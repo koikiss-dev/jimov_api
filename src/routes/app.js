@@ -5,8 +5,8 @@ const r = Router();
 //raiz
 r.get("/", (req, res) => {
   res.send({
-    data: "Servidor de anime corriendo :)",
-    status: "ok"
+    data: "Anime api running :)",
+    status: 200
   });
 });
 

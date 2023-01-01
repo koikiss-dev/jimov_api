@@ -4,7 +4,14 @@ const r = Router();
 
 r.get("/anime/emit", (req, res) => {
   g.getEmitAnime().then((f) => {
-    res.send(f);
+    if (f) {
+      res.send(f);
+    } else {
+      res.status(404).send({
+        message: "Invalid path",
+        code: 404,
+      });
+    }
   });
 });
 

@@ -4,7 +4,14 @@ const r = Router();
 
 r.get("/anime/last-episodes", (req, res) => {
   g.getLasEpisodes().then((f) => {
-    res.send(f);
+    if (f) {
+      res.send(f);
+    } else {
+      res.status(404).send({
+        message: "Invalid anime episode",
+        code: 404,
+      });
+    }
   });
 });
 

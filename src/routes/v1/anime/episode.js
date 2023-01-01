@@ -4,7 +4,14 @@ const r = Router();
 
 r.get("/anime/episode/:episode", (req, res) => {
   g.getEpisodeInfo(req.params.episode).then((f) => {
-    res.send(f);
+    if (f) {
+      res.send(f);
+    } else {
+      res.status(404).send({
+        message: "Invalid anime episode",
+        code: 404,
+      });
+    }
   });
 });
 
