@@ -31,7 +31,7 @@ async function getEpisodeInfo(id) {
     });
     return links_episodes;
   } catch (error) {
-    console.log(error);
+    return false
   }
 }
 

@@ -22,7 +22,9 @@ async function getLasEpisodes() {
       last_episodes.push(anime);
     });
     return last_episodes;
-  } catch (error) {}
+  } catch (error) {
+    return false
+  }
 }
 
 async function getEmitAnime() {
@@ -39,7 +41,9 @@ async function getEmitAnime() {
       emit_anime.push(emit);
     });
     return emit_anime;
-  } catch (error) {}
+  } catch (error) {
+    return false
+  }
 }
 
 async function getLastAdd() {
@@ -67,7 +71,7 @@ async function getLastAdd() {
     ); //eliminar duplicados y vacios
     return last_anime;
   } catch (error) {
-    console.log(error);
+    return false;
   }
 }
 

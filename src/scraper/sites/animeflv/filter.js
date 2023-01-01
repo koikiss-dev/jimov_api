@@ -32,7 +32,7 @@ async function Filter(gen, year, type, status, ord, page) {
 
     return data_filter;
   } catch (error) {
-    console.log(error);
+    return false;
   }
 }
 

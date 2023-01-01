@@ -26,8 +26,7 @@ async function animeInfo(anime) {
         description: sinopsis,
         genres_anime: [],
         similar_anime: [],
-        episodes: []
-
+        episodes: [],
       },
     ];
 
@@ -63,7 +62,7 @@ async function animeInfo(anime) {
     });
     return anime_info;
   } catch (error) {
-    console.log(error);
+    return false;
   }
 }
 export default { animeInfo };
