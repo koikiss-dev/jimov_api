@@ -12,17 +12,31 @@ import helmet from "helmet";
 
 const app = express();
 const port = 3000;
+
 //config
 app.set("json spaces", 2);
-//middleware
+
+/*middleware*/
 app.use(morgan("dev"));
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
+/*middleware*/
 
-//header
+/*headers */
 app.use(helmet()); //segurity
+/*headers */
+
 //routes
-app.use(index, emit, lastAdd, lastEpisodes, animeInfo, filter, episode);
+
+/*animeflv*/
+app.use(index);
+app.use(emit);
+app.use(lastAdd);
+app.use(lastEpisodes);
+app.use(animeInfo);
+app.use(filter);
+app.use(episode);
+/*animeflv*/
 
 //init
 app.listen(3000, () => {
