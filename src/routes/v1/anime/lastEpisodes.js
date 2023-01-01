@@ -1,5 +1,5 @@
 import { Router } from "express";
-import g from "../../../scraper/sites/animeflv/getPageMain.js";
+import g from "../../../scraper/sites/anime/animeflv/getPageMain.js";
 const r = Router();
 
 r.get("/anime/last-episodes", (req, res) => {
