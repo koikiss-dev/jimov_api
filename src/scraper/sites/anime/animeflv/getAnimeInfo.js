@@ -23,8 +23,10 @@ async function animeInfo(anime) {
         type: type,
         img: img,
         status: status,
-        description: sinopsis,
-        genres_anime: [],
+        synopsis:[{
+          tags:[],
+          description: sinopsis,
+        }],
         similar_anime: [],
         episodes: [],
       },
@@ -32,10 +34,8 @@ async function animeInfo(anime) {
 
     //get genres
     const genres = $("nav.Nvgnrs a").each((i, e) => {
-      const gen = { link_gen: "", gen: "" };
-      gen.link_gen = $(e).attr("href");
-      gen.gen = $(e).text().trim();
-      anime_info[0].genres_anime.push(gen);
+      const gen = $(e).text().trim();
+      anime_info[0].synopsis[0].tags.push(gen);
     });
     //getRelated
     const similar_anime = $("ul.ListAnmRel li a").each((i, e) => {

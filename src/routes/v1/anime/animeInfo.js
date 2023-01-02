@@ -1,5 +1,5 @@
 import { Router } from "express";
-import g from "../../../scraper/sites/anime/animeflv/getAnimeInfo.js.js";
+import g from "../../../scraper/sites/anime/animeflv/getAnimeInfo.js";
 const r = Router();
 
 r.get("/anime/:name", (req, res) => {

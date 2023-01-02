@@ -1,5 +1,5 @@
 import { Router } from "express";
-import j from "../../../scraper/sites/anime/animeflv/filter.js.js";
+import j from "../../../scraper/sites/anime/animeflv/filter.js";
 const r = Router();
 
 r.get("/anime/browse/filter", (req, res) => {
