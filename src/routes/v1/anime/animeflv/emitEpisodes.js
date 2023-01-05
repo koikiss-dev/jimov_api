@@ -1,9 +1,9 @@
 import { Router } from "express";
-import g from "../../../scraper/sites/anime/animeflv/getPageMain.js";
+import g from "../../../../scraper/sites/anime/animeflv/getPageMain.js";
 const r = Router();
 
-r.get("/anime/last-anime", (req, res) => {
-  g.getLastAdd().then((f) => {
+r.get("/anime/emit", (req, res) => {
+  g.getEmitAnime().then((f) => {
     if (f) {
       res.send(f);
     } else {

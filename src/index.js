@@ -2,12 +2,12 @@ import express from "express";
 import morgan from "morgan";
 import bodyparser from "body-parser";
 import index from "./routes/app.js";
-import emit from "./routes/v1/anime/emitEpisodes.js";
-import lastAdd from "./routes/v1/anime/lastEpisodes.js";
-import lastEpisodes from "./routes/v1/anime/lastanimeAdd.js";
-import animeInfo from "./routes/v1/anime/animeInfo.js";
-import filter from "./routes/v1/anime/filterAnime.js";
-import episode from "./routes/v1/anime/episode.js";
+import emit from "./routes/v1/anime/animeflv/emitEpisodes.js";
+import lastAdd from "./routes/v1/anime/animeflv/lastEpisodes.js";
+import lastEpisodes from "./routes/v1/anime/animeflv/lastanimeAdd.js";
+import animeInfo from "./routes/v1/anime/animeflv/animeInfo.js";
+import filter from "./routes/v1/anime/animeflv/filterAnime.js";
+import episode from "./routes/v1/anime/animeflv/episode.js";
 import helmet from "helmet";
 
 const app = express();
