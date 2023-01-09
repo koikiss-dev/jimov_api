@@ -3,18 +3,13 @@ import axios from "axios";
 
 export default async function getAnime(name){ 
 
-
   const animeparser = name.toLowerCase();
   const animename = animeparser.replace(/\s/g, "-");
-
-
 
   try {
 
     const { data } = await axios.get(`https://ww4.gogoanimes.org/category/${animename}`)
     const $ = cheerio.load(data);
-    
-   
 
     const title = $("div.anime_info_body_bg  h1").text();
     const url = $("div.anime_info_body_bg ").find("img").attr("src");
@@ -54,9 +49,6 @@ export default async function getAnime(name){
       type: type,
       genre: genre,
     } 
-    
-
-    console.log(anime.status)
 
     return anime 
 
@@ -70,4 +62,3 @@ export default async function getAnime(name){
 
 
 
-getAnime("bocchi the rock");
