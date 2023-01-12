@@ -44,16 +44,6 @@ async function getAnime(anime) {
     });
 
 
-    // console.log($("div.img-in img[class=d-inline-block]").html());
-
-
-    console.log(anime.title)
-    console.log(anime.status)
-    console.log(anime.totalEpisodes)
-    console.log(anime.description);
-    console.log(anime.dateRelease);
-    console.log(anime.rate);
-    console.log(anime.episodes_url)
 
     return anime;
 
@@ -65,7 +55,6 @@ async function getAnime(anime) {
 
 }
 
-getAnime("bocchi the rock");
 
 
 
