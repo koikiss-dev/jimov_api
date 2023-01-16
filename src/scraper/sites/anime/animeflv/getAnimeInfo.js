@@ -60,7 +60,16 @@ async function animeInfo(anime) {
 
       anime_info[0].episodes.push(data);
     });
+      
+
+  
+
     return anime_info;
+    
+
+
+
+
   } catch (error) {
     return false;
   }
