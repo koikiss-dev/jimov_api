@@ -1,9 +1,51 @@
 import * as dotenv from "dotenv";
 import axios from "axios";
 import * as ch from "cheerio";
+import _ from "underscore";
 dotenv.config();
 
-const url_zoro = 'https://zoro.to';
+const url_zoro = "https://zoro.to";
+const USER_AGENT =
+  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36";
+const headerOption = {
+  "User-Agent": USER_AGENT,
+  "X-Requested-With": "XMLHttpRequest",
+};
+
+async function searchZoro(key, page = 1) {
+  try {
+    if (!key)
+      return {
+        error: true,
+        error_message: "No keyword provided",
+      };
+
+    const { data } = await axios.get(
+      `${url_zoro}/search?keyword=${key}&page=${page}`
+    );
+    const $ = ch.load(data);
+    const list = [];
+
+    $("div.film_list-wrap > div.flw-item").each((i, e) => {
+      list.push({
+        animeTitle: $(e).find("div.film-detail > .film-name > a").text(),
+        animeId: $(e)
+          .find("div.film-detail > .film-name > a")
+          .attr("href")
+          .split("/")[1]
+          .split("?")[0],
+        animeImg: $(e).find("div.film-poster > img").attr("data-src"),
+      });
+    });
+
+    return list;
+  } catch (error) {
+    return {
+      error: true,
+      error_message: error,
+    };
+  }
+}
 
 async function AnimeInfo(id) {
   const error_page = [
@@ -20,7 +62,6 @@ async function AnimeInfo(id) {
 
     const $ = ch.load(data);
     const anisc_info = []; //datos que tienen la misma clase por lo tanto es confuzo acceder sin hacer tanto desorden
-
     /*titulo y descripcion */
     const title = $("h2.film-name").text().trim();
     const description = $("div.film-description div.text").text().trim();
@@ -51,11 +92,13 @@ async function AnimeInfo(id) {
         recommendations: [],
         related_anime: [],
         characters: [],
+        total_episodes: "",
         synopsis: [
           {
             tags: [],
             link_tags: [],
             description: description,
+            episodes: [],
           },
         ],
       },
@@ -128,7 +171,34 @@ async function AnimeInfo(id) {
         .next()
         .text()
         .trim();
-      information[0].related_anime.push(related_anime)
+      information[0].related_anime.push(related_anime);
+    });
+    const newArr = animename.split('-').pop()
+  const deletea = _.initial(newArr).join('-')
+    const episodeRes = await axios.get(
+      `${url_zoro}/ajax/v2/episode/list/${newArr}`,
+      {
+        headers: {
+          ...headerOption,
+          Referer: `${url_zoro}/watch/${animename}`,
+        },
+      }
+    );
+    const $$ = ch.load(episodeRes.data.html);
+    const totalEpisodes = $$(
+      "div.detail-infor-content > div.ss-list > a"
+    ).length;
+      information[0].total_episodes = totalEpisodes
+    $$("div.detail-infor-content > div.ss-list > a").each((i, el) => {
+      information[0].synopsis[0].episodes.push({
+        epNum: $(el).attr("data-number"),
+        episodeName: $(el).attr("title"),
+        episodeId: $(el)
+          .attr("href")
+          .split("/")
+          .pop()
+          .replace("?ep=", "-episode-"),
+      });
     });
     return information;
   } catch (error) {
@@ -136,8 +206,8 @@ async function AnimeInfo(id) {
   }
 }
 
-/* AnimeInfo("tokyo ghoul 790").then((f) => {
+AnimeInfo("hunter x hunter 2").then((f) => {
   console.log(f);
-}); */
+});
 
 export default { AnimeInfo };
