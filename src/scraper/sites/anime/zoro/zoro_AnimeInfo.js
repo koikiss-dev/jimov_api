@@ -3,7 +3,7 @@ import axios from "axios";
 import * as ch from "cheerio";
 dotenv.config();
 
-const url_zoro = process.env.ZORO;
+const url_zoro = 'https://zoro.to';
 
 async function AnimeInfo(id) {
   const error_page = [
@@ -14,8 +14,9 @@ async function AnimeInfo(id) {
       value: false,
     },
   ];
+  const animename = id.toLowerCase().replace(/\s/g, "-");
   try {
-    const { data } = await axios.get(`${url_zoro}/${id}`);
+    const { data } = await axios.get(`${url_zoro}/${animename}`);
 
     const $ = ch.load(data);
     const anisc_info = []; //datos que tienen la misma clase por lo tanto es confuzo acceder sin hacer tanto desorden
@@ -131,12 +132,12 @@ async function AnimeInfo(id) {
     });
     return information;
   } catch (error) {
-    return error_page;
+    return error;
   }
 }
 
-AnimeInfo("tokyo-ghoul-790").then((f) => {
+/* AnimeInfo("tokyo ghoul 790").then((f) => {
   console.log(f);
-});
+}); */
 
 export default { AnimeInfo };
