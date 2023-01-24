@@ -8,6 +8,7 @@ import lastEpisodes from "./routes/v1/anime/animeflv/lastanimeAdd.js";
 import animeInfo from "./routes/v1/anime/animeflv/animeInfo.js";
 import filter from "./routes/v1/anime/animeflv/filterAnime.js";
 import episode from "./routes/v1/anime/animeflv/episode.js";
+import featured from './routes/v1/anime/zoro/animeZoroRoutes.js'
 import helmet from "helmet";
 
 const app = express();
@@ -38,6 +39,10 @@ app.use(filter);
 app.use(episode);
 /*animeflv*/
 
+
+/*zoro */
+app.use(featured)
+/*zoro */
 //init
 app.listen(3000, () => {
   console.log(`Servidor iniciado en el puerto ${port} listo para trabajar :)`);
