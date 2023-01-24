@@ -13,12 +13,19 @@ const headerOption = {
 };
 
 async function searchZoro(key, page = 1) {
+  const error_page = [
+    {
+      error: true,
+      error_message: "No keyword provided",
+      code: 404,
+    },
+  ];
   try {
-    if (!key)
+    /* if (!key)
       return {
         error: true,
         error_message: "No keyword provided",
-      };
+      }; */
 
     const { data } = await axios.get(
       `${url_zoro}/search?keyword=${key}&page=${page}`
@@ -40,18 +47,16 @@ async function searchZoro(key, page = 1) {
 
     return list;
   } catch (error) {
-    return {
-      error: true,
-      error_message: error,
-    };
+    if(!key){
+      return error_page
+    }
   }
 }
 
 async function AnimeInfo(id) {
   const error_page = [
     {
-      error: "Invalid or incompleted param",
-      valids_params: ["top-viewed-day", "top-viewed-week", "top-viewed-month"],
+      error: "Invalid or incompleted name",
       code: 404,
       value: false,
     },
@@ -173,8 +178,8 @@ async function AnimeInfo(id) {
         .trim();
       information[0].related_anime.push(related_anime);
     });
-    const newArr = animename.split('-').pop()
-  const deletea = _.initial(newArr).join('-')
+    const newArr = animename.split("-").pop();
+    const deletea = _.initial(newArr).join("-");
     const episodeRes = await axios.get(
       `${url_zoro}/ajax/v2/episode/list/${newArr}`,
       {
@@ -188,7 +193,7 @@ async function AnimeInfo(id) {
     const totalEpisodes = $$(
       "div.detail-infor-content > div.ss-list > a"
     ).length;
-      information[0].total_episodes = totalEpisodes
+    information[0].total_episodes = totalEpisodes;
     $$("div.detail-infor-content > div.ss-list > a").each((i, el) => {
       information[0].synopsis[0].episodes.push({
         epNum: $(el).attr("data-number"),
@@ -202,12 +207,12 @@ async function AnimeInfo(id) {
     });
     return information;
   } catch (error) {
-    return error;
+    return error_page;
   }
 }
 
-AnimeInfo("hunter x hunter 2").then((f) => {
+/* AnimeInfo("hunter x hunter 2").then((f) => {
   console.log(f);
-});
+}); */
 
-export default { AnimeInfo };
+export default { AnimeInfo, searchZoro };
