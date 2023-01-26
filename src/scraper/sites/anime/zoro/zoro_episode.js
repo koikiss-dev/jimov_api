@@ -1,132 +1,100 @@
+//obtiene el id de cada servidor en el episodio y posteriormente en otra funcion regresa los embeds de dicho anime
+
+
 import * as dotenv from "dotenv";
 import axios from "axios";
 import * as ch from "cheerio";
 import _ from "underscore";
-import { scrapeSource } from "../../../helper/rapid-cloud.js";
 dotenv.config();
 
 const url_zoro = process.env.ZORO;
-const USER_AGENT =
-  "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36";
-const headerOption = {
-  "User-Agent": USER_AGENT,
-  "X-Requested-With": "XMLHttpRequest",
-};
 
-async function getEpisodeInfo(anime, ep) {
+async function getServersId(anime, ep) {
   const animename = anime.toLowerCase().replace(/\s/g, "-");
+  const error_page = [
+    {
+      error: "Invalid or incompleted param",
+      valids_params: "anime name and episode id",
+      code: 404,
+      value: false,
+    },
+  ];
   try {
-    /* const { data } = await axios.get(`${url_zoro}/watch/${anime}`, {
-      params: {
-        ep: ep,
-      },
-    });
-    if (!anime) return {
-      error: true,
-      error_message: "Episode ID not provided"
-  }; */
-
-    const episodeId = animename.split("-").pop();
-    const res = await axios.get(
-      `${url_zoro}/ajax/v2/episode/servers?episodeId=${episodeId}`,
-      {
-        headers: headerOption,
-      }
-    );
-    const $ = ch.load(res.data.html);
-
-    // console.log(res.data.html)
-
-    let dataId;
-    let subOrDub = "sub";
-
-    $(`div.servers-${subOrDub} > div.ps__-list > div.server-item`).each(
-      (i, el) => {
-        if ($(el).attr("data-server-id") === 1) {
-          dataId += $(el).attr("data-id");
-        }
-      }
-    );
-    // console.log(subOrDub)
-
-    if (subOrDub === "dub" && $("div.servers-dub").length <= 0) {
-      return {
-        noDubs: true,
-        error_message: "No dubs available for this episode",
-      };
-    }
-
-    const sources = await scrapeSource(dataId);
-
-    return sources;
-    /* let list = {};
-    let episodes = [];
-    const $ = ch.load(data);
-    const animeTitle = $("div.anisc-detail > h2.film-name > a").text();
-    const animeImg = $("div.anisc-poster > div.film-poster > img").attr("src");
-    const synopsis = $("div.film-description > div.text").text().trim();
-    const type = $("div.film-stats > span.item").last().prev().prev().text();
-    let dubbed = false;
-
-    Array.from($("div.film-stats span.item div.tick-dub")).map((el) => {
-      if ($(el).text().toLowerCase().includes("dub")) dubbed = true;
-    });
-    const idNum = anime.split("-")
-    const idNumComp = _.initial(idNum).join("-");
-
-    const episodeRes = await axios.get(
-      `${url_zoro}/ajax/v2/episode/list/${ep}`,
+    const { data } = await axios.get(
+      `${url_zoro}/ajax/v2/episode/servers?episodeId=${ep}`,
       {
         headers: {
-          ...headerOption,
-          Referer: `${url_zoro}/watch/${anime}`,
+          "Accept-Encoding": "*r",
+          Referer: `https://zoro.to/watch/${animename}`,//referencia de pagina para obtener el id
+          "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
         },
       }
     );
-    const $$ = ch.load(episodeRes.data.html);
-    const totalEpisodes = $$(
-      "div.detail-infor-content > div.ss-list > a"
-    ).length;
+    const $ = ch.load(data.html);
+    const serversData = [
+      {
+        serverSub: [],
+        serverDub: [],
+      },
+    ];
 
-    $$("div.detail-infor-content > div.ss-list > a").each((i, el) => {
-      episodes.push({
-        epNum: $(el).attr("data-number"),
-        episodeName: $(el).attr("title"),
-        episodeId: $(el)
-          .attr("href")
-          .split("/")
-          .pop()
-          .replace("?ep=", "-episode-"),
+    $(
+      "body > div.ps_-block.ps_-block-sub.servers-sub > div.ps__-list > div.item "
+    ).each((i, el) => {
+      let type = el.attribs["data-type"];
+      let server = $(el).text().trim();
+      let serverId = el.attribs["data-id"];
+      let serverId2 = el.attribs["data-server-id"];
+      let devNote =
+        server === "StreamSB"
+          ? "Reccomended Server"
+          : "Might not work, rapid-cloud requries to have host as zoro.to";
+      serversData[0].serverSub.push({
+        type,
+        server,
+        serverId,
+        serverId2,
+        devNote,
       });
     });
-    list = {
-      animeTitle,
-      animeImg,
-      synopsis,
-      type,
-      isDubbed: dubbed,
-      totalEpisodes,
-      episodes,
-    };
 
-    return list; */
+    $(
+      "body > div.ps_-block.ps_-block-sub.servers-dub > div.ps__-list > div.item "
+    ).each((i, el) => {
+      let type = el.attribs["data-type"];
+      let server = $(el).text().trim();
+      let serverId = el.attribs["data-id"];
+      let serverId2 = el.attribs["data-server-id"];
+      let devNote =
+        server === "StreamSB"
+          ? "Reccomended Server"
+          : "Might not work, might require to have host and referer as zoro.to";
+      serversData[0].serverDub.push({
+        type,
+        server,
+        serverId,
+        serverId2,
+        devNote,
+      });
+    });
+
+    return serversData
   } catch (error) {
-    console.log(error);
-    /* return {
-      error: true,
-      error_message: err,
-    }; */
+    return error_page;
   }
 }
-
-getEpisodeInfo("hunter x hunter 2", 2).then((f) => {
+//get servers embed
+async function getServers(id) {
+  const { data } = await axios.get(`${url_zoro}/ajax/v2/episode/sources?id=${id}`);
+  return data;
+}
+/* getServersId("hunter-x-hunter-2", 65).then((f) => {
   console.log(f);
 });
 
-export default { getEpisodeInfo };
+getServers(734385).then(f =>{
+  console.log(f)
+}) */
 
-/* const {data} = await axios.get('https://enime.moe/')
-  const $ = ch.load(data)
-  const newArr = anime.split('-')
-  const deletea = _.initial(newArr).join('-')
-  return deletea */
+export default { getServersId, getServers };
+
