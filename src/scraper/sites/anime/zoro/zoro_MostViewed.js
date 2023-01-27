@@ -45,10 +45,10 @@ async function MostViewd(path) {
       return_info.img = $(e).find("img").attr("data-src");
       data_return.push(return_info);
     });
+    return data_return
   } catch (error) {
     return error_page;
   }
-  return data_return;
 }
 
 export default { MostViewd };

@@ -184,5 +184,4 @@ async function filterAnime(
 /* filterAnime(1, 1).then((f) => {
   console.log(f);
 }); */
-
 export default { filterAnime };

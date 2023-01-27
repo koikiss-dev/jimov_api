@@ -135,8 +135,8 @@ async function AnimeInfo(id) {
   }
 }
 
-AnimeInfo("tokyo-ghoul-790").then((f) => {
+/* AnimeInfo("tokyo-ghoul-790").then((f) => {
   console.log(f);
-});
+}); */
 
 export default { AnimeInfo };
