@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "server": "nodemon src/index.js",
-    "zoro": "nodemon src/scraper/sites/anime/zoro/zoro_Episode.js",
+    "zoro": "nodemon src/scraper/sites/anime/zoro/zoro_filter.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
