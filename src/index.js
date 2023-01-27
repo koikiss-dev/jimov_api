@@ -2,12 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import bodyparser from "body-parser";
 import index from "./routes/app.js";
-import emit from "./routes/v1/anime/animeflv/emitEpisodes.js";
-import lastAdd from "./routes/v1/anime/animeflv/lastEpisodes.js";
-import lastEpisodes from "./routes/v1/anime/animeflv/lastanimeAdd.js";
-import animeInfo from "./routes/v1/anime/animeflv/animeInfo.js";
-import filter from "./routes/v1/anime/animeflv/filterAnime.js";
-import episode from "./routes/v1/anime/animeflv/episode.js";
+import flv from './routes/v1/anime/animeflv/animeflvRoutes.js'
 import zoroRout from './routes/v1/anime/zoro/animeZoroRoutes.js'
 import helmet from "helmet";
 
@@ -31,12 +26,7 @@ app.use(helmet()); //segurity
 
 /*animeflv*/
 app.use(index);
-app.use(emit);
-app.use(lastAdd);
-app.use(lastEpisodes);
-app.use(animeInfo);
-app.use(filter);
-app.use(episode);
+app.use(flv);
 /*animeflv*/
 
 /*zoro */
