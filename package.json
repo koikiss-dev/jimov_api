@@ -1,23 +1,35 @@
 {
-  "name": "amazon_scraper",
+  "name": "jimov_scraper",
   "version": "1.0.0",
-  "description": "",
+  "description": "API for scraping multimedia content such as anime, movies, series, and manga",
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "dev": "nodemon src/index.js",
+    "server": "nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["scraper",
+  "api",
+  "multimedia",
+  "anime",
+  "movies",
+  "series",
+  "manga"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koikiss-dev/jimov_api"
+  },
+  "homepage": "https://github.com/koikiss-dev/jimov_api",
   "dependencies": {
     "axios": "^1.2.2",
     "body-parser": "^1.20.1",
     "cheerio": "^1.0.0-rc.12",
     "express": "^4.18.2",
     "helmet": "^6.0.1",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "puppeteer": "^19.4.1",
+    "underscore": "^1.13.6"
   },
   "devDependencies": {
     "dotenv": "^16.0.3",

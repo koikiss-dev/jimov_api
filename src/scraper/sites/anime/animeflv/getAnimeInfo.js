@@ -3,7 +3,7 @@ import axios from "axios";
 import * as ch from "cheerio";
 dotenv.config();
 
-const url = process.env.URL;
+const url = process.env.ANIME_FLV;
 
 async function animeInfo(anime) {
   try {
