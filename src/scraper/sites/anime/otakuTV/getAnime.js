@@ -16,27 +16,34 @@ async function getAnime(anime) {
       // url: "",
       title: "",
       status: "",
-      episodes: "",
+      cover: "",
+      totalEpisodes: "",
       description: "",
       dateRelease: "",
       rate: "",
       episodes_url: []
     }
 
-    /*
-     * Esto no trae la url, trae un icono svg de play...
-     * ahi te lo dejo por si quieres continuarlo :3
-     * anime.url = $("div.img-in").first().find("img").attr("src");
-    */
 
     anime.title = $("div.inn-text h1.text-white").text();
-    anime.status = $("span.btn-anime-info").text();
-    anime.totalEpisodes = $("div.episodios-top div.p-10-m span.text-white").text().replace("episodio(s)", "");
-    anime.description = $("div.modal-body").first().text();
-    anime.dateRelease = $("span.date").text().replace(" Estreno: ", "");
-    anime.rate = $("div.none-otakus-a span.ml-1").text();
+    anime.status = $("span.btn-anime-info").text().trim();
+    anime.totalEpisodes = $("div.episodios-top div.p-10-m span.text-white").text().replace("episodio(s)", "").trim();
+    anime.description = $("div.modal-body").first().text().trim();
+    anime.dateRelease = $("span.date").text().replace(" Estreno: ", "Se estreno: ");
+    anime.rate = $("div.none-otakus-a span.ml-1").text().replace("-", " -");
 
-    const getepisodesurl = $("div.tabs div.tab-content div.tab-pane div.pl-lg-4 div.container-fluid div.row div.col-6 ").each((i, j) => {
+    //Aqui literalmente tuve que usar un each no mas para sacar una cosa,
+    //literalmente no me dejo sacarlo a la primera dude wtf
+
+    const stuff = $("div.img-in img ").each((i, j) => {
+      if (i)
+
+        anime.cover = $(j).attr('src')
+    });
+
+
+
+    const getepisodesanime = $("div.tabs div.tab-content div.tab-pane div.pl-lg-4 div.container-fluid div.row div.col-6 ").each((i, j) => {
       anime.episodes_url.push({
         title: $(j).find("p").find("span").html(),
         url: $(j).find("a").attr("href"),
@@ -49,12 +56,11 @@ async function getAnime(anime) {
 
 
   } catch (error) {
-    console.log(error);
+    return error
   }
 
 
 }
-
 
 
 
