@@ -1,17 +1,26 @@
 {
   "name": "jimov_scraper",
   "version": "1.0.0",
-  "description": "",
+  "description": "API for scraping multimedia content such as anime, movies, series, and manga",
   "main": "index.js",
   "type": "module",
   "scripts": {
     "server": "nodemon src/index.js",
-    "zoro": "nodemon src/scraper/sites/anime/zoro/zoro_filter.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "keywords": ["scraper",
+  "api",
+  "multimedia",
+  "anime",
+  "movies",
+  "series",
+  "manga"],
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/koikiss-dev/jimov_api"
+  },
+  "homepage": "https://github.com/koikiss-dev/jimov_api",
   "dependencies": {
     "axios": "^1.2.2",
     "body-parser": "^1.20.1",
