@@ -59,7 +59,6 @@ async function getLastEpisodes() {
                 url:     $(element).find('article.episode a').attr('href'),
                 episode: episode.episode
             });
-            console.log(episodes[episodes.length - 1]);
         });
         return episodes;
     } catch (error) {
