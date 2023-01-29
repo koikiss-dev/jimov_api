@@ -1,5 +1,8 @@
 //obtiene el id de cada servidor en el episodio y posteriormente en otra funcion regresa los embeds de dicho anime
-
+/*
+*@params [anime, ep] -> anime name and episode id
+*@return server id
+*/
 
 import * as dotenv from "dotenv";
 import axios from "axios";
@@ -84,6 +87,10 @@ async function getServersId(anime, ep) {
   }
 }
 //get servers embed
+/*
+*@params [id] -> id server
+*@return anime fembed
+*/
 async function getServers(id) {
   const { data } = await axios.get(`${url_zoro}/ajax/v2/episode/sources?id=${id}`);
   return data;
