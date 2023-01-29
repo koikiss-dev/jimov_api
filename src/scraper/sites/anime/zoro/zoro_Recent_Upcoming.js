@@ -25,7 +25,7 @@ async function RecentUpload_Upcoming(url, page) {
     const airing_cards = $(
       "div.tab-content div.film_list div.film_list-wrap div.flw-item"
     );
-    const data_return = [{ page: page || 1 }];
+    const data_return = [{ page: page || 1, param: url, }];
 
     airing_cards.each((i, e) => {
       const data_anime = {

@@ -33,7 +33,7 @@ async function AnimeInfo(id) {
       anisc_info.push(data_span, data_a);
     });
 
-    const with_out_spaces = anisc_info.filter((el) => el != ""); //eliminar espacios innecesarios del array anisc_info
+    const with_out_spaces = anisc_info.filter((el) => el !== ""); //eliminar espacios innecesarios del array anisc_info
 
     const information = [
       {
@@ -135,8 +135,8 @@ async function AnimeInfo(id) {
   }
 }
 
-AnimeInfo("tokyo-ghoul-790").then((f) => {
+/* AnimeInfo("tokyo-ghoul-790").then((f) => {
   console.log(f);
-});
+}); */
 
 export default { AnimeInfo };
