@@ -3,7 +3,7 @@ import axios from "axios";
 import * as ch from "cheerio";
 dotenv.config();
 
-const url = process.env.ANIME_FLV;
+const url = 'https://www2.animeflv.bz';
 
 async function Filter(gen, year, type, status, ord, page) {
   try {
