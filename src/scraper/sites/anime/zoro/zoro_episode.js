@@ -4,13 +4,13 @@
 *@return server id
 */
 
-import * as dotenv from "dotenv";
+
 import axios from "axios";
 import * as ch from "cheerio";
 import _ from "underscore";
-dotenv.config();
 
-const url_zoro = process.env.ZORO;
+
+const url_zoro = 'https://zoro.to';
 
 async function getServersId(anime, ep) {
   const animename = anime.toLowerCase().replace(/\s/g, "-");

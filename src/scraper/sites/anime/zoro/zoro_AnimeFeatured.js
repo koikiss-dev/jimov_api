@@ -1,9 +1,9 @@
-import * as dotenv from "dotenv";
+
 import axios from "axios";
 import * as ch from "cheerio";
-dotenv.config();
 
-const url_zoro = process.env.ZORO;
+
+const url_zoro = 'https://zoro.to';
 
 /*anime featured */
 async function AnimeFeatured(url, page) {
