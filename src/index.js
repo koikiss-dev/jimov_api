@@ -7,7 +7,7 @@ import zoroRout from './routes/v1/anime/zoro/animeZoroRoutes.js'
 import helmet from "helmet";
 
 const app = express();
-const port = 3000;
+const port = "https://jimov.herokuapp.com/" || 3000;
 
 //config
 app.set("json spaces", 2);
@@ -33,6 +33,6 @@ app.use(flv);
 app.use(zoroRout)
 /*zoro */
 //init
-app.listen(3000, () => {
+app.listen(port, () => {
   console.log(`Servidor iniciado en el puerto ${port} listo para trabajar :)`);
 });
