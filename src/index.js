@@ -25,7 +25,7 @@ app.use(helmet()); //segurity
 //routes
 
 /*animeflv*/
-/* app.use(index); */
+app.use(index);
 app.use(flv);
 /*animeflv*/
 
