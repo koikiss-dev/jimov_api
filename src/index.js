@@ -7,7 +7,7 @@ import zoroRout from './routes/v1/anime/zoro/animeZoroRoutes.js'
 import helmet from "helmet";
 
 const app = express();
-const port = "https://jimov.herokuapp.com/" || 3000;
+const port = "https://jimov.herokuapp.com" || 3000;
 
 //config
 app.set("json spaces", 2);
