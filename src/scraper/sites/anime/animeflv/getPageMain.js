@@ -42,7 +42,7 @@ async function getEmitAnime() {
     });
     return emit_anime;
   } catch (error) {
-    return false
+    return error
   }
 }
 
@@ -74,5 +74,9 @@ async function getLastAdd() {
     return false;
   }
 }
+
+/* getEmitAnime().then(f => {
+  console.log(f)
+}) */
 
 export default { getLasEpisodes, getEmitAnime, getLastAdd };
