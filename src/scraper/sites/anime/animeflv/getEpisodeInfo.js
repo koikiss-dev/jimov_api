@@ -1,7 +1,7 @@
-import * as dotenv from "dotenv";
+
 import axios from "axios";
 import * as ch from "cheerio";
-dotenv.config();
+
 
 const url = 'https://www2.animeflv.bz';
 
