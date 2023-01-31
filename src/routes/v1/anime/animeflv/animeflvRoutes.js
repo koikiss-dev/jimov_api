@@ -6,30 +6,28 @@ import p from "../../../../scraper/sites/anime/animeflv/getPageMain.js"; //get p
 
 const r = Router();
 
+/*emit, last add and last episodes */
+r.get("/anime/emit", (req, res) => {
+  p.getEmitAnime().then(f =>{
+    res.send(f)
+  })
+});
+r.get("/anime/last-anime", (req, res) => {
+  p.getLastAdd().then((f) => {
+    res.send(f);
+  });
+});
+r.get("/anime/last-episodes", (req, res) => {
+  p.getLasEpisodes().then((f) => {
+    res.send(f);
+  });
+});
 r.get("/anime/:name", (req, res) => {
   a.animeInfo(req.params.name).then((f) => {
     res.send(f);
   });
 });
 
-/*emit, last add and last episodes */
-r.get("/anime/flv/emit", (req, res) => {
-  p.getEmitAnime().then((f) => {
-    res.send(f);
-  });
-});
-
-r.get("/anime/last-anime", (req, res) => {
-  p.getLastAdd().then((f) => {
-    res.send(f);
-  });
-});
-
-r.get("/anime/last-episodes", (req, res) => {
-  p.getLasEpisodes().then((f) => {
-    res.send(f);
-  });
-});
 /*emit, last add and last episodes */
 
 r.get("/anime/episode/:episode", (req, res) => {

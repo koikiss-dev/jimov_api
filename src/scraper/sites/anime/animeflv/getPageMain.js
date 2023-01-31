@@ -31,8 +31,8 @@ async function getEmitAnime() {
   try {
     const { data } = await axios.get(url);
     const $ = ch.load(data);
-    const emit_anime = [];
     const list = $(".ListSdbr li");
+    const emit_anime = [];
 
     list.each((i, e) => {
       const emit = { title: "", link: "" };
@@ -42,7 +42,7 @@ async function getEmitAnime() {
     });
     return emit_anime;
   } catch (error) {
-    return error
+    return false
   }
 }
 
@@ -74,9 +74,5 @@ async function getLastAdd() {
     return false;
   }
 }
-
-/* getEmitAnime().then(f => {
-  console.log(f)
-}) */
 
 export default { getLasEpisodes, getEmitAnime, getLastAdd };
