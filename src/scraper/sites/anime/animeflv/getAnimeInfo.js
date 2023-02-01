@@ -1,9 +1,9 @@
-import * as dotenv from "dotenv";
+
 import axios from "axios";
 import * as ch from "cheerio";
-dotenv.config();
 
-const url = process.env.ANIME_FLV;
+
+const url = 'https://www2.animeflv.bz';
 
 async function animeInfo(anime) {
   try {
@@ -41,7 +41,7 @@ async function animeInfo(anime) {
     const similar_anime = $("ul.ListAnmRel li a").each((i, e) => {
       const data = { similar: "", link: "" };
       data.similar = $(e).text().trim();
-      data.link = $(e).attr("href");
+      data.link = $(e).attr("href").replace('/anime', '/anime/flv');
       anime_info[0].similar_anime.push(data);
     });
     //get episodes
@@ -55,23 +55,15 @@ async function animeInfo(anime) {
       };
       data.title_episode = $(e).children(".Title").text().trim();
       data.episode_number = $(e).children("p").last().text().trim();
-      data.link_episode = `/anime/episode${l}`;
+      data.link_episode = `/anime/episode${l}`.replace('/anime', '/anime/flv');
       data.img_episode = $(e).children("figure").find(".lazy").attr("src");
 
       anime_info[0].episodes.push(data);
     });
-      
-
-  
-
     return anime_info;
-    
-
-
-
-
   } catch (error) {
     return false;
   }
 }
+
 export default { animeInfo };

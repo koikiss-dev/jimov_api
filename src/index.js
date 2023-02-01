@@ -4,10 +4,11 @@ import bodyparser from "body-parser";
 import index from "./routes/app.js";
 import flv from './routes/v1/anime/animeflv/animeflvRoutes.js'
 import zoroRout from './routes/v1/anime/zoro/animeZoroRoutes.js'
+import animelatinoRoutes from './routes/v1/anime/animelatinohd/animelatinohdRoutes.js'
 import helmet from "helmet";
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 //config
 app.set("json spaces", 2);
@@ -30,9 +31,14 @@ app.use(flv);
 /*animeflv*/
 
 /*zoro */
-app.use(zoroRout)
+app.use(zoroRout);
 /*zoro */
+
+/* animelatinohd */
+
+app.use(animelatinoRoutes);
+
 //init
-app.listen(3000, () => {
+app.listen(port, () => {
   console.log(`Servidor iniciado en el puerto ${port} listo para trabajar :)`);
 });

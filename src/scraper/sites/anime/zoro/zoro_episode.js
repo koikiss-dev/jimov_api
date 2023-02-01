@@ -1,13 +1,16 @@
 //obtiene el id de cada servidor en el episodio y posteriormente en otra funcion regresa los embeds de dicho anime
+/*
+*@params [anime, ep] -> anime name and episode id
+*@return server id
+*/
 
 
-import * as dotenv from "dotenv";
 import axios from "axios";
 import * as ch from "cheerio";
 import _ from "underscore";
-dotenv.config();
 
-const url_zoro = process.env.ZORO;
+
+const url_zoro = 'https://zoro.to';
 
 async function getServersId(anime, ep) {
   const animename = anime.toLowerCase().replace(/\s/g, "-");
@@ -84,6 +87,10 @@ async function getServersId(anime, ep) {
   }
 }
 //get servers embed
+/*
+*@params [id] -> id server
+*@return anime fembed
+*/
 async function getServers(id) {
   const { data } = await axios.get(`${url_zoro}/ajax/v2/episode/sources?id=${id}`);
   return data;
