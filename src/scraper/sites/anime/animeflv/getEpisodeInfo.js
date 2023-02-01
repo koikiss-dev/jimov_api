@@ -16,9 +16,9 @@ async function getEpisodeInfo(id) {
     const links_episodes = [
       {
         title_episode: title,
-        next_episode: next === undefined ? false : `/anime/episode${next}`,
-        prev_episode: prev === undefined ? false : `/anime/episode${prev}`,
-        cap_list_link: $(".CapNvLs").attr("href"),
+        next_episode: next === undefined ? false : `/anime/flv/episode${next}`,
+        prev_episode: prev === undefined ? false : `/anime/flv/episode${prev}`,
+        cap_list_link: $(".CapNvLs").attr("href").replace('/anime', '/anime/flv'),
         servers: []
       },
     ];

@@ -18,7 +18,7 @@ async function getLasEpisodes() {
       anime.title = $(e).children("strong").text().trim(); //children es para acceder a lo interno como arriba pero distinto, aca agarro del a para saltar al strong
       anime.episode_title = $(e).children("span").text().trim();
       anime.image = $(e).find(".picture").children().attr("src");
-      anime.link = `/anime/episode${l}`
+      anime.link = `/anime/episode${l}`.replace('/anime', '/anime/flv')
       last_episodes.push(anime);
     });
     return last_episodes;
@@ -37,7 +37,7 @@ async function getEmitAnime() {
     list.each((i, e) => {
       const emit = { title: "", link: "" };
       emit.title = $(e).children("a").text().trim();
-      emit.link = $(e).children("a").attr("href");
+      emit.link = $(e).children("a").attr("href").replace('/anime', '/anime/flv');
       emit_anime.push(emit);
     });
     return emit_anime;
@@ -57,7 +57,7 @@ async function getLastAdd() {
       const last = { title: "", type: "", link: "", image: "" };
       last.title = $(e).children("h3").text().trim();
       last.type = $(e).find(".Type").text().trim();
-      last.link = $(e).attr("href");
+      last.link = $(e).attr("href").replace('/anime', '/anime/flv');
       last.image = $(e)
         .children(".Image")
         .find("figure")
@@ -74,5 +74,6 @@ async function getLastAdd() {
     return false;
   }
 }
+
 
 export default { getLasEpisodes, getEmitAnime, getLastAdd };
