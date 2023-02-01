@@ -4,6 +4,7 @@ import bodyparser from "body-parser";
 import index from "./routes/app.js";
 import flv from './routes/v1/anime/animeflv/animeflvRoutes.js'
 import zoroRout from './routes/v1/anime/zoro/animeZoroRoutes.js'
+import animelatinoRoutes from './routes/v1/anime/animelatinohd/animelatinohdRoutes.js'
 import helmet from "helmet";
 
 const app = express();
@@ -30,8 +31,13 @@ app.use(flv);
 /*animeflv*/
 
 /*zoro */
-app.use(zoroRout)
+app.use(zoroRout);
 /*zoro */
+
+/* animelatinohd */
+
+app.use(animelatinoRoutes);
+
 //init
 app.listen(port, () => {
   console.log(`Servidor iniciado en el puerto ${port} listo para trabajar :)`);
