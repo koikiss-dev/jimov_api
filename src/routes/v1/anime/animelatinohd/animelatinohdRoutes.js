@@ -15,7 +15,7 @@ router.get("/anime/animelatinohd/most-viewed",animefunctions.animeMostviewed);
 // Calendar
 router.get("/anime/animelatinohd/calendar",animefunctions.animeCalendar);
 
-// Search +(Filter)
+// Search
 router.get("/anime/animelatinohd/search/:search",animefunctions.animeSearch);
 
 // Anime Info +(Episodes list)
