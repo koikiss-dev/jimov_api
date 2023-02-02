@@ -22,12 +22,8 @@
   },
   "homepage": "https://github.com/koikiss-dev/jimov_api",
   "dependencies": {
-<<<<<<< HEAD
     "@consumet/extensions": "^1.3.0",
     "axios": "^1.2.3",
-=======
-    "axios": "^1.2.2",
->>>>>>> 43625e53d5ee5bcefdcc0faea60dea5eec97743a
     "body-parser": "^1.20.1",
     "cheerio": "^1.0.0-rc.12",
     "express": "^4.18.2",
