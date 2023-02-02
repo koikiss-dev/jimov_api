@@ -1,27 +1,27 @@
 import { Router } from "express";
-import animeFunctions from "../../../../scraper/sites/anime/animelatinohd/animelatinoFunctions.js";
+import animefunctions from "../../../../scraper/sites/anime/animelatinohd/animelatinoFunctions.js";
 
 const router = Router();
 
 // Recent Episodes
-router.get("/anime/animelatinohd/recent-episodes",animeFunctions.animeRecentEpisodesinfo);
+router.get("/anime/animelatinohd/recent-episodes",animefunctions.animeRecentEpisodesinfo);
 
-// More popular
-router.get("/anime/animelatinohd/most-popular")
+// Most popular
+router.get("/anime/animelatinohd/most-popular",animefunctions.animeMostPopular);
 
-// Most Seen
-router.get("/anime/animelatinohd/most-seen")
+// Most viewed
+router.get("/anime/animelatinohd/most-viewed",animefunctions.animeMostviewed);
 
 // Calendar
-router.get("/anime/animelatinohd/calendar")
+router.get("/anime/animelatinohd/calendar",animefunctions.animeCalendar);
 
 // Search +(Filter)
-router.get("/anime/animelatinohd/search")
+router.get("/anime/animelatinohd/search/:search",animefunctions.animeSearch);
 
 // Anime Info +(Episodes list)
-router.get("/anime/animelatinohd/:title", animeFunctions.animeinfo);
+router.get("/anime/animelatinohd/:title", animefunctions.animeinfo);
 
 // Episode Info +(Video Servers)
-router.get("/anime/animelatinohd/:title/episode/:episode", animeFunctions.animeEpisodeinfo);
+router.get("/anime/animelatinohd/:title/episode/:episode", animefunctions.animeEpisodeinfo);
 
 export default router
