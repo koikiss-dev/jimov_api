@@ -1,10 +1,10 @@
-import * as dotenv from "dotenv";
+
 import axios from "axios";
 import * as ch from "cheerio";
-dotenv.config();
+
 
 //https://zoro.to/filter?type=2&rated=1&score=1&season=1&language=1&sy=2023&sort=recently_updated&genres=1
-const url_zoro = process.env.ZORO;
+const url_zoro = 'https://zoro.to';
 
 const params = [
   {

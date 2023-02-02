@@ -1,9 +1,8 @@
-import * as dotenv from "dotenv";
 import axios from "axios";
 import * as ch from "cheerio";
-dotenv.config();
 
-const url = process.env.ANIME_FLV;
+
+const url = 'https://www2.animeflv.bz';
 
 async function Filter(gen, year, type, status, ord, page) {
   try {
@@ -26,7 +25,7 @@ async function Filter(gen, year, type, status, ord, page) {
       return_object.title = $(e).find(".Title").last().text().trim();
       return_object.img = $("figure").children("img").attr("src");
       return_object.type = $(e).find("p").children("span.Type").text().trim();
-      return_object.link = $(e).find("a").attr("href");
+      return_object.link = $(e).find("a").attr("href").replace('/anime', '/anime/flv');
       data_filter.push(return_object);
     });
 
@@ -35,5 +34,6 @@ async function Filter(gen, year, type, status, ord, page) {
     return false;
   }
 }
+
 
 export default { Filter };
