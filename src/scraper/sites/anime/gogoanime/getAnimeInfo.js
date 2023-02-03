@@ -1,10 +1,12 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 
+
 async function getAnime(name) {
 
   const animeparser = name.toLowerCase();
   const animename = animeparser.replace(/\s/g, "-");
+
 
   try {
 
@@ -42,12 +44,12 @@ async function getAnime(name) {
       }
     });
 
-    let test = [];
 
-    const getEpisodes = $('.anime_video_body #load_ep').html()
+    const getEpisodes = $('#load_ep',  '.anime_video_body').html()
+    
 
     console.log(getEpisodes)
-
+    
 
 
     return anime;

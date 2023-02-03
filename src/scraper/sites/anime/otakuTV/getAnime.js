@@ -1,11 +1,12 @@
 import axios from "axios";
 import * as ch from "cheerio";
 
+
 async function getAnime(anime) {
 
   //aplica minuscula y reemplaza espacios con -
   const animename = anime.toLowerCase().replace(/\s/g, "-");
-
+  
 
   try {
 

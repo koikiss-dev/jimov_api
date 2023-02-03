@@ -1,11 +1,14 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 
+
 export default async function getAnime(name){ 
 
   const animeparser = name.toLowerCase();
   const animename = animeparser.replace(/\s/g, "-");
+  
 
+  
   try {
 
     const { data } = await axios.get(`https://ww4.gogoanimes.org/category/${animename}`)
@@ -49,6 +52,8 @@ export default async function getAnime(name){
       type: type,
       genre: genre,
     } 
+    
+    console.log(anime)
 
     return anime 
 
@@ -61,4 +66,4 @@ export default async function getAnime(name){
 }
 
 
-
+getAnime()

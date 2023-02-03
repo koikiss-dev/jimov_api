@@ -3,6 +3,10 @@ import * as ch from 'cheerio';
 
 async function getAnimeRanking() {
 
+
+
+
+
   try {
 
     const { data } = await axios.get(`https://www1.otakustv.com`);
@@ -30,7 +34,6 @@ async function getAnimeRanking() {
 
 }
 
-getAnimeRanking();
 
 
 export default { getUserActive }
