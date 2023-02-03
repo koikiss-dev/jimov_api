@@ -1,18 +1,19 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 
-const animelatinohdFunctions = {}
+const animelatinohdfunctions = {}
 const url = "https://www.animelatinohd.com"
-
+const urlapi = "https://api.animelatinohd.com/api"
 class Anime {
     constructor() {
         this.title = String();
         this.self = String();
-        this.image = String();
-        this.banner = String();
         this.description = String();
+        this.poster = String();
+        this.banner = String();
+     
 
-        this.state = String();
+        this.status = String();
         this.release = String();
 
         this.genre = new Array();
@@ -33,14 +34,7 @@ class AnimeEpisode {
     }
 }
 
-class AnimeRecentEpisodes {
-    constructor() {
-        this.releases = new Array();
-    }
-}
-
-/* This form of collecting this information will be updated (TokyoTF) $("#__NEXT_DATA__") */
-animelatinohdFunctions.animeinfo = async (req, res) => {
+animelatinohdfunctions.animeinfo = async (req, res) => {
 
     let { title } = req.params
 
@@ -49,50 +43,38 @@ animelatinohdFunctions.animeinfo = async (req, res) => {
         const $ = cheerio.load(data);
         const AnimeInfo = new Anime();
 
-        AnimeInfo.title = $(".Anime_column__P8LV- h1").text();
-        AnimeInfo.self = title;
-        AnimeInfo.state = $(".Anime_info__u9KqV .Anime_list__1KPll .Anime_item__q7dUv:nth-child(3)").text().replace("Estado ", "")
-        AnimeInfo.release = $(".Anime_info__u9KqV .Anime_list__1KPll .Anime_item__q7dUv:nth-child(5)").text().replace("Estreno ", "")
-        AnimeInfo.alternatetitles.push(...$(".Anime_info__u9KqV .Anime_list__1KPll .Anime_item__q7dUv:nth-child(6)").text().replace("Titulos Alternativos ", "").split(","))
-        AnimeInfo.banner = $(".Anime_container__19VOn .Anime_banner__YN-Gl").attr("style").replace("background-image:url(", "").replace(")", "") + "?&w=280&q=95";
-        AnimeInfo.image = $("head").find('meta[name="og:image"]').attr("content") + "?&w=280&q=95";
-        AnimeInfo.description = $(".Anime_overview__3j1JB p").text();
+        let animeInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
+        let animeInfoUrl = "/anime/animelatinohd/" + animeInfoParseObj.slug
 
 
+        // Status (0 == finalized,1 == on broadcast)
+
+        AnimeInfo.title = animeInfoParseObj.name
+        AnimeInfo.self = animeInfoParseObj.slug
+        AnimeInfo.description = animeInfoParseObj.overview
+        AnimeInfo.poster = "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.poster + "?&w=53&q=95"
+        AnimeInfo.banner = "https://www.themoviedb.org/t/p/original" +  animeInfoParseObj.banner + "?&w=280&q=95"
+
+        AnimeInfo.status = animeInfoParseObj.status
+        AnimeInfo.release = animeInfoParseObj.aired
+        AnimeInfo.genre.push(...animeInfoParseObj.name_alternative.split(","))
+        AnimeInfo.alternatetitles.push(...animeInfoParseObj.genres.split(","))
 
 
-        if ($(".Anime_genres__STQYR a").length < 0) {
-            AnimeInfo.genre.push($(".Anime_genres__STQYR a").attr("title"));
-        } else {
-            $(".Anime_genres__STQYR .Anime_item__q7dUv").each((i, e) => {
-                AnimeInfo.genre.push($(e).attr("title"));
-            })
-        }
-        if ($(".Anime_details__1vF_2 .Anime_listEpisodes__1KGdz .EpisodeCard_container__8iff3").length < 0) {
+        animeInfoParseObj.episodes.map(e => {
             let AnimeEpisode = {
                 name: String(),
-                link: String(),
+                image: String(),
+                episode_link: String(),
                 episode_number: Number()
             }
+            AnimeEpisode.name = animeInfoParseObj.name
+            AnimeEpisode.image = "https://www.themoviedb.org/t/p/original" +  animeInfoParseObj.banner + "?&w=280&q=95"
+            AnimeEpisode.episode_number = e.number
+            AnimeEpisode.episode_link = animeInfoUrl + "/episode/" + e.number;
 
-            AnimeEpisode.name = $("Anime_details__1vF_2 .Anime_listEpisodes__1KGdz .EpisodeCard_container__8iff3").find(".EpisodeCard_text__nITZ3 .EpisodeCard_title__1JJd5 .EpisodeCard_limit__sn9IQ").text();
-            AnimeEpisode.episode_number = $(".Anime_details__1vF_2 .Anime_listEpisodes__1KGdz .EpisodeCard_container__8iff3").find(".EpisodeCard_text__nITZ3 .EpisodeCard_title__1JJd5 .EpisodeCard_episode__Vs_Do").text().replace("Ep. ");
-            AnimeEpisode.link = "/anime/animelatinohd/" + title + "/episode/" + AnimeEpisode.episode_number;
             AnimeInfo.episodes.push(AnimeEpisode);
-        } else {
-            $(".Anime_details__1vF_2 .Anime_listEpisodes__1KGdz .EpisodeCard_container__8iff3").each((i, e) => {
-                let AnimeEpisode = {
-                    name: String(),
-                    link: String(),
-                    episode_number: Number()
-                }
-                AnimeEpisode.name = $(e).find(".EpisodeCard_text__nITZ3 .EpisodeCard_title__1JJd5 .EpisodeCard_limit__sn9IQ").text();
-                AnimeEpisode.episode_number = $(e).find(".EpisodeCard_text__nITZ3 .EpisodeCard_title__1JJd5 .EpisodeCard_episode__Vs_Do").text().replace("Ep. ", "");
-                AnimeEpisode.link = "/anime/animelatinohd/" + title + "/episode/" + AnimeEpisode.episode_number;
-                AnimeInfo.episodes.push(AnimeEpisode);
-            })
-        }
-
+        })
 
         res.status(200).send(AnimeInfo);
     } catch (error) {
@@ -100,36 +82,31 @@ animelatinohdFunctions.animeinfo = async (req, res) => {
     }
 }
 
-animelatinohdFunctions.animeEpisodeinfo = async (req, res) => {
-
+animelatinohdfunctions.animeEpisodeinfo = async (req, res) => {
     let { title, episode } = req.params
+
     try {
         const { data } = await axios.get(`${url}/ver/${title}/${episode}`);
         const $ = cheerio.load(data);
         const AnimeEpisodeInfo = new AnimeEpisode();
 
-        AnimeEpisodeInfo.title_episode = $(".Episode_column__1WR-L .Episode_info__CduBf .Episode_details__14-Ri .Episode_info__CduBf h1 a").text()
+        let animeEpisodeParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
+        let animeEpisodeUrl = "/anime/animelatinohd/" + animeEpisodeParseObj.anime.slug
 
-        $(".Episode_column__1WR-L .Episode_actions__JiaFb .Episode_button__3yz57").each((i, e) => {
 
-            if ($(e).text().includes("Anterior")) {
-                !AnimeEpisodeInfo.next_episode ? AnimeEpisodeInfo.next_episode = false : ""
-                AnimeEpisodeInfo.prev_episode = $(e).attr("href").replace("/ver/" + title + "/", "/anime/animelatinohd/" + title + "/episode/")
-            } else if ($(e).text().includes("Siguiente")) {
-                !AnimeEpisodeInfo.prev_episode ? AnimeEpisodeInfo.prev_episode = false : ""
-                AnimeEpisodeInfo.next_episode = $(e).attr("href").replace("/ver/" + title + "/", "/anime/animelatinohd/" + title + "/episode/")
-            }
+        AnimeEpisodeInfo.title_episode = animeEpisodeParseObj.anime.name
 
-        })
+        animeEpisodeParseObj.anterior ? AnimeEpisodeInfo.prev_episode = animeEpisodeUrl + "/episode/" + animeEpisodeParseObj.anterior.number : AnimeEpisodeInfo.prev_episode = false
+        animeEpisodeParseObj.siguiente ? AnimeEpisodeInfo.next_episode = animeEpisodeUrl + "/episode/" + animeEpisodeParseObj.siguiente.number : AnimeEpisodeInfo.next_episode = false
+        
+        AnimeEpisodeInfo.list_episode = animeEpisodeUrl
 
-        AnimeEpisodeInfo.list_episode = `/anime/animelatinohd/${title}`
 
-        let ServersParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
 
         $("#languaje option").each((i, el) => {
             let v = $(el).val();
             let t = $(el).text();
-            ServersParseObj.players[v].map(e => {
+            animeEpisodeParseObj.players[v].map(e => {
                 let ServerObj = {
                     lang_id: String(),
                     lang_name: String(),
@@ -151,37 +128,220 @@ animelatinohdFunctions.animeEpisodeinfo = async (req, res) => {
     }
 }
 
-
-animelatinohdFunctions.animeRecentEpisodesinfo = async (req, res) => {
+animelatinohdfunctions.animeRecentEpisodesinfo = async (req, res) => {
     try {
         const { data } = await axios.get(`${url}`);
         const $ = cheerio.load(data);
+        const AnimeRecentEpisodesObjInfo = new Array();
 
-        const AnimeRecentEpisodesObjInfo = new AnimeRecentEpisodes();
         let ObjRelease = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.releases
+
         ObjRelease.map(e => {
             let AnimeRecent = {
                 title: String(),
+                self: String(),
                 poster: String(),
                 banner: String(),
                 release: String(),
+                anime_link: String(),
                 episode_number: Number(),
                 episode: String()
             }
+
             AnimeRecent.title = e.anime.name
+            AnimeRecent.self = e.anime.slug
             AnimeRecent.poster = "https://www.themoviedb.org/t/p/original" + e.anime.poster + "?&w=53&q=95"
             AnimeRecent.banner = "https://www.themoviedb.org/t/p/original" + e.anime.banner + "?&w=280&q=95"
             AnimeRecent.release = e.created_at
             AnimeRecent.episode_number = e.number
+            AnimeRecent.link = "/anime/animelatinohd/" + e.anime.slug
             AnimeRecent.episode = "/anime/animelatinohd/" + e.anime.slug + "/episode/" + e.number
-            AnimeRecentEpisodesObjInfo.releases.push(AnimeRecent);
+            AnimeRecentEpisodesObjInfo.push(AnimeRecent);
         })
-      
+
         res.status(200).send(AnimeRecentEpisodesObjInfo);
     } catch (error) {
         return false;
     }
 
 }
-export default animelatinohdFunctions
+
+
+animelatinohdfunctions.animeMostPopular = async (req, res) => {
+    try {
+        const { data } = await axios.get(`${url}/animes/populares`);
+        const $ = cheerio.load(data);
+        const AnimeMostPopularObjInfo = new Array();
+
+        let ObjRelease = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data.popular_today
+
+        ObjRelease.map(e => {
+            let AnimeMostPopular = {
+                title: String(),
+                self: String(),
+                poster: String(),
+                anime_link: String(),
+                release: String(),
+            }
+
+            AnimeMostPopular.title = e.name
+            AnimeMostPopular.self = e.slug
+            AnimeMostPopular.poster = "https://www.themoviedb.org/t/p/original" + e.poster + "?&w=53&q=95"
+            AnimeMostPopular.anime_link = "/anime/animelatinohd/" + e.slug
+            AnimeMostPopular.release = e.aired
+            AnimeMostPopularObjInfo.push(AnimeMostPopular);
+        })
+
+        res.status(200).send(AnimeMostPopularObjInfo);
+    } catch (error) {
+        return false;
+    }
+
+}
+
+animelatinohdfunctions.animeMostviewed = async (req, res) => {
+    try {
+        const { data } = await axios.get(`${url}/animes/mas-vistos`);
+        const $ = cheerio.load(data);
+        const AnimeMostviewedObjInfo = new Array();
+
+        let ObjRelease = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data.being_watched
+
+        ObjRelease.map(e => {
+            let AnimeMostviewed = {
+                title: String(),
+                self: String(),
+                poster: String(),
+                anime_link: String(),
+                release: String(),
+            }
+
+            AnimeMostviewed.title = e.name
+            AnimeMostviewed.self = e.slug
+            AnimeMostviewed.poster = "https://www.themoviedb.org/t/p/original" + e.poster + "?&w=53&q=95"
+            AnimeMostviewed.anime_link = "/anime/animelatinohd/" + e.slug
+            AnimeMostviewed.release = e.aired
+            AnimeMostviewedObjInfo.push(AnimeMostviewed);
+        })
+
+        res.status(200).send(AnimeMostviewedObjInfo);
+    } catch (error) {
+        return false;
+    }
+
+}
+
+animelatinohdfunctions.animeCalendar = async (req, res) => {
+    try {
+        const { data } = await axios.get(`${url}/animes/calendario`);
+        const $ = cheerio.load(data);
+
+        /**
+         * Order broadcast(1 == Now, 2 == morning, 3 == Saturday, 4 == Sunday, 5 == Monday, 6 == Tuesday, 7 == Wednesday )
+         */
+
+        let ObjRelease = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.simulcast
+        let ObjCast = [
+            {
+                broadcast: "1",
+                broadcast_timeText: "Now",
+                broadcast_list: Array()
+            },
+            {
+                broadcast: "2",
+                broadcast_timeText: "Morning",
+                broadcast_list: Array()
+            },
+            {
+                broadcast: "3",
+                broadcast_timeText: "Saturday",
+                broadcast_list: Array()
+            },
+            {
+                broadcast: "4",
+                broadcast_timeText: "Sunday",
+                broadcast_list: Array()
+            },
+            {
+                broadcast: "5",
+                broadcast_timeText: "Monday",
+                broadcast_list: Array()
+            },
+            {
+                broadcast: "6",
+                broadcast_timeText: "Tuesday",
+                broadcast_list: Array()
+            },
+            {
+                broadcast: "7",
+                broadcast_timeText: "Wednesday",
+                broadcast_list: Array()
+            },
+        ]
+
+        ObjCast.map(e => {
+            ObjRelease[e.broadcast].map(el => {
+                let animeCalendarObj = {
+                    title: String(),
+                    self: String(),
+                    banner: String(),
+                    broadcast: String(),
+                    lastEpisode: Number(),
+                    anime_link: String(),
+                    release: String(),
+                }
+
+                animeCalendarObj.title = el.name
+                animeCalendarObj.self = el.slug
+                animeCalendarObj.banner = "https://www.themoviedb.org/t/p/original" + el.banner + "?&w=280&q=95"
+                animeCalendarObj.anime_link = "/anime/animelatinohd/" + el.slug
+                animeCalendarObj.broadcast = el.broadcast
+                animeCalendarObj.release = el.date
+                animeCalendarObj.lastEpisode = el.lastEpisode
+
+                e.broadcast_list.push(animeCalendarObj)
+            })
+
+        })
+
+        res.status(200).send(ObjCast);
+    } catch (error) {
+        return false;
+    }
+
+}
+
+animelatinohdfunctions.animeSearch = async (req, res) => {
+
+    let {search} = req.params
+
+    try {
+        const { data } = await axios.get(`${urlapi}/anime/search?search=${search}`);
+        const animeSearchParse = []
+       
+        data.map(e => {
+            let animeSearchObj = {
+                title: String(),
+                self: String(),
+                anime_link: String(),
+                poster: String()
+            }
+
+            animeSearchObj.title = e.name
+            animeSearchObj.self = e.slug
+            animeSearchObj.anime_link = "/anime/animelatinohd/" + e.slug
+            animeSearchObj.poster = "https://www.themoviedb.org/t/p/original" + e.poster + "?&w=53&q=95"
+
+            animeSearchParse.push(animeSearchObj)
+        })
+       
+ 
+        res.status(200).send(animeSearchParse);
+    } catch (error) {
+        return false;
+    }
+
+}
+
+export default animelatinohdfunctions
 
