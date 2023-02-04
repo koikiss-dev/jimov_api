@@ -4,6 +4,7 @@ import bodyparser from "body-parser";
 import index from "./routes/app.js";
 import flv from './routes/v1/anime/animeflv/animeflvRoutes.js'
 import zoroRout from './routes/v1/anime/zoro/animeZoroRoutes.js'
+import otakutv from './routes/v1/anime/otakutv/otakutvRoute.js'
 import animelatinoRoutes from './routes/v1/anime/animelatinohd/animelatinohdRoutes.js'
 import helmet from "helmet";
 
@@ -37,6 +38,9 @@ app.use(zoroRout);
 /* animelatinohd */
 
 app.use(animelatinoRoutes);
+
+/*otakutv */
+app.use(otakutv)
 
 //init
 app.listen(port, () => {
