@@ -8,35 +8,35 @@ import u from "../../../../scraper/sites/anime/otakuTV/getUsersActive.js";
 const r = Router();
 
 //coming soon
-r.get("/anime/otakuTV/coming-soon", (req, res)=>{
+r.get("/anime/otakuTV/comingsoon", (req, res)=>{
     c.getComingSoon().then(f =>{
         res.send(f)
     })
 })
 
 //latino anime
-r.get("/anime/otakuTV/anime-latin", (req, res) => {
+r.get("/anime/otakuTV/animelatin", (req, res) => {
     l.getAnimeLatino().then(f => {
         res.send(f)
     })
 })
 
 //news
-r.get("/anime/otakuTV/anime-new", (req, res) => {
+r.get("/anime/otakuTV/animenew", (req, res) => {
     n.getAnimeNew().then(f => {
         res.send(f)
     })
 })
 
 //anime ranking 
-r.get("/anime/otakuTV/anime-ranking", (req, res) => {
+r.get("/anime/otakuTV/animeranking", (req, res) => {
     ra.getAnimeRanking().then(f => {
         res.send(f)
     })
 })
 
 //user-ranking
-r.get("/anime/otakuTV/user-top", (req, res) => {
+r.get("/anime/otakuTV/usertop", (req, res) => {
     u.getUsersActive().then(f => {
         res.send(f)
     })
