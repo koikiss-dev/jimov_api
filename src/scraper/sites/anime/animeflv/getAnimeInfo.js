@@ -46,8 +46,8 @@ async function animeInfo(anime) {
       const episode = new EpisodeListShema(
         $(e).children(".Title").text().trim(),
         $(e).children("p").last().text().trim(),
+$(e).children("figure").find(".lazy").attr("src")
         `/anime/episode${l}`.replace("/anime", "/anime/flv"),
-        $(e).children("figure").find(".lazy").attr("src")
       );
       const data_anime = {};
       /*  const data_anime = {
