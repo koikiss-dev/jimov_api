@@ -33,7 +33,7 @@ export class GetAnimeInfo {
      * @param {*} anime_image String()
      * @param {*} premiere String()
      * @author yako
-     * @description please use: episode_title: String(), episode_number: String(), image_espisode: String(), link_episode: String()
+     * @description please use: episode_title: String(), episode_number: String(), image_episode: String(), link_episode: String()
      */
   constructor(type = null, anime_image = null, premiere = null) {
     this.anime_title = String();
