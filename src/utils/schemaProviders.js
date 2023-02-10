@@ -4,14 +4,14 @@
 /*search*/
 export class AnimeSearch {
   /**
-   * 
-   * @param {*} anime_title 
-   * @param {*} anime_image 
-   * @param {*} link_anime 
-   * @param {*} type 
-   * @param {*} current_page 
+   *
+   * @param {*} anime_title
+   * @param {*} anime_image
+   * @param {*} link_anime
+   * @param {*} type
+   * @param {*} current_page
    */
-  constructor(anime_title, anime_image, link_anime, type, current_page){
+  constructor(anime_title, anime_image, link_anime, type, current_page) {
     this.anime_title = anime_title;
     this.anime_image = anime_image;
     this.link_anime = link_anime;
@@ -43,13 +43,13 @@ export class EpisodeListShema {
 }
 export class Cronology {
   /**
-   * 
-   * @param {*} anime_title 
-   * @param {*} link 
+   *
+   * @param {*} anime_title
+   * @param {*} link
    */
-  constructor(anime_title, link){
+  constructor(anime_title, link) {
     this.anime_title = anime_title;
-    this.link_anime = link
+    this.link_anime = link;
   }
 }
 export class GetAnimeInfo {
@@ -97,7 +97,7 @@ export class EpisodeServer {
    * @param {*} url
    */
   constructor(name, url) {
-    this.name =name;
+    this.name = name;
     this.url = url;
   }
 }
