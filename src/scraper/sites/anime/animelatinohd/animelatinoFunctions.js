@@ -1,26 +1,10 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 
+import { GetAnimeInfo } from "../../../../utils/schemaProviders.js";
 const animelatinohdfunctions = {}
 const url = "https://www.animelatinohd.com"
 const urlapi = "https://api.animelatinohd.com/api"
-class Anime {
-    constructor() {
-        this.title = String();
-        this.self = String();
-        this.description = String();
-        this.poster = String();
-        this.banner = String();
-     
-
-        this.status = String();
-        this.release = String();
-
-        this.genre = new Array();
-        this.alternatetitles = new Array();
-        this.episodes = new Array();
-    }
-}
 
 class AnimeEpisode {
     constructor() {
@@ -41,39 +25,40 @@ animelatinohdfunctions.animeinfo = async (req, res) => {
     try {
         const { data } = await axios.get(`${url}/anime/${title}`);
         const $ = cheerio.load(data);
-        const AnimeInfo = new Anime();
+        const AnimeInfo = new GetAnimeInfo();
 
         let animeInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
         let animeInfoUrl = "/anime/animelatinohd/" + animeInfoParseObj.slug
 
 
         // Status (0 == finalized,1 == on broadcast)
+        // Type (1 == "Movie")
+        AnimeInfo.anime_title = animeInfoParseObj.name
+        AnimeInfo.alternative_title.push(...animeInfoParseObj.name_alternative.split(","))
+        AnimeInfo.synopsis[0].description = animeInfoParseObj.overview
+        AnimeInfo.synopsis[0].keywords.push(...animeInfoParseObj.genres.split(","))
+        AnimeInfo.synopsis[0].status = animeInfoParseObj.status == 1 ? "En emisión" : "Finalizado" 
+        AnimeInfo.anime_image = "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.poster + "?&w=53&q=95"
+        AnimeInfo.type = animeInfoParseObj.type
+        AnimeInfo.synopsis[0].premiere = animeInfoParseObj.aired
 
-        AnimeInfo.title = animeInfoParseObj.name
-        AnimeInfo.self = animeInfoParseObj.slug
-        AnimeInfo.description = animeInfoParseObj.overview
-        AnimeInfo.poster = "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.poster + "?&w=53&q=95"
-        AnimeInfo.banner = "https://www.themoviedb.org/t/p/original" +  animeInfoParseObj.banner + "?&w=280&q=95"
-
-        AnimeInfo.status = animeInfoParseObj.status
-        AnimeInfo.release = animeInfoParseObj.aired
-        AnimeInfo.genre.push(...animeInfoParseObj.name_alternative.split(","))
-        AnimeInfo.alternatetitles.push(...animeInfoParseObj.genres.split(","))
-
+        //AnimeInfo.self = animeInfoParseObj.slug
+   
+        //AnimeInfo.banner = "https://www.themoviedb.org/t/p/original" +  animeInfoParseObj.banner + "?&w=280&q=95"
 
         animeInfoParseObj.episodes.map(e => {
             let AnimeEpisode = {
-                name: String(),
-                image: String(),
-                episode_link: String(),
-                episode_number: Number()
+                episode_title: String(),
+                episode_number: Number(),
+                image_episode: String(),
+                link_episode: String()
             }
-            AnimeEpisode.name = animeInfoParseObj.name
-            AnimeEpisode.image = "https://www.themoviedb.org/t/p/original" +  animeInfoParseObj.banner + "?&w=280&q=95"
-            AnimeEpisode.episode_number = e.number
-            AnimeEpisode.episode_link = animeInfoUrl + "/episode/" + e.number;
+            AnimeEpisode.episode_title = animeInfoParseObj.name
+            AnimeEpisode.episode_number = e.number + ""
+            AnimeEpisode.image_episode = "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.banner + "?&w=280&q=95"
+            AnimeEpisode.link_episode = animeInfoUrl + "/episode/" + e.number;
 
-            AnimeInfo.episodes.push(AnimeEpisode);
+            AnimeInfo.episode_list.push(AnimeEpisode);
         })
 
         res.status(200).send(AnimeInfo);
@@ -98,7 +83,7 @@ animelatinohdfunctions.animeEpisodeinfo = async (req, res) => {
 
         animeEpisodeParseObj.anterior ? AnimeEpisodeInfo.prev_episode = animeEpisodeUrl + "/episode/" + animeEpisodeParseObj.anterior.number : AnimeEpisodeInfo.prev_episode = false
         animeEpisodeParseObj.siguiente ? AnimeEpisodeInfo.next_episode = animeEpisodeUrl + "/episode/" + animeEpisodeParseObj.siguiente.number : AnimeEpisodeInfo.next_episode = false
-        
+
         AnimeEpisodeInfo.list_episode = animeEpisodeUrl
 
 
@@ -313,12 +298,12 @@ animelatinohdfunctions.animeCalendar = async (req, res) => {
 
 animelatinohdfunctions.animeSearch = async (req, res) => {
 
-    let {search} = req.params
+    let { search } = req.params
 
     try {
         const { data } = await axios.get(`${urlapi}/anime/search?search=${search}`);
         const animeSearchParse = []
-       
+
         data.map(e => {
             let animeSearchObj = {
                 title: String(),
@@ -334,8 +319,8 @@ animelatinohdfunctions.animeSearch = async (req, res) => {
 
             animeSearchParse.push(animeSearchObj)
         })
-       
- 
+
+
         res.status(200).send(animeSearchParse);
     } catch (error) {
         return false;
