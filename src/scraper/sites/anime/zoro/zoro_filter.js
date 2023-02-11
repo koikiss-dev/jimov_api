@@ -1,10 +1,9 @@
-
 import axios from "axios";
 import * as ch from "cheerio";
-
+import { AnimeSearch, SearchArray } from "../../../../utils/schemaProviders.js";
 
 //https://zoro.to/filter?type=2&rated=1&score=1&season=1&language=1&sy=2023&sort=recently_updated&genres=1
-const url_zoro = 'https://zoro.to';
+const url_zoro = "https://zoro.to";
 
 const params = [
   {
@@ -145,35 +144,22 @@ async function filterAnime(
     const $ = ch.load(data);
     const most_cards = $("div.film_list div.film_list-wrap div.flw-item");
     const page_index = $("div.pre-pagination nav ul li.active");
-    const data_return = [];
+
+    const data_return = new SearchArray();
     most_cards.each((i, e) => {
-      const data_anime = {
-        title: "",
-        episode_number: "",
-        type: "",
-        img: "",
-        link: "",
-      };
-      data_anime.title = $(e).find("a.dynamic-name").text().trim();
-      data_anime.episode_number = $(e).find("div.tick-eps").text().trim();
-      data_anime.type = $(e)
-        .find("div.fd-infor")
-        .children()
-        .first()
-        .text()
-        .trim();
-      data_anime.img = $(e)
-        .find("div.film-poster")
-        .find("img.film-poster-img")
-        .attr("data-src");
-      data_anime.link = $(e).find("a.dynamic-name").attr("href");
-      data_return.push(data_anime);
+      const anime = new AnimeSearch(
+        $(e).find("a.dynamic-name").text().trim(),
+        $(e)
+          .find("div.film-poster")
+          .find("img.film-poster-img")
+          .attr("data-src"),
+        `/anime/zoro/name${$(e).find("a.dynamic-name").attr("href")}`,
+        $(e).find("div.fd-infor").children().first().text().trim()
+      );
+      data_return.data.push(anime);
     });
     page_index.each((i, e) => {
-      const index_page = { page: "" };
-      index_page.page = $(e).children("a").text().trim();
-      /* index_page.total_pages = $(i).index() */
-      data_return.push(index_page);
+      data_return.page = $(e).children("a").text().trim();
     });
     return data_return;
   } catch (error) {

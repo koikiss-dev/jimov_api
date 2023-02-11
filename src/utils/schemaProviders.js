@@ -11,17 +11,17 @@ export class AnimeSearch {
    * @param {*} type
    * @param {*} current_page
    */
-  constructor(anime_title, anime_image, link_anime, type, current_page) {
+  constructor(anime_title, anime_image, link_anime, type) {
     this.anime_title = anime_title;
     this.anime_image = anime_image;
     this.link_anime = link_anime;
     this.type = type;
-    this.current_page = current_page;
   }
 }
 export class SearchArray {
-  constructor() {
+  constructor(page) {
     this.data = new Array();
+    this.page = page
   }
 }
 /*search*/
@@ -84,6 +84,7 @@ export class GetAnimeInfo {
         chronology: [],
       },
     ];
+    this.anime_similar = new Array();
     this.episode_list = new Array();
   }
 }

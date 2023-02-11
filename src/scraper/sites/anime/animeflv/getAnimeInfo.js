@@ -64,8 +64,5 @@ $(e).children("figure").find(".lazy").attr("src"),
   }
 }
 
-animeInfo("majutsushi-orphen-hagure-tabi-urbanramahen").then((f) => {
-  console.log(f);
-});
 
 export default { animeInfo };

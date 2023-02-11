@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as ch from "cheerio";
-
+import { AnimeSearch, SearchArray } from "../../../../utils/schemaProviders.js";
 
 const url = 'https://www2.animeflv.bz';
 
@@ -18,22 +18,17 @@ async function Filter(gen, year, type, status, ord, page) {
     });
     const $ = ch.load(data);
     const info = $("ul.ListAnimes li article.Anime div.Description");
-    const data_filter = [{ page: page || "1" }];
+    const data_anime = new SearchArray(page || "1")
 
     info.each((i, e) => {
-      const return_object = { title: "", img: "", type: "", link: "" };
-      return_object.title = $(e).find(".Title").last().text().trim();
-      return_object.img = $("figure").children("img").attr("src");
-      return_object.type = $(e).find("p").children("span.Type").text().trim();
-      return_object.link = $(e).find("a").attr("href").replace('/anime', '/anime/flv');
-      data_filter.push(return_object);
+      const info = new AnimeSearch($(e).find(".Title").last().text().trim(), $("figure").children("img").attr("src"), $(e).find("a").attr("href").replace('/anime', '/anime/flv'), $(e).find("p").children("span.Type").text().trim())
+      data_anime.data.push(info)
     });
 
-    return data_filter;
+    return data_anime;
   } catch (error) {
     return false;
   }
 }
-
 
 export default { Filter };
