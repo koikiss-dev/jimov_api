@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 
-import { GetAnimeInfo } from "../../../../utils/schemaProviders.js";
+import { GetAnimeInfo } from "../../../../utils/shemaProvidersExperimental";
 const animelatinohdfunctions = {}
 const url = "https://www.animelatinohd.com"
 const urlapi = "https://api.animelatinohd.com/api"
