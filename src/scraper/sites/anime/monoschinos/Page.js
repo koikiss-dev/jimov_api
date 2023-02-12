@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { Episode } from "../../../../utils/episode";
+import { Anime, Episode, Image } from "../../../../utils/schemaProviders.js";
 
 const PageInfo = {
     url: 'https://monoschinos2.com' // url page
@@ -42,7 +42,7 @@ async function getLastEpisodes() {
         $('div.heroarea div.heroarea1 div.row').children().each(async (i, element) => {
             if ($(element).children().length != 0) {
                 let anime = [ null ];
-                episodes.push(new Episode = {
+                episodes.push( {
                     name:    $(element).find('h2.animetitles').text().trim(),
                     image:   $(element).find('div.animeimgdiv img.animeimghv').attr('data-src'),
                     url:     $(element).find('a').attr('href'),
@@ -61,34 +61,67 @@ async function getLastEpisodes() {
 
 /**
  * 
- * @param {*} url 
- * @returns 
+ * @param {Cheerio<Element>} $ 
+ * @returns {string[]}
  */
-async function getAnimeInfo(url) {
-    let animes = [];
-    const $ = cheerio.load((await axios.get(url)).data);
-    return {
-        name: $('div.chapterdetails').find('h1').text(),
-        url: url,
-        description: $('div.chapterdetails p.textComplete').text().trim(),
-        image: {
-            banner: $('div.herobg img').attr('src'),
-            url: $('div.chapterpic img').attr('src')
-        }
-    };
+function getGenres($) {
+    let genres = [];
+    $('div.chapterdetls2 table tbody a').each((i, element) => {
+        genres.push($(element).text().trim())
+    });
+    return genres;
 }
 
 /**
  * 
- * @returns 
+ * @param {string} url 
+ * @returns {Anime}
+ */
+async function getAnime(url) {
+    const $ = cheerio.load((await axios.get(url)).data);
+    const anime    = new Anime();
+    anime.name     = $('div.chapterdetails').find('h1').text();
+    anime.url      = url;
+    anime.synopsis = $('div.chapterdetls2 p').text().trim();
+    anime.genres   = getGenres($);
+    anime.image    = new Image($('div.chapterpic img').attr('src'), $('div.herobg img').attr('src'));
+    anime.active   = 'estreno' === $('div.butns button.btn1').text().toLowerCase().trim()
+
+    $('div.heromain2 div.allanimes div.row').children().each((i, element) => {
+        const episode  = new Episode();
+        episode.number = parseInt($(element).attr('data-episode').trim());
+        episode.image  = $(element).find('img.animeimghv').attr('data-src');
+        episode.name   = $(element).find('img.animeimghv').attr('alt');
+        episode.url    = $(element).find('a').attr('href');
+        anime.episodes.push(episode);
+    });
+
+    $('div.chapterdetails nav').children().each((i, element) => {
+        if (i == 1) {
+            const date = $(element).find('ol.breadcrumb li.breadcrumb-item').text();
+            for (let i = date.length - 1; i >= 0; i--) {
+                if (date[i] === ' ') {
+                    anime.year = parseInt(date.substring(i, date.length));
+                    return false;
+                }
+            }
+        }
+    });
+
+    return anime;
+}
+
+/**
+ * 
+ * @returns {Anime[]}
  */
 async function getLastAnimes() {
     try {
-        let animes = [];
+        let animes = [Anime];
         const $ = cheerio.load((await axios.get(`${ PageInfo.url }/emision`)).data);
         $('div.heroarea div.heromain div.row').children().each(async (i, element) => {
             if ($(element).find('a').attr('title') != undefined) {
-                animes.push(getAnimeInfo($(element).find('a').attr('href')));
+                animes.push(await getAnime($(element).find('a').attr('href')));
             }
         });
         return animes;
@@ -98,6 +131,6 @@ async function getLastAnimes() {
     return null;
 }
 
-await getLastAnimes()
+console.log(await getAnime('https://monoschinos2.com/anime/maou-gakuin-no-futekigousha-shijou-saikyou-no-maou-no-shiso-tensei-shite-shison-tachi-no-gakkou-e-kayou-ii-sub-espanol'))
 
 export default { getLastEpisodes, getLastAnimes };
