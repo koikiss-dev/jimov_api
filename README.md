@@ -35,8 +35,8 @@ npm run server
 
 ## **Technologies Used**
 
-*JavaScript: The primary programming language used for building the API.
-*Express.js: The framework used for building the API. It is a fast and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
+* JavaScript: The primary programming language used for building the API.
+* Express.js: The framework used for building the API. It is a fast and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
 
 ## **How to Contribute**
 
