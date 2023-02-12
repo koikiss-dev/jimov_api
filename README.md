@@ -1,6 +1,6 @@
 # JIMOV **- Media Content API**
 
-![](src/images/JIMOV.png)
+![](src/images/JIMOV_logo.png)
 
 ## **Overview**
 
@@ -34,6 +34,6 @@ npm run server
 This is an open source project.
 If you are interested in contributing to this project, please fork the repository and submit a pull request.
 
-## **LICENESE**
+## **LICENSE**
 
 https://github.com/josesim/jimov_api/blob/main/LICENSE
