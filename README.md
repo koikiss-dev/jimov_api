@@ -1,6 +1,6 @@
 # JIMOV **- Media Content API**
 
-![](src/images/JIMOV_logo.png)
+![](../src/images/JIMOV_logo.png)
 
 ## **Overview**
 
