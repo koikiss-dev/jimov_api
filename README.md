@@ -3,7 +3,6 @@
 
 ![image description](https://github.com/josesim/jimov_api/blob/main/src/images/JIMOV_logo.png)
 
-![badge](https://img.shields.io/aur/last-modified/README.md)
 
 ## **Overview**
 
@@ -33,6 +32,9 @@ The API can be started by running the following command:
 ```bash
 npm run server
 ```
+
+## **Features**
+
 
 ## **How to Contribute**
 
