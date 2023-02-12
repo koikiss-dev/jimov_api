@@ -13,10 +13,10 @@ export class AnimeSearch {
      * @param {*} type
      * @param {*} current_page
      */
-    constructor(anime_title, anime_image, link_anime, type) {
+    constructor(anime_title, anime_image, anime_link, type) {
         this.anime_title = anime_title;
         this.anime_image = anime_image;
-        this.link_anime = link_anime;
+        this.anime_link = anime_link;
         this.type = type;
     }
 }
@@ -35,14 +35,14 @@ export class GetAnimeEpisodeList {
     /**
      * @param {*} episode_title String()
      * @param {*} episode_number String()
-     * @param {*} image_espisode String()
-     * @param {*} link_episode String()
+     * @param {*} episode_image String()
+     * @param {*} episode_link String()
      */
-    constructor(episode_title, episode_number, image_espisode, link_episode) {
+    constructor(episode_title, episode_number, episode_image, episode_link) {
         this.episode_title = episode_title;
         this.episode_number = episode_number;
-        this.image_espisode = image_espisode;
-        this.link_episode = link_episode;
+        this.episode_image = episode_image;
+        this.episode_link = episode_link;
     }
 }
 

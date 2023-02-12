@@ -49,8 +49,8 @@ animelatinohdfunctions.animeinfo = async (req, res) => {
         animeInfoParseObj.episodes.map(e => {
             EpisodeInfo.episode_title = animeInfoParseObj.name
             EpisodeInfo.episode_number = e.number + ""
-            EpisodeInfo.image_episode = "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.banner + "?&w=280&q=95"
-            EpisodeInfo.link_episode = animeInfoUrl + "/episode/" + e.number;
+            EpisodeInfo.episode_image = "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.banner + "?&w=280&q=95"
+            EpisodeInfo.episode_link = animeInfoUrl + "/episode/" + e.number;
 
             AnimeInfo.episode_list.push(EpisodeInfo);
         })
