@@ -241,7 +241,7 @@ export class Anime {
    * Specifies the chronological order of the anime
    * @type {Chronology[]}
    */
-  chronology;
+  chronology = [];
   /**
    * Anime episodes available. If the anime is on air it will only show the
    * available episodes, and if it is not on air it will show all the episodes.
