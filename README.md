@@ -3,6 +3,8 @@
 
 ![image description](https://github.com/josesim/jimov_api/blob/main/src/images/JIMOV_logo.png)
 
+![badge](https://img.shields.io/aur/last-modified/README.md)
+
 ## **Overview**
 
 JIMOV - Media Content API is a comprehensive platform for finding and retrieving information on a wide range of multimedia content, including anime, movies, series, news, and manga. With its simple and intuitive interface, users can search for content using keywords and view detailed information on each item, including its title, description, and language. The API also provides users with the ability to filter search results based on their preferred language and content type.
