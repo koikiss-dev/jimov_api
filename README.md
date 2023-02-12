@@ -1,7 +1,7 @@
 # JIMOV **- Media Content API**
 
-![](../src/images/JIMOV_logo.png)
-![image link](https://github.com/josesim/jimov_api/blob/[branch]/image.jpg?raw=true)
+
+![image description](https://github.com/josesim/jimov_api/blob/main/src/images/JIMOV_logo.png)
 
 ## **Overview**
 
