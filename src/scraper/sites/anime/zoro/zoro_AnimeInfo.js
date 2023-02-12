@@ -1,10 +1,8 @@
 import axios from "axios";
 import * as ch from "cheerio";
 import {
-  GetAnimeInfo,
-  EpisodeListShema,
-  Cronology,
-} from "../../../../utils/schemaProviders.js";
+  GetAnimeInfo
+} from "../../../../utils/shemaProvidersExperimental.js";
 
 const url_zoro = "https://zoro.to";
 
@@ -23,7 +21,8 @@ async function AnimeInfo(id) {
     const $ = ch.load(data);
     const anisc_info = []; //datos que tienen la misma clase por lo tanto es confuzo acceder sin hacer tanto desorden
     const anime = new GetAnimeInfo();
-    const items_title = $("div.anisc-info div.item-title").each((i, e) => {
+
+    $("div.anisc-info div.item-title").each((i, e) => {
       const data_span = $(e).children("span.name").text().trim();
       const data_a = $(e).children("a.name").text().trim();
       anisc_info.push(data_span, data_a);
@@ -32,11 +31,9 @@ async function AnimeInfo(id) {
     const with_out_spaces = anisc_info.filter((el) => el !== ""); //eliminar espacios innecesarios del array anisc_info
 
     /*titulo y descripcion */
-    anime.anime_title = $("h2.film-name").text().trim();
-    anime.synopsis[0].description = $("div.film-description div.text")
-      .text()
-      .trim();
-    anime.anime_image = $("img.film-poster-img").attr("src");
+    anime.title = $("h2.film-name").text().trim();
+    anime.synopsis[0].description = $("div.film-description div.text").text().trim();
+    anime.image = $("img.film-poster-img").attr("src");
     anime.alternative_title.push(with_out_spaces[0]);
     anime.synopsis[0].status = with_out_spaces[5];
     anime.synopsis[0].premiere = with_out_spaces[2];
@@ -67,18 +64,18 @@ async function AnimeInfo(id) {
         ],
       },
     ]; */
-    const genres = $("div.anisc-info div.item-list a").each((i, e) => {
+    $("div.anisc-info div.item-list a").each((i, e) => {
       const gen = $(e).text().trim();
       anime.synopsis[0].keywords.push(gen);
       //information[0].synopsis[0].link_tags.push(link);
     });
 
-    const related = $("div.anif-block-ul ul li").each((i, e) => {
-      const cr = new Cronology(
-        $(e).find("h3.film-name").children("a").text().trim(),
-        `/anime/zoro/name${$(e).find("h3.film-name").children("a").attr("href")}`
-      );
-      anime.synopsis[0].chronology.push(cr);
+    $("div.anif-block-ul ul li").each((i, e) => {
+      const cronology = {
+        title:$(e).find("h3.film-name").children("a").text().trim(),
+        link: `/anime/zoro/name${$(e).find("h3.film-name").children("a").attr("href")}`
+      }
+      anime.synopsis[0].chronology.push(cronology);
     });
     return anime;
   } catch (error) {

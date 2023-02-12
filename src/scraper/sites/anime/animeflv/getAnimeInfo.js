@@ -2,8 +2,8 @@ import axios from "axios";
 import * as ch from "cheerio";
 
 import {
-  Anime, Episode, Image, Chronology
-} from "../../../../utils/schemaProviders.js";
+  GetAnimeInfo
+} from "../../../../utils/shemaProvidersExperimental.js";
 
 const url = "https://www2.animeflv.bz";
 
@@ -20,21 +20,23 @@ async function animeInfo(anime) {
     const status = $("p.AnmStts span").text().trim();
     const synopsis = $("div.Description").text().trim();
     const episodes = $(".ListCaps li a");
-    const anime_info = new Anime();
-    anime_info.name = title;
+    const anime_info = new GetAnimeInfo();
+
+    anime_info.title = title;
+    anime_info.type = type;
     anime_info.image = img;
-    anime_info.active = status;
-    anime_info.synopsis = synopsis;
+    anime_info.synopsis[0].description = synopsis;
+    anime_info.synopsis[0].status = status;
 
     //get genres
     const genres = $("nav.Nvgnrs a").each((i, e) => {
       const gen = $(e).text().trim();
-      anime_info.genres.push(gen);
+      anime_info.synopsis[0].keywords.push(gen);
     });
     //getRelated
     const similar_anime = $("ul.ListAnmRel li a").each((i, e) => {
       const cro = new Cronology($(e).text().trim(), $(e).attr("href").replace("/anime", "/anime/flv"))
-      anime_info.chronology.push(cro);
+      anime_info.synopsis[0].chronology.push(cro);
     });
     //get episodes
     episodes.each((i, e) => {

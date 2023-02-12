@@ -64,10 +64,10 @@ export class GetAnimeInfo {
      * @description please use: episode_title: String(), episode_number: String(), image_episode: String(), link_episode: String()
      */
     constructor(type = null, anime_image = null, premiere = null) {
-        this.anime_title = String();
+        this.title = String();
         this.alternative_title = new Array();
         this.type = type;
-        this.anime_image = new String();
+        this.image = new String();
         this.synopsis = [
             {
                 description: String(),

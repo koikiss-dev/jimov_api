@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as ch from "cheerio";
-import { AnimeSearch, SearchArray } from "../../../../utils/schemaProviders.js";
+import { AnimeSearch, SearchArray } from "../../../../utils/shemaProvidersExperimental.js";
 
 //https://zoro.to/filter?type=2&rated=1&score=1&season=1&language=1&sy=2023&sort=recently_updated&genres=1
 const url_zoro = "https://zoro.to";

@@ -33,12 +33,12 @@ animelatinohdfunctions.animeinfo = async (req, res) => {
 
         // Status (0 == finalized,1 == on broadcast)
         // Type (1 == "Movie")
-        AnimeInfo.anime_title = animeInfoParseObj.name
+        AnimeInfo.title = animeInfoParseObj.name
         AnimeInfo.alternative_title.push(...animeInfoParseObj.name_alternative.split(","))
         AnimeInfo.synopsis[0].description = animeInfoParseObj.overview
         AnimeInfo.synopsis[0].keywords.push(...animeInfoParseObj.genres.split(","))
         AnimeInfo.synopsis[0].status = animeInfoParseObj.status == 1 ? "En emisión" : "Finalizado" 
-        AnimeInfo.anime_image = "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.poster + "?&w=53&q=95"
+        AnimeInfo.image = "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.poster + "?&w=53&q=95"
         AnimeInfo.type = animeInfoParseObj.type
         AnimeInfo.synopsis[0].premiere = animeInfoParseObj.aired
 

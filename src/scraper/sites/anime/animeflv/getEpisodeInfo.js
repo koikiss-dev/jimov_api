@@ -1,9 +1,9 @@
 import axios from "axios";
 import * as ch from "cheerio";
 import {
-  EpisodeServer,
+  GetAnimeEpisode,
   GetAnimeServers,
-} from "../../../../utils/schemaProviders.js";
+} from "../../../../utils/shemaProvidersExperimental.js";
 
 const url = "https://www2.animeflv.bz";
 
@@ -15,7 +15,7 @@ async function getEpisodeInfo(id) {
     const getLinks = $(".CpCnA .anime_muti_link li");
     //const next = $(".CapNvNx").attr("href");
     //const prev = $(".CapNvPv").attr("href");
-    const getServers = new GetAnimeServers();
+    const getServers = new GetAnimeEpisode();
     /*  const links_episodes = [
       {
         title_episode: title,
@@ -27,10 +27,10 @@ async function getEpisodeInfo(id) {
     ]; */
 
     getLinks.each((i, e) => {
-      const serversName = new EpisodeServer(
-        $(e).attr("title"),
-        $(e).attr("data-video")
-      );
+      const serversName = new GetAnimeServers();
+      serversName.name =  $(e).attr("title");
+      serversName.url = $(e).attr("data-video");
+   
       getServers.servers.push(serversName);
     });
     return getServers;
