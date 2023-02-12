@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 
-import { GetAnimeInfo } from "../../../../utils/shemaProvidersExperimental";
+import { GetAnimeInfo,GetAnimeEpisodeList,GetAnimeEpisode } from "../../../../utils/shemaProvidersExperimental.js";
 const animelatinohdfunctions = {}
 const url = "https://www.animelatinohd.com"
 const urlapi = "https://api.animelatinohd.com/api"
@@ -26,7 +26,7 @@ animelatinohdfunctions.animeinfo = async (req, res) => {
         const { data } = await axios.get(`${url}/anime/${title}`);
         const $ = cheerio.load(data);
         const AnimeInfo = new GetAnimeInfo();
-
+        const EpisodeInfo = new GetAnimeEpisodeList();
         let animeInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
         let animeInfoUrl = "/anime/animelatinohd/" + animeInfoParseObj.slug
 
@@ -47,18 +47,12 @@ animelatinohdfunctions.animeinfo = async (req, res) => {
         //AnimeInfo.banner = "https://www.themoviedb.org/t/p/original" +  animeInfoParseObj.banner + "?&w=280&q=95"
 
         animeInfoParseObj.episodes.map(e => {
-            let AnimeEpisode = {
-                episode_title: String(),
-                episode_number: Number(),
-                image_episode: String(),
-                link_episode: String()
-            }
-            AnimeEpisode.episode_title = animeInfoParseObj.name
-            AnimeEpisode.episode_number = e.number + ""
-            AnimeEpisode.image_episode = "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.banner + "?&w=280&q=95"
-            AnimeEpisode.link_episode = animeInfoUrl + "/episode/" + e.number;
+            EpisodeInfo.episode_title = animeInfoParseObj.name
+            EpisodeInfo.episode_number = e.number + ""
+            EpisodeInfo.image_episode = "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.banner + "?&w=280&q=95"
+            EpisodeInfo.link_episode = animeInfoUrl + "/episode/" + e.number;
 
-            AnimeInfo.episode_list.push(AnimeEpisode);
+            AnimeInfo.episode_list.push(EpisodeInfo);
         })
 
         res.status(200).send(AnimeInfo);
@@ -73,18 +67,18 @@ animelatinohdfunctions.animeEpisodeinfo = async (req, res) => {
     try {
         const { data } = await axios.get(`${url}/ver/${title}/${episode}`);
         const $ = cheerio.load(data);
-        const AnimeEpisodeInfo = new AnimeEpisode();
+        const AnimeEpisodeInfo = new GetAnimeEpisode();
 
         let animeEpisodeParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
         let animeEpisodeUrl = "/anime/animelatinohd/" + animeEpisodeParseObj.anime.slug
 
 
-        AnimeEpisodeInfo.title_episode = animeEpisodeParseObj.anime.name
+        AnimeEpisodeInfo.episode_title = animeEpisodeParseObj.anime.name
 
-        animeEpisodeParseObj.anterior ? AnimeEpisodeInfo.prev_episode = animeEpisodeUrl + "/episode/" + animeEpisodeParseObj.anterior.number : AnimeEpisodeInfo.prev_episode = false
-        animeEpisodeParseObj.siguiente ? AnimeEpisodeInfo.next_episode = animeEpisodeUrl + "/episode/" + animeEpisodeParseObj.siguiente.number : AnimeEpisodeInfo.next_episode = false
+        animeEpisodeParseObj.anterior ? AnimeEpisodeInfo.episode_prev = animeEpisodeUrl + "/episode/" + animeEpisodeParseObj.anterior.number : AnimeEpisodeInfo.episode_prev = false
+        animeEpisodeParseObj.siguiente ? AnimeEpisodeInfo.episode_next = animeEpisodeUrl + "/episode/" + animeEpisodeParseObj.siguiente.number : AnimeEpisodeInfo.episode_next = false
 
-        AnimeEpisodeInfo.list_episode = animeEpisodeUrl
+        AnimeEpisodeInfo.episode_list = animeEpisodeUrl
 
 
 

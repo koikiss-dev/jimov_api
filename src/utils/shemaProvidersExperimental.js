@@ -3,6 +3,7 @@
 //spanish providers
 
 /* Search */
+
 export class AnimeSearch {
     /**
      *
@@ -25,10 +26,12 @@ export class SearchArray {
         this.page = page
     }
 }
+
 /* Search */
 
 /* Anime Info */
-export class Episode {
+
+export class GetAnimeEpisodeList {
     /**
      * @param {*} episode_title String()
      * @param {*} episode_number String()
@@ -81,23 +84,34 @@ export class GetAnimeInfo {
 
 /* Anime Info */
 
-
-
 /* Anime Servers */
 
-export class EpisodeServer {
+export class GetAnimeEpisode {
     /**
-     * @param {*} name
-     * @param {*} url
+     * @param {*} title episode
+     * @param {*} next episode
+     * @param {*} previous episode
+     * @param {*} list episode
      */
-    constructor(name, url) {
-        this.name = name;
-        this.url = url;
+    constructor(episode_title,episode_next, episode_prev,episode_list) {
+        this.episode_title = episode_title;
+        this.episode_next = episode_next;
+        this.episode_prev = episode_prev;
+        this.episode_list = episode_list;
+        this.servers = new Array();
     }
 }
+
 export class GetAnimeServers {
-    constructor() {
-        this.servers = new Array();
+    /**
+     * @param {*} name server
+     * @param {*} url server
+     * @param {*} special is additional information from some providers
+     */
+    constructor(name, url,special) {
+        this.name = name;
+        this.url = url;
+        this.special = special;
     }
 }
 
