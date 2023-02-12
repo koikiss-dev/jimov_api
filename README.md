@@ -12,6 +12,8 @@ One of the key features of JIMOV - Media Content API is its multilingual support
 In addition to its user-friendly interface, JIMOV - Media Content API is also built using modern and efficient technologies. The API is built using JavaScript and the Express.js framework, ensuring fast and reliable performance for users.
 
 Whether you are an anime fan, movie buff, or simply looking for information on a specific piece of multimedia content, JIMOV - Media Content API is the perfect platform to meet your needs. With its extensive library of content, detailed information, and easy-to-use interface, you'll never run out of interesting and engaging content to explore.
+
+This is an open source project.
 ## **Installation**
 
 To use the API, you will need to have Node.js and npm installed on your machine. Once you have these, you can clone the repository and install the dependencies by running the following commands:
@@ -30,10 +32,13 @@ The API can be started by running the following command:
 npm run server
 ```
 
-## **Contribution**
+## **How to Contribute**
 
-This is an open source project.
-If you are interested in contributing to this project, please fork the repository and submit a pull request.
+If you are interested in contributing to the project follow these instructions:
+1. Fork the repository.
+2. Make changes and test.
+3. Submit a pull request.
+
 
 ## **LICENSE**
 
