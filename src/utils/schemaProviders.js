@@ -161,7 +161,7 @@ export class Chronology {
    * @param {(string)} url anime url
    * @param {(string)} image banner or image of the chronological anime
    */
-  constructor(name, url, image /* image url! */) {
+  constructor(name, url, image = null /* image url! */) {
     this.name = name;
     this.url = url;
     this.image = image;
@@ -185,6 +185,11 @@ export class Anime {
   name;
   /**
    * The URL of the anime
+   * @type {string}
+   */
+  alt_name = null;
+  /**
+   * The alternative name of the anime
    * @type {string}
    */
   url;
@@ -235,3 +240,31 @@ export class Anime {
    */
   active = false;
 }
+
+/* Search */
+
+export class AnimeSearch {
+  /**
+   * 
+   * @param {*} name @type {string}
+   * @param {*} image @type {string}
+   * @param {*} url @type {string}
+   * @param {*} type @type {string}
+   */
+  constructor(name, image, url, type = null) {
+      this.name = name;
+      this.image = image;
+      this.url = url;
+      this.type = type;
+  }
+}
+export class SearchArray {
+  constructor(page) {
+      this.data = new Array();
+      this.page = page
+  }
+}
+/**
+ nota: AnimeSearch se encargara de guardar los datos tipo name, image, url, type pero como en el scraper
+ necesita devolver un array eso se hara desde SearchArray. El searcharray sera la primera clase que se mencionara para guardar los datos y con animesearch se le hara un push a searcharray para agregarle los datos
+ */
