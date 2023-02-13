@@ -184,7 +184,8 @@ export class Anime {
    */
   name;
   /**
-   * The URL of the anime
+   * Name of the directory where the anime anchored to the website
+   * domain is located
    * @type {string}
    */
   alt_name = null;
