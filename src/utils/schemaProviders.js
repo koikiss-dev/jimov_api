@@ -1,23 +1,3 @@
-// Copyright (c) 2023 JIMOV
-//
-// Permission is hereby granted, free of charge, to any person obtaining a copy
-// of this software and associated documentation files (the "Software"), to deal
-// in the Software without restriction, including without limitation the rights
-// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-// copies of the Software, and to permit persons to whom the Software is
-// furnished to do so, subject to the following conditions:
-//
-// The above copyright notice and this permission notice shall be included in all
-// copies or substantial portions of the Software.
-//
-// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-// SOFTWARE.
-
 //anime data return standard
 
 //spanish providers
@@ -181,7 +161,7 @@ export class Chronology {
    * @param {(string)} url anime url
    * @param {(string)} image banner or image of the chronological anime
    */
-  constructor(name, url, image /* image url! */) {
+  constructor(name, url, image = null /* image url! */) {
     this.name = name;
     this.url = url;
     this.image = image;
@@ -205,6 +185,11 @@ export class Anime {
   name;
   /**
    * The URL of the anime
+   * @type {string}
+   */
+  alt_name = null;
+  /**
+   * The alternative name of the anime
    * @type {string}
    */
   url;
@@ -255,3 +240,31 @@ export class Anime {
    */
   active = false;
 }
+
+/* Search */
+
+export class AnimeSearch {
+  /**
+   * 
+   * @param {*} name @type {string}
+   * @param {*} image @type {string}
+   * @param {*} url @type {string}
+   * @param {*} type @type {string}
+   */
+  constructor(name, image, url, type = null) {
+      this.name = name;
+      this.image = image;
+      this.url = url;
+      this.type = type;
+  }
+}
+export class SearchArray {
+  constructor(page) {
+      this.data = new Array();
+      this.page = page
+  }
+}
+/**
+ nota: AnimeSearch se encargara de guardar los datos tipo name, image, url, type pero como en el scraper
+ necesita devolver un array eso se hara desde SearchArray. El searcharray sera la primera clase que se mencionara para guardar los datos y con animesearch se le hara un push a searcharray para agregarle los datos
+ */

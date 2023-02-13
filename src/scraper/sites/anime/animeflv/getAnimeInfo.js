@@ -1,9 +1,6 @@
 import axios from "axios";
 import * as ch from "cheerio";
-
-import {
-  Anime, Episode, Image, Chronology
-} from "../../../../utils/schemaProviders.js";
+import { Anime, Episode, Chronology } from "../../../../utils/schemaProviders.js";
 
 const url = "https://www2.animeflv.bz";
 
@@ -15,25 +12,27 @@ async function animeInfo(anime) {
     const $ = ch.load(data);
     const title = $("h2.Title").text().trim();
     const title_alt = $("span.TxtAlt").text().trim();
-    const type = $("span.Type").text().trim();
     const img = $("div.AnimeCover .Image figure img").attr("src");
     const status = $("p.AnmStts span").text().trim();
     const synopsis = $("div.Description").text().trim();
     const episodes = $(".ListCaps li a");
     const anime_info = new Anime();
+
     anime_info.name = title;
     anime_info.image = img;
-    anime_info.active = status;
     anime_info.synopsis = synopsis;
+    anime_info.active = status;
+    anime_info.alt_name = title_alt;
+    anime_info.url = `/anime/flv/${anime}`
 
     //get genres
     const genres = $("nav.Nvgnrs a").each((i, e) => {
       const gen = $(e).text().trim();
-      anime_info.genres.push(gen);
+      anime_info.genres.push(gen)
     });
     //getRelated
     const similar_anime = $("ul.ListAnmRel li a").each((i, e) => {
-      const cro = new Cronology($(e).text().trim(), $(e).attr("href").replace("/anime", "/anime/flv"))
+      const cro = new Chronology($(e).text().trim(), $(e).attr("href").replace("/anime", "/anime/flv"))
       anime_info.chronology.push(cro);
     });
     //get episodes
@@ -44,14 +43,6 @@ async function animeInfo(anime) {
       episode.image = $(e).children("figure").find(".lazy").attr("src");
       episode.url = `/anime/episode${l}`.replace("/anime", "/anime/flv");
       episode.number =  $(e).children("p").last().text().trim()
-      
-      const data_anime = {};
-      /*  const data_anime = {
-        episode_title: $(e).children(".Title").text().trim(),
-        episode_number: $(e).children("p").last().text().trim(),
-        image_espisode: `/anime/episode${l}`.replace("/anime", "/anime/flv"),
-        link_episode: $(e).children("figure").find(".lazy").attr("src"),
-      }; */
       anime_info.episodes.push(episode);
     });
     return anime_info
@@ -60,5 +51,8 @@ async function animeInfo(anime) {
   }
 }
 
+/* animeInfo('one-piece-tv').then(f => {
+  console.log(f)
+}) */
 
 export default { animeInfo };
