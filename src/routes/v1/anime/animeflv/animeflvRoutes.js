@@ -2,7 +2,6 @@ import { Router } from "express";
 import f from "../../../../scraper/sites/anime/animeflv/filter.js"; //filter anime
 import a from "../../../../scraper/sites/anime/animeflv/getAnimeInfo.js"; //get anime info
 import e from "../../../../scraper/sites/anime/animeflv/getEpisodeInfo.js"; //get episode info
-import p from "../../../../scraper/sites/anime/animeflv/getPageMain.js"; //get page main and emit
 
 const r = Router();
 

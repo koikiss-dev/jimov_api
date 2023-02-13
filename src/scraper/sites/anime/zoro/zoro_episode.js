@@ -10,7 +10,7 @@
 import axios from "axios";
 import * as ch from "cheerio";
 import _ from "underscore";
-
+import { Episode, EpisodeServer } from "../../../../utils/schemaProviders.js";
 
 const url_zoro = 'https://zoro.to';
 async function getServersId(anime, ep) {
@@ -35,12 +35,7 @@ async function getServersId(anime, ep) {
       }
     );
     const $ = ch.load(data.html);
-    const serversData = [
-      {
-        servers: [],
-      },
-    ];
-
+    const servers = new EpisodeServer()
     $(
       "body > div.ps_-block.ps_-block-sub.servers-sub > div.ps__-list > div.item "
     ).each((i, el) => {
@@ -53,35 +48,11 @@ async function getServersId(anime, ep) {
         name === "StreamSB"
           ? "Reccomended Server"
           : "Might not work, rapid-cloud requries to have host as zoro.to";
-      serversData[0].servers.push({
-        name,
-        serverId,
-        serverId2,
-        url
-      });
+      servers.name = name;
+      servers.url = url;
     });
 
-    /* $(
-      "body > div.ps_-block.ps_-block-sub.servers-dub > div.ps__-list > div.item "
-    ).each((i, el) => {
-      let type = el.attribs["data-type"];
-      let server = $(el).text().trim();
-      let serverId = el.attribs["data-id"];
-      let serverId2 = el.attribs["data-server-id"];
-      let devNote =
-        server === "StreamSB"
-          ? "Reccomended Server"
-          : "Might not work, might require to have host and referer as zoro.to";
-      serversData[0].serverDub.push({
-        type,
-        server,
-        serverId,
-        serverId2,
-        devNote,
-      });
-    }); */
-
-    return serversData
+    return servers
   } catch (error) {
     return error_page;
   }
@@ -97,13 +68,13 @@ async function getServers(id) {
   const { data } = await axios.get(`${url_zoro}/ajax/v2/episode/sources?id=${id}`);
   return data;
 }
-/* getServersId("hunter-x-hunter-2", 65).then((f) => {
+getServersId("hunter-x-hunter-2", 65).then((f) => {
   console.log(f);
 });
 
 getServers(734385).then(f =>{
   console.log(f)
-}) */
+})
 
 export default { getServersId, getServers };
 

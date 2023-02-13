@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as ch from "cheerio";
-import { AnimeSearch, SearchArray } from "../../../../utils/shemaProvidersExperimental.js";
+import { AnimeSearch, SearchArray } from "../../../../utils/schemaProviders.js";
 
 const url = 'https://www2.animeflv.bz';
 
