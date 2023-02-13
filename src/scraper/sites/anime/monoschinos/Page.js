@@ -27,29 +27,21 @@ async function getEpisodeServers(url, anime /* variable reference */) {
 }
 
 /**
- * {
- *      name:
- *      image:
- *      url:
- *      episode:
- *      video:
- * }
+ * 
+ * @returns {Episode[]}
  */
 async function getLastEpisodes() {
     try {
-        let episodes = [];
+        let episodes = [Episode];
         const $ = cheerio.load((await axios.get(PageInfo.url)).data);
         $('div.heroarea div.heroarea1 div.row').children().each(async (i, element) => {
             if ($(element).children().length != 0) {
-                let anime = [ null ];
-                episodes.push( {
-                    name:    $(element).find('h2.animetitles').text().trim(),
-                    image:   $(element).find('div.animeimgdiv img.animeimghv').attr('data-src'),
-                    url:     $(element).find('a').attr('href'),
-                    episode: $(element).find('div.positioning p').text().trim(),
-                    video:   await getEpisodeServers($(element).find('a').attr('href'), anime),
-                    anime:   anime[0]
-                });
+                const episode  = new Episode();
+                episode.number = parseInt($(element).find('div.positioning p').text().trim());
+                episode.image  = $(element).find('div.animeimgdiv img.animeimghv').attr('data-src');
+                episode.name   = $(element).find('h2.animetitles').text().trim();
+                episode.url    = $(element).find('a').attr('href');
+                episodes.push(episode);
             }
         });
         return episodes;
@@ -74,6 +66,27 @@ function getGenres($) {
 
 /**
  * 
+ * @param {Object} $ 
+ * @returns {Episode[]}
+ */
+function getAnimeEpisodes($) {
+	let episodes = [];
+	$('div.heromain2 div.allanimes div.row').children().each((i, element) => {
+		// Warning!! the following code does not list the servers of the
+		// episode, it only specifies the link
+        const episode  = new Episode();
+        episode.number = parseInt($(element).attr('data-episode').trim());
+        episode.image  = $(element).find('img.animeimghv').attr('data-src');
+        episode.name   = $(element).find('img.animeimghv').attr('alt');
+        episode.url    = $(element).find('a').attr('href');
+		//episode.servers | Not used
+        episodes.push(episode);
+    });
+	return episodes;
+}
+
+/**
+ * 
  * @param {string} url 
  * @returns {Anime}
  */
@@ -81,23 +94,18 @@ async function getAnime(url) {
     const $ = cheerio.load((await axios.get(url)).data);
     const anime    = new Anime();
     anime.name     = $('div.chapterdetails').find('h1').text();
+	anime.alt_name = url.split('/').pop();
     anime.url      = url;
     anime.synopsis = $('div.chapterdetls2 p').text().trim();
     anime.genres   = getGenres($);
     anime.image    = new Image($('div.chapterpic img').attr('src'), $('div.herobg img').attr('src'));
-    anime.active   = 'estreno' === $('div.butns button.btn1').text().toLowerCase().trim()
-
-    $('div.heromain2 div.allanimes div.row').children().each((i, element) => {
-        const episode  = new Episode();
-        episode.number = parseInt($(element).attr('data-episode').trim());
-        episode.image  = $(element).find('img.animeimghv').attr('data-src');
-        episode.name   = $(element).find('img.animeimghv').attr('alt');
-        episode.url    = $(element).find('a').attr('href');
-        anime.episodes.push(episode);
-    });
+    anime.active   = 'estreno' === $('div.butns button.btn1').text().toLowerCase().trim();
+	anime.episodes.push(...getAnimeEpisodes($));
 
     $('div.chapterdetails nav').children().each((i, element) => {
         if (i == 1) {
+			// The year of the anime is extracted. The format shown on the
+			// website is 'dd from mm from yyyy'.
             const date = $(element).find('ol.breadcrumb li.breadcrumb-item').text();
             for (let i = date.length - 1; i >= 0; i--) {
                 if (date[i] === ' ') {
@@ -117,7 +125,7 @@ async function getAnime(url) {
  */
 async function getLastAnimes() {
     try {
-        let animes = [Anime];
+        let animes = [];
         const $ = cheerio.load((await axios.get(`${ PageInfo.url }/emision`)).data);
         $('div.heroarea div.heromain div.row').children().each(async (i, element) => {
             if ($(element).find('a').attr('title') != undefined) {
@@ -131,6 +139,6 @@ async function getLastAnimes() {
     return null;
 }
 
-console.log(await getAnime('https://monoschinos2.com/anime/maou-gakuin-no-futekigousha-shijou-saikyou-no-maou-no-shiso-tensei-shite-shison-tachi-no-gakkou-e-kayou-ii-sub-espanol'))
+console.log(await getAnime('https://monoschinos2.com/anime/mou-ippon-sub-espanol'))
 
 export default { getLastEpisodes, getLastAnimes };
