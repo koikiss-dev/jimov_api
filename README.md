@@ -2,6 +2,7 @@
 
 ![image description](.gitbook/assets/JIMOV\_logo.png)
 
+
 ## **Overview**
 
 This project is an open-source API for retrieving multimedia content such as anime, movies and series, news, and manga in both Spanish and English. The API is built using JavaScript and the Express.js framework. The API allows users to search for content by keywords and retrieve detailed information about the content such as title, description, and language. The API also allows users to filter results by language and content type.
@@ -63,6 +64,12 @@ If you are interested in contributing to the project follow these instructions:
 2. Make changes and test.
 3. Submit a pull request.
 
+## **Authors**
+- [@Koikiss](https://github.com/koikiss-dev)
+- [@Maw](https://github.com/Mawfyy)
+- [@Zukaritasu](https://github.com/Zukaritasu)
+- [@Tokyo](https://github.com/TokyoTF)
+
 ## **LICENSE**
 
 Copyright (c) 2023 JIMOV
@@ -72,3 +79,5 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)
