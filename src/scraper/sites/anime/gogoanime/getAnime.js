@@ -1,69 +1,71 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
+import { Anime } from "../../../../utils/schemaProviders.js";
 
 
-export default async function getAnime(name){ 
+
+export default async function getAnime(name) {
 
   const animeparser = name.toLowerCase();
   const animename = animeparser.replace(/\s/g, "-");
-  
 
-  
+
+
   try {
 
-    const { data } = await axios.get(`https://ww4.gogoanimes.org/category/${animename}`)
+    const { data } = await axios.get(`https://ww4.gogoanimes.org/category/${animename}#`)
     const $ = cheerio.load(data);
 
-    const title = $("div.anime_info_body_bg  h1").text();
-    const url = $("div.anime_info_body_bg ").find("img").attr("src");
-    const genre  = [];
-    const stuff = [];
-    const episodes = [];
+    const anime = new Anime();
 
-    //Obtuve cosas por separado, asi que las dividi
-    const getgenre = $("div.anime_info_body_bg p.type a").each((i, j) => {
-      genre.push($(j).text().trim())
+    //name, image, url
+    anime.name = $("div.anime_info_body_bg  h1").text();
+    anime.image = $("div.anime_info_body_bg ").find("img").attr("src");
+    anime.url = `https://ww4.gogoanimes.org/category/${animename}`;
+
+
+    //Get synopsis, year
+    $('div.anime_info_body_bg p.type').each((i, j) => {
+      //Skips for first p.type
+      if (i)
+
+        // synopsis
+        if (i == 1) {
+          anime.synopsis = $(j).text().replace('Plot Summary: ', '').trim();
+          // year
+        } if (i == 3) {
+          anime.year = $(j).text().replace('Released: ', '')
+          //Status
+        } if (i == 4 && $(j).text().trim() != 'Status: ') {
+          anime.active = true;
+        }
     })
 
-    const getstuff = $("div.anime_info_body_bg p.type ").each((i, j) => {
-      stuff.push($(j).text().trim())
-    }) 
+    //Genre
+    $('div.anime_info_body_bg p.type a').each((i, j) => {
+      if (i)
+        anime.genres.push($(j).text())
+    })
 
-    const getepisodes = $("div.anime_video_body ul a").each((i, j) =>{
-      episodes.push($(j).text());
-    });
-   
 
-    let status = stuff[4].replace("Status: ", "")
+    /*
+    //Episodes
+    $('.main_body .anime_video_body div#load_ep ul#load_ep').each((i, element) => {
+      console.log($(element))
+    })
 
-    if(status != 'Completed'){
-       status = "Not completed"
-    }
+    */
 
-    const description = stuff[1].replace("Plot Summary: ", "")
-    const type = genre.shift();
+    console.log($('.anime_video_body ').html());
 
-   const anime = {
-      title: title,
-      description: description,
-      url: url,
-      episodes: episodes,
-      status: status,
-      type: type,
-      genre: genre,
-    } 
-    
-    console.log(anime)
-
-    return anime 
 
 
   } catch (error) {
-    console.log(error) 
+    return error
   }
 
 
 }
 
 
-getAnime()
+getAnime('bocchi the rock')
