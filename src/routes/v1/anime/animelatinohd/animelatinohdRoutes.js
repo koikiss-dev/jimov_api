@@ -3,18 +3,6 @@ import animefunctions from "../../../../scraper/sites/anime/animelatinohd/animel
 
 const router = Router();
 
-// Recent Episodes
-//router.get("/anime/animelatinohd/recent-episodes",animefunctions.animeRecentEpisodesinfo);
-
-// Most popular
-//router.get("/anime/animelatinohd/most-popular",animefunctions.animeMostPopular);
-
-// Most viewed
-//router.get("/anime/animelatinohd/most-viewed",animefunctions.animeMostviewed);
-
-// Calendar
-//router.get("/anime/animelatinohd/calendar",animefunctions.animeCalendar);
-
 // Search
 router.get("/anime/animelatinohd/search/:search",animefunctions.animeSearch);
 

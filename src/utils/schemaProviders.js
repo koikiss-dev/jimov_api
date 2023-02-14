@@ -192,6 +192,11 @@ export class Anime {
    * The URL of the anime
    * @type {string}
    */
+  alt_name = null;
+  /**
+   * The alternative name of the anime
+   * @type {string}
+   */
   url;
   /**
    * Anime synopsis
