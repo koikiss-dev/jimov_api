@@ -9,21 +9,33 @@ const PageInfo = {
 /**
  * 
  * @param {*} url 
- * @returns 
+ * @returns {EpisodeServer[]}
  */
-async function getEpisodeServers(url, anime /* variable reference */) {
+async function getEpisodeServers(url) {
     let servers = [];
     const $ = cheerio.load((await axios.get(url)).data);
     $('div.playother').children().each((i, element) => {
-        if (anime != null && anime[0] == null) {
-            anime[0] = $('div.lista').find('a').attr('href');
-        }
-        servers.push({
-            server: $(element).text().trim(),
-            video: atob($(element).attr('data-player'))
-        });
+		servers.push(new EpisodeServer($(element).text().trim(), atob($(element).attr('data-player'))))
+        /*if (anime != null && anime[0] == null) {
+            anime[0] = $('div.lista').find('a').attr('href'); // anime url
+        }*/
     });
     return servers;
+}
+
+/**
+ * @param {CheerioAPI} $ HTML Document by cheerio
+ * @param {Element} element episode document
+ * @returns {Episode}
+ */
+async function getEpisode($, element) {
+	const episode  = new Episode();
+    episode.number = parseInt($(element).find('div.positioning p').text().trim());
+    episode.image  = $(element).find('div.animeimgdiv img.animeimghv').attr('data-src');
+    episode.name   = $(element).find('h2.animetitles').text().trim();
+    episode.url    = $(element).find('a').attr('href');
+	episode.servers.push(...(await getEpisodeServers(episode.url)));
+	return episode;
 }
 
 /**
@@ -32,16 +44,11 @@ async function getEpisodeServers(url, anime /* variable reference */) {
  */
 async function getLastEpisodes() {
     try {
-        let episodes = [Episode];
+        let episodes = [];
         const $ = cheerio.load((await axios.get(PageInfo.url)).data);
         $('div.heroarea div.heroarea1 div.row').children().each(async (i, element) => {
             if ($(element).children().length != 0) {
-                const episode  = new Episode();
-                episode.number = parseInt($(element).find('div.positioning p').text().trim());
-                episode.image  = $(element).find('div.animeimgdiv img.animeimghv').attr('data-src');
-                episode.name   = $(element).find('h2.animetitles').text().trim();
-                episode.url    = $(element).find('a').attr('href');
-                episodes.push(episode);
+                episodes.push(await getEpisode($, element));
             }
         });
         return episodes;
@@ -91,16 +98,17 @@ function getAnimeEpisodes($) {
  * @returns {Anime}
  */
 async function getAnime(url) {
+	// The anime page in monoschinos does not define the chronology and station
     const $ = cheerio.load((await axios.get(url)).data);
     const anime    = new Anime();
     anime.name     = $('div.chapterdetails').find('h1').text();
-	anime.alt_name = url.split('/').pop();
+	anime.alt_name = $('div.chapterdetails').find('span.alterno').text();
     anime.url      = url;
     anime.synopsis = $('div.chapterdetls2 p').text().trim();
     anime.genres   = getGenres($);
     anime.image    = new Image($('div.chapterpic img').attr('src'), $('div.herobg img').attr('src'));
     anime.active   = 'estreno' === $('div.butns button.btn1').text().toLowerCase().trim();
-	anime.episodes.push(...getAnimeEpisodes($));
+	anime.episodes = getAnimeEpisodes($);
 
     $('div.chapterdetails nav').children().each((i, element) => {
         if (i == 1) {
@@ -123,22 +131,26 @@ async function getAnime(url) {
  * 
  * @returns {Anime[]}
  */
-async function getLastAnimes() {
+async function getLastAnimes(url) {
     try {
         let animes = [];
-        const $ = cheerio.load((await axios.get(`${ PageInfo.url }/emision`)).data);
-        $('div.heroarea div.heromain div.row').children().each(async (i, element) => {
-            if ($(element).find('a').attr('title') != undefined) {
-                animes.push(await getAnime($(element).find('a').attr('href')));
+		const use_filter = (url != null && url != undefined);
+        const $ = cheerio.load((await axios.get(use_filter ? url : `${ PageInfo.url }/emision`)).data);
+        const elements = $('div.heroarea div.heromain div.row').children();
+        for (let i = 0; i < elements.length; i++) {
+            if ($(elements[i]).children().length != 0) {
+                animes.push(await getAnime($(elements[i]).find('a').attr('href')));
             }
-        });
+        }
         return animes;
     } catch (error) {
         console.log(error);
     }
-    return null;
+    return [];
 }
 
-console.log(await getAnime('https://monoschinos2.com/anime/mou-ippon-sub-espanol'))
+//console.log(await getLastAnimes('https://monoschinos2.com/animes?categoria=anime&genero=accion&fecha=2023&letra=A'));
+
+//console.log(await getAnime('https://monoschinos2.com/anime/mou-ippon-sub-espanol'))
 
 export default { getLastEpisodes, getLastAnimes };
