@@ -184,13 +184,12 @@ export class Anime {
    */
   name;
   /**
-   * Name of the directory where the anime anchored to the website
-   * domain is located
+   * The alternative name of the anime
    * @type {string}
    */
   alt_name = null;
   /**
-   * The alternative name of the anime
+   * The URL of the anime
    * @type {string}
    */
   url;
@@ -244,13 +243,37 @@ export class Anime {
 
 /* Search */
 
+/**
+ * General information about an anime. The class contains information
+ * that can be found on any anime website.
+ * @author Zukaritasu
+ */
 export class AnimeSearch {
   /**
-   * 
-   * @param {*} name @type {string}
-   * @param {*} image @type {string}
-   * @param {*} url @type {string}
-   * @param {*} type @type {string}
+   * Specifies the name of the anime being searched for
+   * @type {string}
+   */
+  name;
+  /**
+   * The cover image of the anime
+   * @type {string}
+   */
+  image;
+  /**
+   * The URL of the anime
+   * @type {string}
+   */
+  url;
+  /**
+   * Defines whether the anime refers to a movie, ova, or ona
+   * @type {string}
+   */
+  type;
+  /**
+   * @param {string} name anime name
+   * @param {string} image the url of the anime image
+   * @param {string} url the url of the anime
+   * @param {string} type anime type
    */
   constructor(name, image, url, type = null) {
       this.name = name;
