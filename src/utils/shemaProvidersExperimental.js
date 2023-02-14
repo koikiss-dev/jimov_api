@@ -23,7 +23,7 @@ export class AnimeSearch {
 export class SearchArray {
     constructor(page) {
         this.data = new Array();
-        this.page = page
+        this.page = page;
     }
 }
 
@@ -106,12 +106,12 @@ export class GetAnimeServers {
     /**
      * @param {*} name server
      * @param {*} url server
-     * @param {*} special is additional information from some providers
+     * @param {*} optional is additional information from some providers
      */
-    constructor(name, url,special) {
+    constructor(name, url) {
         this.name = name;
         this.url = url;
-        this.special = special;
+        this.optional = new Array();
     }
 }
 
