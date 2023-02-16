@@ -31,7 +31,6 @@ async function Search(name = 'Action', numPages = 1) {
       ))
     })
 
-    console.log(animes)
 
     return animes
 
@@ -41,4 +40,3 @@ async function Search(name = 'Action', numPages = 1) {
 }
 
 
-Search('Action', 2)
