@@ -1,6 +1,6 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { Anime, Episode, Image } from "../../../../utils/schemaProviders.js";
+import { Anime, Episode, Image, EpisodeServer } from "../../../../utils/schemaProviders.js";
 
 const PageInfo = {
     url: 'https://monoschinos2.com' // url page
