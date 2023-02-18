@@ -46,11 +46,14 @@ async function getLastEpisodes() {
     try {
         let episodes = [];
         const $ = cheerio.load((await axios.get(PageInfo.url)).data);
-        $('div.heroarea div.heroarea1 div.row').children().each(async (i, element) => {
-            if ($(element).children().length != 0) {
-                episodes.push(await getEpisode($, element));
+		const elements = $('div.heroarea div.heroarea1 div.row').children();
+		// Do not use the each method, this function ignores the promises,
+		// so it is priority to use for
+        for (let i = 0; i < elements.length; i++) {
+            if ($(elements[i]).children().length != 0) {
+                episodes.push(await getEpisode($, elements[i]));
             }
-        });
+        }
         return episodes;
     } catch (error) {
         console.log(error);
