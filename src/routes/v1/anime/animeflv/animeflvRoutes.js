@@ -5,20 +5,22 @@ import e from "../../../../scraper/sites/anime/animeflv/getEpisodeInfo.js"; //ge
 
 const r = Router();
 
+// Endpoint to retrieve information about a specific anime by name
 r.get("/anime/flv/:name", (req, res) => {
   a.animeInfo(req.params.name).then((f) => {
     res.send(f);
   });
 });
 
+// Endpoint to retrieve information about a specific episode by episode number
 r.get("/anime/flv/episode/:episode", (req, res) => {
   e.getEpisodeInfo(req.params.episode).then((f) => {
     res.send(f);
   });
 });
 
+// Endpoint to filter anime based on various criteria
 r.get("/anime/flv/browse/filter", (req, res) => {
-  //si se quita el browse deja de funcionar
   const { gen, year, type, status, ord, page } = req.query;
   f.Filter(gen, year, type, status, ord, page).then((f) => {
     res.send(f);

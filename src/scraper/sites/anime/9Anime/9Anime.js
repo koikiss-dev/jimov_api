@@ -1,56 +1,65 @@
-import * as ch from "cheerio";
+import { load } from "cheerio";
 import axios from "axios";
-import {
-  Anime,
-  EpisodeServer,
-  Episode,
-  Image,
-} from "../../../../utils/schemaProviders.js";
+import { Anime } from "../../../../utils/schemaProviders.js";
 import { parseAnimeInfo } from "./parse9AnimeInfo.js";
 
-//url
-const nineAnime = "https://9anime.to/";
+const NINE_ANIME_URL = "https://9anime.to/";
 
-async function NineAnimeInfo(anime) {
+async function getAnimeData(animeName) {
   try {
-    const { data } = await axios.get(`${nineAnime}watch/${anime}`);
-    const $ = ch.load(data);
-    const anime_data = new Anime();
-    anime_data.name = $("h1").text().trim();
-    anime_data.image = $("div.poster span > img").attr("src");
-    anime_data.alt_name = $("div.names").text().trim();
-    anime_data.synopsis = $("div.content").text().trim();
-    anime_data.url = `/anime/9anime/watch/${anime}`;
-
-    $("div.binfo div.info div.bmeta").each((i, e) => {
-      const info = parseAnimeInfo(
-        $(e).find("div.meta:first").text().trim(),
-        $(e).find("div.meta").next().text().trim()
-      );
-      anime_data.year = info.dateAired.trim();
-      anime_data.genres = info.genre;
-      anime_data.station = info.premiered.replace("Duration", "").trim();
-      anime_data.active = info.status.trim();
-      for (let i = info.episodes; i >= 1; i--) {
-        anime_data.episodes.push(
-          `/anime/9anime/watch/${anime.split("/")[0]}/ep-${i}`
-        );
-      }
-    });
-    $("section#w-related").each((i, e) => {
-      anime_data.chronology.push({
-        name: $(e).find("div.name").text().trim(),
-        image: $(e).find("img").attr("src"),
-        url: `/anime/9anime${$(e).find("a.item").attr("href")}`,
-      });
-    });
-    return anime_data;
+    const { data } = await axios.get(`${NINE_ANIME_URL}watch/${animeName}`);
+    return load(data);
   } catch (error) {
     console.log(error);
   }
 }
 
-export default {NineAnimeInfo}
+function getEpisodes(animeName, numEpisodes) {
+  const episodes = [];
+  for (let i = numEpisodes; i >= 1; i--) {
+    episodes.push(`/anime/9anime/watch/${animeName.split("/")[0]}/ep-${i}`);
+  }
+  return episodes;
+}
+
+function getRelatedAnime($, anime_data) {
+  $("section#w-related").each((i, e) => {
+    anime_data.chronology.push({
+      name: $(e).find("div.name").text().trim(),
+      image: $(e).find("img").attr("src"),
+      url: `/anime/9anime${$(e).find("a.item").attr("href")}`,
+    });
+  });
+}
+
+async function NineAnimeInfo(animeName) {
+  const $ = await getAnimeData(animeName);
+  const animeData = new Anime();
+
+  animeData.name = $("h1").text().trim();
+  animeData.image = $("div.poster span > img").attr("src");
+  animeData.alt_name = $("div.names").text().trim();
+  animeData.synopsis = $("div.content").text().trim();
+  animeData.url = `/anime/9anime/watch/${animeName}`;
+
+  $("div.binfo div.info div.bmeta").each((i, e) => {
+    const info = parseAnimeInfo(
+      $(e).find("div.meta:first").text().trim(),
+      $(e).find("div.meta").next().text().trim()
+    );
+    animeData.year = info.dateAired.trim();
+    animeData.genres = info.genre;
+    animeData.station = info.premiered.replace("Duration", "").trim();
+    animeData.active = info.status.trim();
+    animeData.episodes = getEpisodes(animeName, info.episodes);
+  });
+
+  getRelatedAnime($, animeData);
+
+  return animeData;
+}
+
+export default { NineAnimeInfo };
 
 /**
  type: dataArray[0],

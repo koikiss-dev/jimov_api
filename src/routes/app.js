@@ -5,9 +5,15 @@ const r = Router();
 //raiz
 r.get("/", (req, res) => {
   res.send({
-    data: "Anime api running :)",
-    status: 200
+    message: "Jimov API is up and running 🎬🎉🎉",
+    status: "success",
+    code: 200,
+    additional_info: {
+      server: "https://jimov.herokuapp.com/",
+      discord: "https://discord.gg/tyZ39GCX7R",
+      last_update: "2/15/2023",
+    },
   });
 });
 
-export default r
+export default r;

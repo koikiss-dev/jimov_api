@@ -40,6 +40,14 @@ async function AnimeInfo(id) {
     anime.alt_name = with_out_spaces[0];
     anime.year = with_out_spaces[2];
     anime.url = `/anime/zoro/name/${id}`
+    /* $('div.film-stats .item:contains("Ep")').each((i, e)=> {
+      const ep = $(e).text().trim().split('/')[0].replace('Ep', '').trim()
+      for (let i = ep; i >= 1; i--) {
+        anime.episodes.push(
+          `/anime/zoro/watch/${anime.split("/")[0]}/ep-${i}`
+        );
+      }
+    }) */
     //const play = $("div.film-buttons").find("a.btn-play").attr("href");
     /*titulo y descripcion */
 
@@ -88,5 +96,8 @@ async function AnimeInfo(id) {
   }
 }
 
+AnimeInfo('tokyo-revengers-christmas-showdown-18244').then(f => {
+  console.log(f)
+})
 
 export default { AnimeInfo };

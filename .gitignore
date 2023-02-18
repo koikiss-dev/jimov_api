@@ -1,3 +1,4 @@
 node_modules
 .env
+.turbo
 /src/scraper/sites/anime/tioanime/testing.js
