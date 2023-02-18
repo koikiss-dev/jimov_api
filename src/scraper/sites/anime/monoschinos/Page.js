@@ -11,9 +11,10 @@ const PageInfo = {
  * @param {*} url 
  * @returns {EpisodeServer[]}
  */
+//https://monoschinos2.com/ver/mou-ippon-episodio-2
 async function getEpisodeServers(url) {
     let servers = [];
-    const $ = cheerio.load((await axios.get(url)).data);
+    const $ = cheerio.load((await axios.get(`${PageInfo.url}/ver/${url}`)).data);
     $('div.playother').children().each((i, element) => {
 		servers.push(new EpisodeServer($(element).text().trim(), atob($(element).attr('data-player'))))
         /*if (anime != null && anime[0] == null) {
@@ -88,7 +89,7 @@ function getAnimeEpisodes($) {
         episode.number = parseInt($(element).attr('data-episode').trim());
         episode.image  = $(element).find('img.animeimghv').attr('data-src');
         episode.name   = $(element).find('img.animeimghv').attr('alt');
-        episode.url    = $(element).find('a').attr('href');
+        episode.url    = $(element).find('a').attr('href').replace('https://monoschinos2.com/ver/', '/anime/monoschinos/watch/');
 		//episode.servers | Not used
         episodes.push(episode);
     });
@@ -102,11 +103,11 @@ function getAnimeEpisodes($) {
  */
 async function getAnime(url) {
 	// The anime page in monoschinos does not define the chronology and station
-    const $ = cheerio.load((await axios.get(url)).data);
+    const $ = cheerio.load((await axios.get(`${PageInfo.url}/anime/${url}`)).data);
     const anime    = new Anime();
     anime.name     = $('div.chapterdetails').find('h1').text();
 	anime.alt_name = $('div.chapterdetails').find('span.alterno').text();
-    anime.url      = url;
+    anime.url      = `/anime/monoschinos/name/${url}`;
     anime.synopsis = $('div.chapterdetls2 p').text().trim();
     anime.genres   = getGenres($);
     anime.image    = new Image($('div.chapterpic img').attr('src'), $('div.herobg img').attr('src'));
@@ -155,5 +156,10 @@ async function getLastAnimes(url) {
 //console.log(await getLastAnimes('https://monoschinos2.com/animes?categoria=anime&genero=accion&fecha=2023&letra=A'));
 
 //console.log(await getAnime('https://monoschinos2.com/anime/mou-ippon-sub-espanol'))
-
-export default { getLastEpisodes, getLastAnimes };
+getAnime('mou-ippon-sub-espanol').then(f => {
+    console.log(f)
+})
+getEpisodeServers('mou-ippon-episodio-2').then(f =>{
+    console.log(f)
+})
+export default { getLastEpisodes, getLastAnimes, getAnime };
