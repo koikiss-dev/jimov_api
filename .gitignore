@@ -1,4 +1,8 @@
 node_modules
 .env
-.turbo
+<<<<<<< HEAD
 /src/scraper/sites/anime/tioanime/testing.js
+=======
+/src/scraper/sites/anime/tioanime/testing.js
+/src/scraper/sites/anime/tioanime/*.html
+>>>>>>> 86d3ec089a17ba7fb4ae87b1dddb7658449bb47f
