@@ -287,13 +287,29 @@ export class AnimeSearch {
       this.type = type;
   }
 }
+
+/**
+ * Contains the result of the anime search through a filter
+ * and the page number that specifies where the search should be
+ * performed or was performed.
+ * @author Zukaritasu
+ */
 export class SearchArray {
+  /**
+   * This array contains the anime that are the result of the search
+   * @type {Anime[]}
+   */
+  data = [];
+  /**
+   * The number of the page where the search was made
+   * @type {(string | number)}
+   */
+  page;
+  /**
+   * @type {(string | number)} page the search page number
+   */
   constructor(page) {
       this.data = new Array();
       this.page = page
   }
 }
-/**
- nota: AnimeSearch se encargara de guardar los datos tipo name, image, url, type pero como en el scraper
- necesita devolver un array eso se hara desde SearchArray. El searcharray sera la primera clase que se mencionara para guardar los datos y con animesearch se le hara un push a searcharray para agregarle los datos
- */
