@@ -6,6 +6,7 @@ import flv from './routes/v1/anime/animeflv/animeflvRoutes.js'
 import zoroRout from './routes/v1/anime/zoro/animeZoroRoutes.js'
 import otakutv from './routes/v1/anime/otakutv/otakutvRoute.js'
 import animelatinoRoutes from './routes/v1/anime/animelatinohd/animelatinohdRoutes.js'
+import monoschinosRout from './routes/v1/anime/monoschinos/monoschinosRoutes.js'
 import helmet from "helmet";
 
 const app = express();
@@ -41,6 +42,10 @@ app.use(animelatinoRoutes);
 
 /*otakutv */
 app.use(otakutv)
+
+/*monoschinos */
+app.use(monoschinosRout)
+/*monoschinos */
 
 //init
 app.listen(port, () => {
