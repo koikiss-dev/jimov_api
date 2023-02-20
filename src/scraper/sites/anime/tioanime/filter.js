@@ -12,10 +12,13 @@ import page from "./Page.js";
 function arrayToURLParams(param, array) {
 	let elements = '';
 	if (utilities.isUsableValue(array)) {
-		array.forEach(option => {
+		for (let i = 0; i < array.length; i++) {
+			elements += `${param}%5B%5D=${array[o]}`;
+		}
+		/*array.forEach(option => {
 			// %5B%5D > []
 			elements += `${param}%5B%5D=${option}`;
-		});
+		});*/
 	}
 	return elements;
 }

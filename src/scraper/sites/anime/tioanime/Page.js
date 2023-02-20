@@ -9,9 +9,9 @@ const PageInfo = {
 
 //================== API functions ==================
 
-function api_getURL(url) {
+/*function api_getURL(url) {
 	return url.replace()
-}
+}*/
 
 //===================================================
 
