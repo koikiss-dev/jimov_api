@@ -7,6 +7,14 @@ const PageInfo = {
     url: 'https://tioanime.com' // url page
 }
 
+//================== API functions ==================
+
+function api_getURL(url) {
+	return url.replace()
+}
+
+//===================================================
+
 /**
  * 
  * @param {*} $ 
@@ -64,7 +72,8 @@ async function getAnimeEpisodes(data) {
 		let episode     = new Episode();
 		episode.name    = `${data.info[2]} Capitulo ${episode_number}`;
 		episode.image   = PageInfo.url +`/uploads/thumbs/${data.info[0]}.jpg`;
-		episode.url     = PageInfo.url + `/ver/${data.info[1]}-${episode_number}`;
+	  //episode.url     = PageInfo.url + `/ver/${data.info[1]}-${episode_number}`;
+		episode.url     = `/anime/tioanime/servers/${data.info[1]}-${episode_number}`;
 		episode.number  = episode_number;
         __episodes.push(episode);
 	});
@@ -81,7 +90,8 @@ function getEpisode($, element) {
 	const title   = $(element).find('h3.title').text().trim();
 	const episode = new Episode();
 	episode.image = PageInfo.url + $(element).find('figure.fa-play-circle img').attr('src');
-	episode.url   = PageInfo.url + $(element).find('article.episode a').attr('href');
+  //episode.url   = PageInfo.url + $(element).find('article.episode a').attr('href');
+	episode.url   = $(element).find('article.episode a').attr('href').replace('/ver/', '/anime/tioanime/servers/')
 	
     for (let i = title.length - 1; i >= 0; i--) {
         if (title[i] == ' ') {
@@ -162,7 +172,8 @@ async function getAnime(url) {
 	
 	const anime      = new Anime();
     anime.name       = $('div.container h1.title').text();
-    anime.url        = url;
+    //anime.url        = url;
+	anime.url        = url.replace('https://tioanime.com/anime/', '/anime/tioanime/name/');
 	anime.type       = $('div.meta span.anime-type-peli').text();
 	//anime.year       = parseInt($('div.meta span.year').text().trim());
 	anime.year       = data.info.length < 4 ? parseInt($('div.meta span.year').text().trim().substring(0, 4)) : 
