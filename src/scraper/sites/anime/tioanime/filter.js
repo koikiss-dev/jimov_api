@@ -13,7 +13,7 @@ function arrayToURLParams(param, array) {
 	let elements = '';
 	if (utilities.isUsableValue(array)) {
 		for (let i = 0; i < array.length; i++) {
-			elements += `${param}%5B%5D=${array[o]}`;
+			elements += `${param}%5B%5D=${array[i]}`;
 		}
 		/*array.forEach(option => {
 			// %5B%5D > []
