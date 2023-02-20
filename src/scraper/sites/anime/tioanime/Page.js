@@ -1,6 +1,7 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
 import { Anime, Episode, Image, Chronology, EpisodeServer } from "../../../../utils/schemaProviders.js";
+import utilities from "../../../../utils/utilities.js";
 
 const PageInfo = {
     url: 'https://tioanime.com' // url page
@@ -26,14 +27,16 @@ function getAnimeChronology($) {
 }
 
 /**
- * 
+ * This function supports a full path of the episode and not a relative path.
+ * Use PageInfo.url + /(relative path) in that case.
+ *
  * @param {string} url anime episode url
  * @return {EpisodeServer[]}
  */
 async function getEpisodeServers(url) {
 	'use strict'
 	let servers = []
-    const $ = cheerio.load((await axios.get(PageInfo.url + url)).data);
+    const $ = cheerio.load((await axios.get(url)).data);
 	const script = $($('script').get().pop()).text().trim();
 	try {
 		// The variable 'videos' of the script is accessed
@@ -60,8 +63,8 @@ async function getAnimeEpisodes(data) {
 	data.episodes.forEach(episode_number => {
 		let episode     = new Episode();
 		episode.name    = `${data.info[2]} Capitulo ${episode_number}`;
-		episode.image   = `/uploads/thumbs/${data.info[0]}.jpg`;
-		episode.url     = `/ver/${data.info[1]}-${episode_number}`;
+		episode.image   = PageInfo.url +`/uploads/thumbs/${data.info[0]}.jpg`;
+		episode.url     = PageInfo.url + `/ver/${data.info[1]}-${episode_number}`;
 		episode.number  = episode_number;
         __episodes.push(episode);
 	});
@@ -138,12 +141,14 @@ function getScriptAnimeInfo($) {
 			episodes: globalThis.episodes
 		}
 	} catch(error) {
-		
+		console.log(error);
 	}
 	return null;
 }
 
 /**
+ * This function supports a full path of the anime and not a relative path.
+ * Use PageInfo.url + /(relative path) in that case.
  * 
  * @param {string} url anime url
  * @returns {Anime}
@@ -153,39 +158,42 @@ async function getAnime(url) {
 	const $ = cheerio.load((await axios.get(url)).data);
 	const data       = getScriptAnimeInfo($);
 	// It is possible that the object returned by the getScriptAnimeInfo function is null.
-	if (data === null) return null;
+	if (data == null) return null;
 	
 	const anime      = new Anime();
     anime.name       = $('div.container h1.title').text();
     anime.url        = url;
+	anime.type       = $('div.meta span.anime-type-peli').text();
 	//anime.year       = parseInt($('div.meta span.year').text().trim());
-	anime.year       = new Date(data.info[3]).getFullYear();
+	anime.year       = data.info.length < 4 ? parseInt($('div.meta span.year').text().trim().substring(0, 4)) : 
+											  new Date(data.info[3]).getFullYear();
     anime.synopsis   = $('p.sinopsis').text().trim();
     anime.genres     = getGenres($, $('div.container p.genres span'));
     anime.image      = new Image(PageInfo.url + $('div.container div.thumb figure img').attr('src'), 
-								 PageInfo.url + $('figure.backdrop').attr('src'));
+											    $('figure.backdrop img').attr('src') == undefined ? null :
+								 PageInfo.url + $('figure.backdrop img').attr('src')
+												);
     anime.active     = $('div.thumb a.status').text() === 'En emision';
+	anime.station    = $('div.meta span.fa-snowflake').text().trim().split('\n')[0];
 	anime.episodes   = await getAnimeEpisodes(data);
 	anime.chronology = getAnimeChronology($);
 	return anime;
 }
 
-
 /**
- * finished!
+ * 
+ * @param {string} url 
+ * @returns 
  */
-async function getLastAnimes() {
+async function getLastAnimes(url) {
     try {
         let animes = [];
-        const $ = cheerio.load((await axios.get(PageInfo.url)).data);
-		const elements = $('div.container section ul.list-unstyled.row li').children();
+        const $ = cheerio.load((await axios.get(url ?? PageInfo.url)).data);
+		const elements = $(utilities.isUsableValue(url) ? 'ul.animes' : 'div.container section ul.list-unstyled.row li').children();
 		for (let i = 0; i < elements.length; i++) {
             const anime_url = $(elements[i]).find('article.anime a').attr('href');
-            if (anime_url != undefined) {
-				const anime = await getAnime(PageInfo.url + anime_url);
-				if (anime !== null) {
-					animes.push(await getAnime(PageInfo.url + anime_url));
-				}
+            if (utilities.isUsableValue(anime_url)) {
+				animes.push(await getAnime(PageInfo.url + anime_url));
             }
 		}
         return animes;
@@ -195,7 +203,6 @@ async function getLastAnimes() {
     return [];
 }
 
-
 /**
  * 
  * @param {*} section movies, ovas and onas
@@ -204,8 +211,8 @@ async function getLastAnimes() {
 async function getSectionContents(section) {
 	let animes = [];
     try {
-        const $ = cheerio.load((await axios.get(PageInfo.url)).data);
-		const elements = $(`div.container div.latest section.${section} ul.list-unstyled li`).children();
+        const $ = cheerio.load((await axios.get(`${PageInfo.url}/directorio?type%5B%5D=${section}`)).data);
+		const elements = $(`ul.animes`).children();
 		for (let i = 0; i < elements.length; i++) {
 			animes.push(await getAnime(PageInfo.url + $(elements[i])
 				.find('article.anime a').attr('href')));
@@ -217,17 +224,26 @@ async function getSectionContents(section) {
 }
 
 async function getLastMovies() {
-    return await getSectionContents('movies');
+    return await getSectionContents(1);
 }
 
 async function getLastOvas() {
-    return await getSectionContents('ovas');
+    return await getSectionContents(2);
 }
 
 async function getLastOnas() {
-    return await getSectionContents('onas');
+    return await getSectionContents(3);
 }
 
-console.log(await getLastAnimes());
+//console.log(await getEpisodeServers('https://tioanime.com/ver/getsuyoubi-no-tawawa-2-11'));
 
-export default { getLastEpisodes, getLastAnimes, getLastMovies, getLastOvas, getLastOnas };
+export default 
+{
+	getLastEpisodes, 
+	getLastAnimes, 
+	getLastMovies, 
+	getLastOvas, 
+	getLastOnas, 
+	getEpisodeServers,
+	getAnime
+};
