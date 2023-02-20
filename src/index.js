@@ -7,7 +7,7 @@ import zoroRout from "./routes/v1/anime/zoro/animeZoroRoutes.js";
 import otakutv from "./routes/v1/anime/otakutv/otakutvRoute.js";
 import animelatinoRoutes from "./routes/v1/anime/animelatinohd/animelatinohdRoutes.js";
 import monoschinosRout from "./routes/v1/anime/monoschinos/monoschinosRoutes.js";
-import nineAnime from "./routes/v1/anime/9anime/9animeRoute.js";
+//import nineAnime from "./routes/v1/anime/9anime/9animeRoute.js";
 import tioanimeRout from './routes/v1/anime/tioanime/tioanimeRoutes.js'
 import helmet from "helmet";
 
@@ -53,7 +53,7 @@ app.use(otakutv);
 app.use(tioanimeRout)
 
 /*9anime */
-app.use(nineAnime);
+//app.use(nineAnime);
 
 /*9anime */
 //init
