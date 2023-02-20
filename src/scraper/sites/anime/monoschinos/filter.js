@@ -10,14 +10,18 @@ import page from "./Page.js";
  */
 async function filter(category, genre, year, letter) {
 	const animes = new SearchArray('1');
+	
 	// the function getLastAnimes returns an array of type Anime no matter
 	// if the array is empty, it never returns null
-	(await page.getLastAnimes(`https://monoschinos2.com/animes?categoria=${category}&genero=${genre}&fecha=${year}&letra=${letter}`))
+	const __eval = (value => { return value == null || value == undefined ? false : value });
+	(await page.getLastAnimes(`https://monoschinos2.com/animes?categoria=${__eval(category)}&genero=${__eval(genre)}&fecha=${__eval(year)}&letra=${__eval(letter)}`))
 		.forEach(element => {
 			animes.data.push(new AnimeSearch(element.name, element.image.url, element.url, category))
 		});
 	return animes;
 }
+
+console.log(await filter('anime', 'accion', 2020, 'A'))
 
 export default { filter };
 

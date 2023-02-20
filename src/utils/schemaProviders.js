@@ -215,6 +215,11 @@ export class Anime {
    */
   year = 0;
   /**
+   * Defines whether the anime refers to a tv, movie, ova, or ona
+   * @type {string}
+   */
+  type;
+  /**
    * Anime genres. Genres are defined by a text string in English or
    * Spanish depending on the location
    * @type {string[]}
