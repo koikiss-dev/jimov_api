@@ -13,12 +13,12 @@ function arrayToURLParams(param, array) {
 	let elements = '';
 	if (utilities.isUsableValue(array)) {
 		for (let i = 0; i < array.length; i++) {
-			elements += `${param}%5B%5D=${array[i]}`;
-		}
-		/*array.forEach(option => {
 			// %5B%5D > []
-			elements += `${param}%5B%5D=${option}`;
-		});*/
+			elements += `${param}%5B%5D=${array[i]}`;
+			if (i + 1 < array.length) {
+				elements += '&';
+			}
+		}
 	}
 	return elements;
 }
@@ -43,5 +43,7 @@ async function filter(types, genres, year_range, status, sort) {
 		});
 	return animes;
 }
+
+//console.log(await filter([1, 2], ['accion', 'fantasia'], {begin: 2000, end: 2019}, 2, '-recent'))
 
 export default { filter }

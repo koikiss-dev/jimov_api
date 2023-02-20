@@ -199,6 +199,7 @@ async function getAnime(url) {
 async function getLastAnimes(url) {
     try {
         let animes = [];
+		//console.log(url)
         const $ = cheerio.load((await axios.get(url ?? PageInfo.url)).data);
 		const elements = $(utilities.isUsableValue(url) ? 'ul.animes' : 'div.container section ul.list-unstyled.row li').children();
 		for (let i = 0; i < elements.length; i++) {
