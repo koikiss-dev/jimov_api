@@ -44,6 +44,6 @@ async function filter(types, genres, year_range, status, sort) {
 	return animes;
 }
 
-//console.log(await filter([1, 2], ['accion', 'fantasia'], {begin: 2000, end: 2019}, 2, '-recent'))
+//console.log(await filter(null, ['accion', 'comedia'], {begin: 2000, end: 2019}, 2, '-recent'));
 
 export default { filter }
