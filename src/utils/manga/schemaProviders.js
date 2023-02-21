@@ -1,4 +1,4 @@
-import { Image } from '../schemaProviders';
+import { Image } from '../schemaProviders.js';
 
 /**
  * Describes a manga chapter with its basic information including the
