@@ -2,10 +2,22 @@
 
 ![image description](.gitbook/assets/JIMOV\_logo.png)
 
-
 ## **Overview**
 
 This project is an open-source API for retrieving multimedia content such as anime, movies and series, news, and manga in both Spanish and English. The API is built using JavaScript and the Express.js framework. The API allows users to search for content by keywords and retrieve detailed information about the content such as title, description, and language. The API also allows users to filter results by language and content type.
+
+## Providers
+
+### Anime
+
+1. [GOGOAnime](https://ww4.gogoanimes.org) (English)
+2. [ZoroTo](https://zoro.to) (English)—Completed
+3. [9Anime](https://9anime.to/) (English)
+4. [OtakusTv](https://app.gitbook.com/s/V5QZYEOnv5nTMcwPqHnl/fundamentals/getting-set-up) (Spanish)
+5. [MonosChinos](https://monoschinos2.com) (Spanish)
+6. [TioAnime](https://tioanime.com) (Spanish)—Completed
+7. [AnimeLatinoHD](https://www.animelatinohd.com) (Spanish)—Completed
+8. [AnimeFLV](https://www2.animeflv.bz) (Spanish)—Completed
 
 ## **Installation**
 
@@ -25,32 +37,6 @@ The API can be started by running the following command:
 npm run server
 ```
 
-## **API Routes Explained**
-
-#### AnimeFlv
-
-| URL                         | Description                                                                                      | Example                             |
-| --------------------------- | ------------------------------------------------------------------------------------------------ | ----------------------------------- |
-| /anime/flv/:name            | Gets anime show title,show description (query by anime show name)                                | /anime/flv/one-piece-tv             |
-| /anime/flv/episode/:episode | Gets episode info, link to episode,and shows previous and next episode (query by episode number) | /anime/flv/episode/one-piece-tv-100 |
-| /anime/flv/browse/filter    | Filter certain anime shows based on show title                                                   |                                     |
-
-#### AnimeLatinoHD
-
-| URL                                          | Description                                                                                                 | Example |
-| -------------------------------------------- | ----------------------------------------------------------------------------------------------------------- | ------- |
-| /anime/animelatinohd/search/:search          | Gets show title that are anime based in Latin America (query by show name)                                  |         |
-| /anime/animelatinohd/:title                  | Queries by the title of the anime show and returns the show information and the list of episodes that exist |         |
-| /anime/animelatinohd/:title/episode/:episode | Queries by show title and returns the episode info                                                          |         |
-
-#### Zoro
-
-| URL                           | Description                                                                        | Example |
-| ----------------------------- | ---------------------------------------------------------------------------------- | ------- |
-| /anime/zoro/name/:name        | Returns the info on the show and the synopsis, queried by show title name          |         |
-| /anime/zoro/servers/:name/:id | Returns episode synopsis queried by name and episode number (based on server info) |         |
-| /anime/zoro/iframe/:id        | Returns all the internal data info returned by server                              |         |
-
 ## **Technologies Used**
 
 * JavaScript: The primary programming language used for building the API.
@@ -65,10 +51,11 @@ If you are interested in contributing to the project follow these instructions:
 3. Submit a pull request.
 
 ## **Authors**
-- [@Koikiss](https://github.com/koikiss-dev)
-- [@Maw](https://github.com/Mawfyy)
-- [@Zukaritasu](https://github.com/Zukaritasu)
-- [@Tokyo](https://github.com/TokyoTF)
+
+* [@Koikiss](https://github.com/koikiss-dev)
+* [@Maw](https://github.com/Mawfyy)
+* [@Zukaritasu](https://github.com/Zukaritasu)
+* [@Tokyo](https://github.com/TokyoTF)
 
 ## **LICENSE**
 
