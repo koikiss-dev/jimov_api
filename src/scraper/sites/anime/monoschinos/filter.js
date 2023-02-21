@@ -1,5 +1,6 @@
 import { AnimeSearch, SearchArray } from "../../../../utils/schemaProviders.js";
 import page from "./Page.js";
+import utilities from "../../../../utils/utilities.js"
 
 /**
  * @param {string} category 
@@ -13,15 +14,16 @@ async function filter(category, genre, year, letter) {
 	
 	// the function getLastAnimes returns an array of type Anime no matter
 	// if the array is empty, it never returns null
-	const __eval = (value => { return value == null || value == undefined ? false : value });
-	(await page.getLastAnimes(`https://monoschinos2.com/animes?categoria=${__eval(category)}&genero=${__eval(genre)}&fecha=${__eval(year)}&letra=${__eval(letter)}`))
+	(await page.getLastAnimes(`https://monoschinos2.com/animes?categoria=${category ?? false}&genero=${genre ?? false}&fecha=${year ?? false}&letra=${letter ?? false}`))
 		.forEach(element => {
-			animes.data.push(new AnimeSearch(element.name, element.image.url, element.url, category))
+			if (utilities.isUsableValue(element)) {
+				animes.data.push(new AnimeSearch(element.name, element.image.url, element.url, category))
+			}
 		});
 	return animes;
 }
 
-console.log(await filter('anime', 'accion', 2020, 'A'))
+//console.log(await filter('anime', 'accion', 2018, 'k'))
 
 export default { filter };
 
