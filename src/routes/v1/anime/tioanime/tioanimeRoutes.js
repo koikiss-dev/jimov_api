@@ -2,7 +2,6 @@ import { Router } from "express";
 import g from "../../../../scraper/sites/anime/tioanime/Page.js";
 import server from '../../../../scraper/sites/anime/tioanime/Page.js';
 import filter from '../../../../scraper/sites/anime/tioanime/filter.js';
-
 const r = Router();
 
 //get anime info
