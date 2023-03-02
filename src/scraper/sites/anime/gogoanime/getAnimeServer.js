@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { load } from 'cheerio';
 import puppeteer from 'puppeteer';
-import { Episode } from '../../../../utils/schemaProviders';
+import { Episode } from '../../../../utils/schemaProviders.js';
 
 async function getAnimeServer(animeName, numberEpisode) {
 
