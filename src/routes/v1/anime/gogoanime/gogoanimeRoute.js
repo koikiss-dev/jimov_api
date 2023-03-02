@@ -4,10 +4,6 @@ import server from '../../../../scraper/sites/anime/gogoanime/getAnimeServer.js'
 
 const r = Router();
 
-getAnimeInfo('punirunes').then(f => {
-	console.log(f)
-})
-
 server.getAnimeServer("bocchi the rock", 3).then(f => {
 	console.log(f)
 })
