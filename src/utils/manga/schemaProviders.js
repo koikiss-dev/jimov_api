@@ -1,6 +1,16 @@
 import { Image } from '../schemaProviders.js';
 
 /**
+ * 
+ */
+export class ChapterView {
+    title;
+    url;
+    image;
+    manga;
+}
+
+/**
  * Describes a manga chapter with its basic information including the
  * title and an array containing the images or pages of the chapter.
  * 
@@ -82,11 +92,11 @@ export class Manga {
      * Manga genres
      * @type {string[]}
      */
-    genres;
+    genres = [];
     /**
      * Manga chapters. Most of the pages of manga do not define volumes
      * and arcs, so all the chapters are in a single array
-     * @type {Chapter[]}
+     * @type {(Chapter[] | string[])}
      */
-    chapters;
+    chapters = [];
 }
