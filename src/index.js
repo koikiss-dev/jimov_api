@@ -7,7 +7,8 @@ import zoroRout from "./routes/v1/anime/zoro/animeZoroRoutes.js";
 import otakutv from "./routes/v1/anime/otakutv/otakutvRoute.js";
 import animelatinoRoutes from "./routes/v1/anime/animelatinohd/animelatinohdRoutes.js";
 import monoschinosRout from "./routes/v1/anime/monoschinos/monoschinosRoutes.js";
-//import nineAnime from "./routes/v1/anime/9anime/9animeRoute.js";
+import nineAnime from "./routes/v1/anime/9anime/9animeRoute.js";
+import gogoanime from './routes/v1/anime/gogoanime/gogoanimeRoute.js'
 import tioanimeRout from './routes/v1/anime/tioanime/tioanimeRoutes.js'
 import helmet from "helmet";
 
@@ -46,16 +47,20 @@ app.use(animelatinoRoutes);
 app.use(otakutv);
 
 /*monoschinos */
-//app.use(monoschinosRout);
+app.use(monoschinosRout);
 /*monoschinos */
 
 /*tioanime */
 app.use(tioanimeRout)
 
 /*9anime */
-//app.use(nineAnime);
+app.use(nineAnime);
 
 /*9anime */
+
+/*gogoanime*/
+app.use(gogoanime)
+/*gogoanime*/
 //init
 app.listen(port, () => {
   console.log(`Servidor iniciado en el puerto ${port} listo para trabajar :)`);
