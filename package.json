@@ -38,9 +38,11 @@
     "underscore": "^1.13.6"
   },
   "devDependencies": {
+    "@tsconfig/recommended": "^1.0.2",
     "dotenv": "^16.0.3",
     "nodemon": "^2.0.20",
     "npm-check-updates": "^16.6.2",
-    "pretty": "^2.0.0"
+    "pretty": "^2.0.0",
+    "typescript": "^4.9.5"
   }
 }
