@@ -2,6 +2,7 @@ export interface Base {
   name: string;
 } //base of interface
 
+<<<<<<< HEAD
 type AnimeType = "Anime" | "Movie" | "OVA" | "Special" | "ONA" | "Music" | "All";
 type Status = "Ongoing" | "Completed" | "Hiatus" | "Cancelled" | "Not yet aired" | "Unknow"; 
 type ClimaticStation = "Summer" | "Autumn" | "Winter" | "Spring";
@@ -51,6 +52,14 @@ export interface SearchAnimeResult extends Base{
 /*--------anime info interface--------*/
 export interface AnimeInfo<S, E> extends SearchAnimeResult {
   alternative_name?: string[];
+=======
+/*--------anime interface--------*/
+export interface Anime<S, E> extends Base {
+  alternative_name?: string[];
+  synopsis: S[]; //use Synopsis interface
+  link: `/anime/${string}/name/${string}`;//params -> provider's name & name of the anime -> /anime/flv/name/one-piece-tv
+  image: string;
+>>>>>>> 64dc9467d6641566a1653ee68b9cbf3b57e3b1fd
   banner?: string;
   synopsis: S[]; //use Synopsis interface
   episodes: E[]; // use Episodes interface
@@ -73,12 +82,17 @@ export interface Synopsis<C> {
 }
 export interface InfoCronology extends Base {
   image?: string;
-  link: `/anime/${string}/name/${string}`;//paramas -> provider's name & name of the anime -> /anime/flv/episode/one-piece-tv
+  link: `/anime/${string}/name/${string}`;//params -> provider's name & name of the anime -> /anime/flv/episode/one-piece-tv
 }
 
 export interface Episodes extends Base {
+<<<<<<< HEAD
   link: `/anime/${string}/episode/${string}`;//paramas -> provider's name & episode of the anime -> /anime/flv/episode/one-piece-tv-20;
   number?: `Episode ${number}`;
+=======
+  link: `/anime/${string}/episode/${string}`;//params -> provider's name & episode of the anime -> /anime/flv/episode/one-piece-tv-20;
+  number: `Episode ${number}`;
+>>>>>>> 64dc9467d6641566a1653ee68b9cbf3b57e3b1fd
   image?: string;
   totalEpisodes?: number;
 }
