@@ -27,7 +27,7 @@ export class AnimeFlv {
       AnimeReturn.name = title;
       AnimeReturn.alt_name = [...title_alt.split(",")];
       AnimeReturn.image = {
-        url: img,
+        url: img as string,
       };
       AnimeReturn.status = status;
       AnimeReturn.synopsis = synopsis;
@@ -37,9 +37,7 @@ export class AnimeFlv {
       $("ul.ListAnmRel li a").each((_i, e) => {
         const cro = new Chronology();
         cro.name = $(e).text().trim();
-        cro.url = `/anime/flv/name/${$(e)
-          .attr("href")
-          .replace("/anime", "anime/flv")}`;
+        cro.url = `/anime/flv/name/${$(e)!.attr("href").replace("/anime", "anime/flv")}`;
         AnimeReturn.chronology.push(cro);
       });
       //get genres
@@ -57,7 +55,7 @@ export class AnimeFlv {
           "/anime/flv"
         )}`;
         episode.number = $(e).children("p").last().text().trim();
-        episode.image = $(e).children("figure").find(".lazy").attr("src");
+        episode.image = $(e).children("figure").find(".lazy").attr("src") as string;
         AnimeReturn.episodes.push(episode);
       });
       return AnimeReturn;
@@ -94,7 +92,7 @@ export class AnimeFlv {
         const info = new AnimeSearch();
         info.name = $(e).find(".Title").last().text().trim();
         info.image = $("figure").children("img").attr("src");
-        info.url = `/anime/flv/name/${$(e)
+        info.url = `/anime/flv/name/${$(e)!
           .find("a")
           .attr("href")
           .replace("/anime/", "")}`;
