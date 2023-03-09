@@ -26,7 +26,6 @@
       ]
     }
   },
-<<<<<<< HEAD
   "include": [
     "src/**/*.ts"
   ],
@@ -35,8 +34,3 @@
     "build"
   ]
 }
-=======
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "build"]
-}
->>>>>>> 56305aa (animeflv provider experimental!!)

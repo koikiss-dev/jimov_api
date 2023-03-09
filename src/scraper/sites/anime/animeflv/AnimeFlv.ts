@@ -1,6 +1,5 @@
 import axios from "axios";
 import { load } from "cheerio";
-<<<<<<< HEAD
 import { Anime, Chronology } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
@@ -15,35 +14,12 @@ export class AnimeFlv {
   readonly url = "https://www2.animeflv.bz";
 
   async GetAnimeInfo(anime: string): Promise<Anime> {
-=======
-import { AnimeInfo, Synopsis, Episodes, InfoCronology } from "src/types/anime";
-
-/*
-It is not finished yet but you can get an idea
-
-Suggested structure for the providers, you must declare a class and inside write the necessary 
-functions but the three that are required are: GetAnimeInfo that will return the information of 
-the anime in general, EpisodeServers that will return the links and names of the servers 
-where the episodes are and Search that will return an array with the search results, please check 
-the file anime.d.ts. Encapsulate everything in the same file with the name 
-of the provider, e.g. Animeflv.ts.
-
-Sincerely: yako :)
-*/
-
-class AnimeFlv {
-  readonly url = "https://www2.animeflv.bz";
-  async GetAnimeInfo(
-    anime: string
-  ): Promise<AnimeInfo<Synopsis<InfoCronology>, Episodes>> {
->>>>>>> 56305aa (animeflv provider experimental!!)
     try {
       const { data } = await axios.get(`${this.url}/anime/${anime}`);
       const $ = load(data);
       const title = $("h2.Title").text().trim();
       const title_alt = $("span.TxtAlt").text().trim();
       const img = $("div.AnimeCover .Image figure img").attr("src");
-<<<<<<< HEAD
       const status = $("p.AnmStts span").text().trim();
       const synopsis = $("div.Description").text().trim();
       const episodes = $(".ListCaps li a");
@@ -51,7 +27,7 @@ class AnimeFlv {
       AnimeReturn.name = title;
       AnimeReturn.alt_name = [...title_alt.split(",")];
       AnimeReturn.image = {
-        url: img as string,
+        url: img,
       };
       AnimeReturn.status = status;
       AnimeReturn.synopsis = synopsis;
@@ -61,7 +37,9 @@ class AnimeFlv {
       $("ul.ListAnmRel li a").each((_i, e) => {
         const cro = new Chronology();
         cro.name = $(e).text().trim();
-        cro.url = `/anime/flv/name/${$(e)!.attr("href").replace("/anime", "anime/flv")}`;
+        cro.url = `/anime/flv/name/${$(e)
+          .attr("href")
+          .replace("/anime", "anime/flv")}`;
         AnimeReturn.chronology.push(cro);
       });
       //get genres
@@ -79,7 +57,7 @@ class AnimeFlv {
           "/anime/flv"
         )}`;
         episode.number = $(e).children("p").last().text().trim();
-        episode.image = $(e).children("figure").find(".lazy").attr("src") as string;
+        episode.image = $(e).children("figure").find(".lazy").attr("src");
         AnimeReturn.episodes.push(episode);
       });
       return AnimeReturn;
@@ -116,7 +94,7 @@ class AnimeFlv {
         const info = new AnimeSearch();
         info.name = $(e).find(".Title").last().text().trim();
         info.image = $("figure").children("img").attr("src");
-        info.url = `/anime/flv/name/${$(e)!
+        info.url = `/anime/flv/name/${$(e)
           .find("a")
           .attr("href")
           .replace("/anime/", "")}`;
@@ -152,42 +130,6 @@ class AnimeFlv {
     } catch (error) {
       console.log("An error occurred while getting the episode servers", error);
       throw new Error("An error occurred while getting the episode servers");
-=======
-      //const status = $("p.AnmStts span").text().trim();
-      const desc = $("div.Description").text().trim();
-      //const episodesNumber = $(".ListCaps li a");
-      const gen = [];
-      //get genres
-      $("nav.Nvgnrs a").each((_i, e) => {
-        const key = $(e).text().trim();
-        gen.push(key);
-      });
-
-      const animeInfo: AnimeInfo<Synopsis<InfoCronology>, Episodes> = {
-        name: title,
-        alternative_name: [title_alt],
-        image: img,
-        synopsis: [
-          {
-            description: desc,
-            keywords: gen,
-          },
-        ],
-        episodes: [],
-        link: `/anime/${"flv"}/name/${anime}`,
-      };
-      return animeInfo;
-    } catch (error) {
-      console.log(error);
->>>>>>> 56305aa (animeflv provider experimental!!)
     }
   }
 }
-
-<<<<<<< HEAD
-=======
-const ff = new AnimeFlv();
-ff.GetAnimeInfo("one-piece-tv").then((f) => {
-  console.log(f);
-});
->>>>>>> 56305aa (animeflv provider experimental!!)
