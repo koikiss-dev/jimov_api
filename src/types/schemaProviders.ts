@@ -6,6 +6,58 @@
 type AnimeType = "Anime" | "Movie" | "OVA" | "ONA";
 type ClimaticStation = "Summer" | "Autumn" | "Winter" | "Spring";
 
+//genres animeflf
+export enum Genres {
+    Action = "Acción",
+    MartialArts = "Artes Marciales",
+    Adventure = "Aventuras",
+    Racing = "Carreras",
+    ScienceFiction = "Ciencia Ficción",
+    Comedy = "Comedia",
+    Dementia = "Demencia",
+    Demons = "Demonios",
+    Sports = "Deportes",
+    Drama = "Drama",
+    Ecchi = "Ecchi",
+    School = "Escolares",
+    Space = "Espacial",
+    Fantasy = "Fantasía",
+    Harem = "Harem",
+    Historical = "Histórico",
+    Kids = "Infantil",
+    Josei = "Josei",
+    Games = "Juegos",
+    Magic = "Magia",
+    Mecha = "Mecha",
+    Military = "Militar",
+    Mystery = "Misterio",
+    Music = "Música",
+    Parody = "Parodia",
+    Police = "Policía",
+    Psychological = "Psicológico",
+    SliceOfLife = "Recuentos de la vida",
+    Romance = "Romance",
+    Samurai = "Samurai",
+    Seinen = "Seinen",
+    Shoujo = "Shoujo",
+    Shounen = "Shounen",
+    Supernatural = "Sobrenatural",
+    Superpowers = "Superpoderes",
+    Suspense = "Suspenso",
+    Horror = "Terror",
+    Vampires = "Vampiros",
+    Yaoi = "Yaoi",
+    Yuri = "Yuri",
+  }
+  
+  export enum StatusAnimeflv {
+    OnGoing = "En emisión",
+    Finished = "Finalizado",
+    Upcoming = "Próximamente",
+  }
+  
+export type TypeAnimeflv = "all" | 1 | 2 | 3 | 4;
+export type OrderAnimeflv = "all" | 1 | 2 | 3 | 4 | 5;
 export interface IImage {
     url: string;
     banner?: string;
@@ -23,9 +75,9 @@ export interface IEpisodeServer {
 export interface IEpisode {
     name: string;
     url: `/anime/${string}/episode/${string}`;
-    number: number;
+    number: number | string;
     servers?: IEpisodeServer[];
-    image: string;
+    image?: string;
 }
 
 /**************************************************************
@@ -142,14 +194,14 @@ export class EpisodeServer implements IEpisodeServer {
 export class Episode implements IEpisode {
     name: string;
     url: `/anime/${string}/episode/${string}`;
-    number: number;
+    number: number | string;
     servers?: IEpisodeServer[] = [];
     image: string;
 }
 
 export class Chronology implements IChronology {
     name: string;
-    url: string;
+    url: `/anime/${string}/name/${string}`;
     image?: string;
 }
 
