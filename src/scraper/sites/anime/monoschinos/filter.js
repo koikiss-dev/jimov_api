@@ -18,6 +18,8 @@ async function filter(category, genre, year, letter) {
 		});
 	return animes;
 }
-
+filter('anime', 'carrera').then(f => {
+	console.log(f)
+})
 export default { filter };
 
