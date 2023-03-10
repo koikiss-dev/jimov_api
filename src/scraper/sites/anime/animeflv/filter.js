@@ -10,7 +10,7 @@ async function Filter(gen, year, type, status, ord, page) {
       params: {
         genres: gen || "all",
         year: year || "all",
-        status: status || "all", //En-emision, Finalizado, Proximamente
+        status: status || "all", //En_emision, Finalizado, Proximamente
         Tipo: type || "all", //all, 1, 2, 3, 4
         order: ord || "1", //1, 2, 3, 4, 5
         page: page || "1",

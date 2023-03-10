@@ -40,7 +40,7 @@ async function NineAnimeInfo(animeName) {
   animeData.image = $("div.poster span > img").attr("src");
   animeData.alt_name = $("div.names").text().trim();
   animeData.synopsis = $("div.content").text().trim();
-  animeData.url = `/anime/9anime/watch/${animeName}`;
+  animeData.url = `/anime/9anime/name/${animeName}`;
 
   $("div.binfo div.info div.bmeta").each((i, e) => {
     const info = parseAnimeInfo(

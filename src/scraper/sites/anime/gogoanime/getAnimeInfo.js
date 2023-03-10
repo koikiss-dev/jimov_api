@@ -1,27 +1,26 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 import { Anime, Image } from "../../../../utils/schemaProviders.js";
-import {splitString} from './split.js';
 
 export async function getAnimeInfo(name = null, url = null) {
 
   let url_fetch = "";
   let animeparser = "";
   let animename = "";
-  
 
-  if(name != null){
-    
+
+  if (name != null) {
+
     animeparser = name.toLowerCase();
-    animename = animeparser.replace(/\s/g, "-");
+    animename = animeparser.replace(/\s/g, "-").toLowerCase();
+
     url_fetch = `https://ww4.gogoanimes.org/category/${animename}`
 
-  }else if( url != null ){
-    
+  } else if (url != null) {
+
     url_fetch = url;
     let getEndpointsArray = splitString(`${url_fetch}`, "/")
     animename = getEndpointsArray[getEndpointsArray.length - 1];
-
 
   }
 
@@ -33,13 +32,10 @@ export async function getAnimeInfo(name = null, url = null) {
 
     const anime = new Anime();
 
-
-
-      
     //name, image, url
     anime.name = $("div.anime_info_body_bg  h1").text();
     anime.image = new Image($("div.anime_info_body_bg ").find("img").attr("src"));
-    anime.url = `${url_fetch}`;
+    anime.url = `/anime/gogoanime/${animename}`;
 
 
     //Get synopsis, year
@@ -56,7 +52,7 @@ export async function getAnimeInfo(name = null, url = null) {
           //Status
         } if (index == 4 && $(element).text().trim() != 'Status: ') {
           anime.active = true;
-        } if(index == 5){
+        } if (index == 5) {
           anime.alt_name = $(element).text().trim()
             .replace('Other name:', '')
             .replace(/\s/g, '')
@@ -69,26 +65,14 @@ export async function getAnimeInfo(name = null, url = null) {
         anime.genres.push($(element).text())
     })
 
-   //Get numbers from html 
-    const getLastEpisode =  $('#episode_page li').last().text().trim();
-     
+    //Get numbers from html 
+    let getNumberEpisodes = $('#episode_page li').last().text().trim().split("-")[1];
+    getNumberEpisodes = parseInt(getNumberEpisodes)
 
-    //separator that they have
-  
-    const separator = "-" 
- 
-    //Return a array with its values dividies in array
-    const getArrayNumbers = splitString(getLastEpisode, separator);
-  
-
-    //Get last value from array and parse it to number
-    const getLastNumber = (getArrayNumbers[getArrayNumbers.length - 1]);
-
-
-    for (let index = 1; index <= getLastNumber; index++) {
-     anime.episodes.push({ 
-       episode: `https://ww4.gogoanimes.org/watch/${animename}-episode-${index}`
-      }) 
+    for (let index = 1; index <= getNumberEpisodes; index++) {
+      anime.episodes.push({
+        episode: `/anime/gogoanime/name/${animename}/episode/${index}`
+      })
     }
 
 
@@ -99,7 +83,8 @@ export async function getAnimeInfo(name = null, url = null) {
     return error
   }
 
-
 }
+
+
 
 
