@@ -74,7 +74,7 @@ export interface IEpisodeServer {
 
 export interface IEpisode {
     name: string;
-    url: `/anime/${string}/episode/${string}`;
+    url: `/anime/${string}/episode/${string | number}`;
     number: number | string;
     servers?: IEpisodeServer[];
     image?: string;
@@ -112,7 +112,7 @@ export interface IChronology {
 
 export interface IAnime {
     name: string;
-    alt_name?: string;
+    alt_name?: string | string[];
 	id?: number;
     url: `/anime/${string}/name/${string}`;
     synopsis: string;
