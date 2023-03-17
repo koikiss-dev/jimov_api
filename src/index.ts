@@ -27,7 +27,10 @@ app.use(helmet()); //segurity
 
 /*animeflv*/
 app.use(flv);
+<<<<<<< HEAD
 app.use(latinhd);
+=======
+>>>>>>> cd02fde (delete index.js and add ts version with animeflv)
 /*animeflv*/
 
 
