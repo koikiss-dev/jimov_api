@@ -10,7 +10,7 @@ import {
 } from "./animeflv_helper";
 import { AnimeSearch, ResultSearch } from "../../../../types/search";
 
-class AnimeFlv {
+export class AnimeFlv {
   readonly url = "https://www2.animeflv.bz";
 
   async GetAnimeInfo(anime: string): Promise<Anime> {
@@ -134,4 +134,3 @@ class AnimeFlv {
   }
 }
 
-export default AnimeFlv;
