@@ -2,9 +2,9 @@
   "name": "jimov_scraper",
   "version": "1.0.0",
   "description": "API for scraping multimedia content such as anime, movies, series, and manga",
-  "main": "index.js",
+  "main": "index.ts",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "ts-node src/index.ts",
     "server": "nodemon src/index.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
