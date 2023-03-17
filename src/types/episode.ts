@@ -30,7 +30,7 @@ export interface IEpisodeServer {
 export interface IEpisode {
   name: string;
   url: `/anime/${string}/episode/${string | number}`;
-  number: number;
+  number: number | string;
   servers?: IEpisodeServer[];
   image: string;
 }
@@ -45,7 +45,7 @@ export class EpisodeServer implements IEpisodeServer {
 export class Episode implements IEpisode {
   name: string;
   url: `/anime/${string}/episode/${string | number}`;
-  number: number;
+  number: number | string;
   servers?: IEpisodeServer[] = [];
   image: string;
 }
