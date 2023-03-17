@@ -25,7 +25,7 @@ export class AnimeFlv {
       const episodes = $(".ListCaps li a");
       const AnimeReturn = new Anime();
       AnimeReturn.name = title;
-      AnimeReturn.alt_name = title_alt;
+      AnimeReturn.alt_name = [...title_alt.split(",")];
       AnimeReturn.image = {
         url: img,
       };
@@ -39,7 +39,7 @@ export class AnimeFlv {
         cro.name = $(e).text().trim();
         cro.url = `/anime/flv/name/${$(e)
           .attr("href")
-          .replace("/anime", "/anime/flv")}`;
+          .replace("/anime", "anime/flv")}`;
         AnimeReturn.chronology.push(cro);
       });
       //get genres
@@ -68,7 +68,7 @@ export class AnimeFlv {
   }
 
   async Filter(
-    gen?: Genres,
+    gen?: Genres | string,
     date?: string,
     type?: TypeAnimeflv,
     status?: StatusAnimeflv,
@@ -97,7 +97,7 @@ export class AnimeFlv {
         info.url = `/anime/flv/name/${$(e)
           .find("a")
           .attr("href")
-          .replace("/", "")}`;
+          .replace("/anime/", "")}`;
         info.type = $(e).find("p").children("span.Type").text().trim();
         data_filter.results.push(info);
       });
