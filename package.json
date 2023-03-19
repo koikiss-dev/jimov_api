@@ -4,8 +4,8 @@
   "description": "API for scraping multimedia content such as anime, movies, series, and manga",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node src/index.js",
-    "server": "ts-node src/index.ts",
+    "start": "node src/index.js",
+    "server": "nodemon src/index.ts",
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
