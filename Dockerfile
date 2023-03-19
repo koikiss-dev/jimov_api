@@ -8,11 +8,11 @@ WORKDIR /anime
 
 RUN npm i 
 
-EXPOSE 3000
+
 
 WORKDIR /anime/src/
 
-CMD [ "node", "index.js" ]
+CMD [ "ts-node", "index.ts" ]
 
 
 
