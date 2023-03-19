@@ -39,7 +39,7 @@ export class AnimeLatinoHD {
                     name: animeInfoParseObj.name,
                     number: e.number + "",
                     image: "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.banner + "?&w=280&q=95",
-                    url: `/anime/animelatinohd/episode/${animeInfoParseObj.name + "-" + e.number}`
+                    url: `/anime/animelatinohd/episode/${animeInfoParseObj.name.replace(" ", "-") + "-" + e.number}`
                 }
                 AnimeInfo.episodes.push(AnimeEpisode);
             })
@@ -52,6 +52,7 @@ export class AnimeLatinoHD {
     }
     async GetEpisodeServers(episode: string) {
         try {
+          
             let number = episode.substring(episode.lastIndexOf("-") + 1)
             let anime = episode.substring(0, episode.lastIndexOf("-"))
 
