@@ -86,13 +86,13 @@ export class AnimeLatinoHD {
                         url: "https://api.animelatinohd.com/stream/" + e.id,
                     }
 
-                    let ServerObj = {
+                    /*let ServerObj = {
                         lang_id: String,
                         lang_name: String,
                     }
 
                     ServerObj.lang_id = e.languaje
-                    //ServerObj.lang_name = t
+                    ServerObj.lang_name = t*/
 
                     AnimeEpisodeInfo.servers.push(Server)
                 })
@@ -104,7 +104,7 @@ export class AnimeLatinoHD {
         }
     }
 
-    async GetAnimeBySearch(search?: string, type?: number, page?: number, year?: string, genre?: string) {
+    async GetAnimeByFilter(search?: string, type?: number, page?: number, year?: string, genre?: string) {
         try {
             const { data } = await axios.get(`${this.api}/api/anime/list`, {
                 params: {

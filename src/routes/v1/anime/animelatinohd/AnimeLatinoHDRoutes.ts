@@ -3,11 +3,11 @@ import { AnimeLatinoHD } from "../../../../scraper/sites/anime/animelatinohd/Ani
 const Anime = new AnimeLatinoHD();
 const router = Router();
 
-// Search
+// Filter
 router.get("/anime/animelatinohd/filter", async (req, res) => {
     let { search, type, page, year, genre } = req.query
 
-    let data = await Anime.GetAnimeBySearch(search as string, type as unknown as number, page as unknown as number, year as string, genre as string)
+    let data = await Anime.GetAnimeByFilter(search as string, type as unknown as number, page as unknown as number, year as string, genre as string)
     res.send(data)
 });
 
