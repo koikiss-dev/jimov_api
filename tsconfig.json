@@ -20,7 +20,17 @@
     "strictNullChecks": false,
     "outDir": "./build",
     "baseUrl": ".",
+    "paths": {
+      "@animetypes/*": [
+        "./src/types/*"
+      ]
+    }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["node_modules", "build"]
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "build"
+  ]
 }
