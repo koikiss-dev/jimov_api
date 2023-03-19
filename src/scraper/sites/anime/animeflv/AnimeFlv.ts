@@ -1,34 +1,19 @@
 import axios from "axios";
 import { load } from "cheerio";
+import { Anime, Chronology } from "../../../../types/anime";
+import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
-  IEpisode,
-  IEpisodeServer,
-  IChronology,
-  IAnime,
   Genres,
-  StatusAnimeflv,
   OrderAnimeflv,
+  StatusAnimeflv,
   TypeAnimeflv,
-  IResultSearch,
-  IAnimeSearch,
-} from "../../../../types/schemaProviders";
-/*
-It is not finished yet but you can get an idea
+} from "./animeflv_helper";
+import { AnimeSearch, ResultSearch } from "../../../../types/search";
 
-Suggested structure for the providers, you must declare a class and inside write the necessary 
-functions but the three that are required are: GetAnimeInfo that will return the information of 
-the anime in general, EpisodeServers that will return the links and names of the servers 
-where the episodes are and Filter that will return an array with the search results, please check 
-the file shemaProviders.ts. Encapsulate everything in the same file with the name 
-of the provider, e.g. Animeflv.ts.
-
-Sincerely: yako :)
-*/
-
-class AnimeFlv {
+export class AnimeFlv {
   readonly url = "https://www2.animeflv.bz";
 
-  async GetAnimeInfo(anime: string): Promise<IAnime> {
+  async GetAnimeInfo(anime: string): Promise<Anime> {
     try {
       const { data } = await axios.get(`${this.url}/anime/${anime}`);
       const $ = load(data);
@@ -38,28 +23,23 @@ class AnimeFlv {
       const status = $("p.AnmStts span").text().trim();
       const synopsis = $("div.Description").text().trim();
       const episodes = $(".ListCaps li a");
-      const AnimeReturn: IAnime = {
-        name: title,
-        alt_name: title_alt,
-        image: {
-          url: img,
-        },
-        status: status,
-        synopsis: synopsis,
-        chronology: [],
-        url: `/anime/flv/name/${anime}`,
-        genres: [],
-        episodes: [],
+      const AnimeReturn = new Anime();
+      AnimeReturn.name = title;
+      AnimeReturn.alt_name = [...title_alt.split(",")];
+      AnimeReturn.image = {
+        url: img,
       };
+      AnimeReturn.status = status;
+      AnimeReturn.synopsis = synopsis;
+      AnimeReturn.chronology = [];
 
       //getRelated
       $("ul.ListAnmRel li a").each((_i, e) => {
-        const cro: IChronology = {
-          name: $(e).text().trim(),
-          url: `/anime/flv/name/${$(e)
-            .attr("href")
-            .replace("/anime", "/anime/flv")}`,
-        };
+        const cro = new Chronology();
+        cro.name = $(e).text().trim();
+        cro.url = `/anime/flv/name/${$(e)
+          .attr("href")
+          .replace("/anime", "anime/flv")}`;
         AnimeReturn.chronology.push(cro);
       });
       //get genres
@@ -70,12 +50,14 @@ class AnimeFlv {
       //get episodes
       episodes.each((_i_, e) => {
         const l = $(e).attr("href").replace("/", "");
-        const episode: IEpisode = {
-          name: $(e).children(".Title").text().trim(),
-          url: `/anime/flv/episode/${`${l}`.replace("/anime", "/anime/flv")}`,
-          number: $(e).children("p").last().text().trim(),
-          image: $(e).children("figure").find(".lazy").attr("src"),
-        };
+        const episode = new Episode();
+        episode.name = $(e).children(".Title").text().trim();
+        episode.url = `/anime/flv/episode/${`${l}`.replace(
+          "/anime",
+          "/anime/flv"
+        )}`;
+        episode.number = $(e).children("p").last().text().trim();
+        episode.image = $(e).children("figure").find(".lazy").attr("src");
         AnimeReturn.episodes.push(episode);
       });
       return AnimeReturn;
@@ -86,13 +68,13 @@ class AnimeFlv {
   }
 
   async Filter(
-    gen?: Genres,
+    gen?: Genres | string,
     date?: string,
     type?: TypeAnimeflv,
     status?: StatusAnimeflv,
     ord?: OrderAnimeflv,
     page?: number
-  ): Promise<IResultSearch> {
+  ): Promise<ResultSearch> {
     try {
       const { data } = await axios.get(`${this.url}/browse`, {
         params: {
@@ -106,49 +88,42 @@ class AnimeFlv {
       });
       const $ = load(data);
       const info = $("ul.ListAnimes li article.Anime div.Description");
-      const data_anime: IResultSearch = {
-        nav: {
-          current: page || 1,
-        },
-        results: [],
-      };
+      const data_filter = new ResultSearch();
+      data_filter.results = [];
       info.each((_i, e) => {
-        const info: IAnimeSearch = {
-          name: $(e).find(".Title").last().text().trim(),
-          image: $("figure").children("img").attr("src"),
-          url: `/anime/flv/name/${$(e)
-            .find("a")
-            .attr("href")
-            .replace("/", "")}`,
-          type: $(e).find("p").children("span.Type").text().trim(),
-        };
-        data_anime.results.push(info);
+        const info = new AnimeSearch();
+        info.name = $(e).find(".Title").last().text().trim();
+        info.image = $("figure").children("img").attr("src");
+        info.url = `/anime/flv/name/${$(e)
+          .find("a")
+          .attr("href")
+          .replace("/anime/", "")}`;
+        info.type = $(e).find("p").children("span.Type").text().trim();
+        data_filter.results.push(info);
       });
-      return data_anime;
+      return data_filter;
     } catch (error) {
       console.log("An error occurred while getting the filter values", error);
       throw new Error("An error occurred while getting the filter values");
     }
   }
-  async GetEpisodeServers(episode: string): Promise<IEpisode> {
+
+  async GetEpisodeServers(episode: string): Promise<Episode> {
     try {
       const { data } = await axios.get(`${this.url}/${episode}`);
       const $ = load(data);
       const title = $(".CapiTop").children("h1").text().trim();
       const getLinks = $(".CpCnA .anime_muti_link li");
       const numberEpisode = episode.match(/\d+/g);
-
-      const episodeReturn: IEpisode = {
-        name: title,
-        url: `/anime/flv/episode/${episode}`,
-        number: numberEpisode as unknown as string,
-        servers: [],
-      };
+      const episodeReturn = new Episode();
+      episodeReturn.name = title;
+      episodeReturn.url = `/anime/flv/episode/${episode}`;
+      episodeReturn.number = numberEpisode as unknown as string;
+      episodeReturn.servers = [];
       getLinks.each((_i, e) => {
-        const servers: IEpisodeServer = {
-          name: $(e).attr("title"),
-          url: $(e).attr("data-video"),
-        };
+        const servers = new EpisodeServer();
+        servers.name = $(e).attr("title");
+        servers.url = $(e).attr("data-video");
         episodeReturn.servers.push(servers);
       });
       return episodeReturn;
@@ -158,3 +133,4 @@ class AnimeFlv {
     }
   }
 }
+
