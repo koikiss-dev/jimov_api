@@ -6,7 +6,7 @@
   "scripts": {
     "start": "npm run build && node build/index.js",
     "server": "nodemon src/index.ts",
-    "build": "tsc",
+    "build": "tsc --build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
