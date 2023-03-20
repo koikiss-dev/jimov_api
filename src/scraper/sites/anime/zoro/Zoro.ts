@@ -1,8 +1,7 @@
 import axios from "axios";
 import { load } from "cheerio";
 import { Anime, Chronology } from "../../../../types/anime";
-import { Episode, EpisodeServer } from "../../../../types/episode";
-import {} from "../../../../types/search";
+//import { Episode, EpisodeServer } from "../../../../types/episode";
 
 export class Zoro {
   readonly url = "https://zoro.to";
@@ -59,7 +58,7 @@ export class Zoro {
   //filter
 
   //episode server
-  async GetEpisodeServer(episode: string, ep: string): Promise<Episode> {
+  /* async GetEpisodeServer(episode: string, ep: string): Promise<Episode> {
     try {
       const animename = episode.toLowerCase().replace(/\s/g, "-");
       const { data } = await axios.get(
@@ -108,5 +107,5 @@ export class Zoro {
       `${this.url}/ajax/v2/episode/sources?id=${id}`
     );
     return data;
-  }
+  } */
 }
