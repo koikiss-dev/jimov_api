@@ -5,7 +5,7 @@
         "use": "@now/node"}
     ],
     "routes":[{
-        "src": "src/**/*.ts",
+        "src": "src/routes/v1/anime",
         "dest": "src/index.ts"
     }]
 }
