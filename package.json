@@ -4,9 +4,11 @@
   "description": "API for scraping multimedia content such as anime, movies, series, and manga",
   "main": "index.ts",
   "scripts": {
-    "start": "npm run build && node build/index.js",
-    "server": "nodemon src/index.ts",
-    "build": "tsc --build",
+    "start": "node build/index.js",
+    "watch-node": "nodemon build/index.js",
+    "watch-ts": "tsc -w",
+    "postinstall": "tsc",
+    "deploy": "git add . && git commit -m Heroku && git push heroku main",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -18,6 +20,7 @@
     "series",
     "manga"
   ],
+  "engines": {"node": "12.16.3"},
   "license": "MIT",
   "repository": {
     "type": "git",
