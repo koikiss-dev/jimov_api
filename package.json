@@ -8,7 +8,7 @@
     "watch-node": "nodemon build/index.js",
     "watch-ts": "tsc -w",
     "postinstall": "tsc",
-    "deploy": "git add . && git commit -m heroku && git push heroku main",
+    "deploy": "git add . && git commit -m Heroku && git push heroku main",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
