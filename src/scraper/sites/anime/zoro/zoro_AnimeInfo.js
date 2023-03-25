@@ -96,8 +96,8 @@ async function AnimeInfo(id) {
   }
 }
 
-AnimeInfo('tokyo-revengers-christmas-showdown-18244').then(f => {
+/* AnimeInfo('tokyo-revengers-christmas-showdown-18244').then(f => {
   console.log(f)
-})
+}) */
 
 export default { AnimeInfo };
