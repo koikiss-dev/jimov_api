@@ -1,5 +1,3 @@
 node_modules
-build
 .env
 /src/scraper/sites/anime/tioanime/testing.js
-dist/
