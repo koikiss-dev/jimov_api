@@ -16,6 +16,7 @@ async function filter(category, genre, year, letter) {
 	// if the array is empty, it never returns null
 	(await page.getLastAnimes(`https://monoschinos2.com/animes?categoria=${category ?? false}&genero=${genre ?? false}&fecha=${year ?? false}&letra=${letter ?? false}`))
 		.forEach(element => {
+			
 			if (utilities.isUsableValue(element)) {
 				animes.data.push(new AnimeSearch(element.name, element.image.url, element.url, category))
 			}

@@ -3,7 +3,7 @@ import { Router } from "express";
 const r = Router();
 
 //raiz
-r.get("/", (req, res) => {
+r.get("/", (_req, res) => {
   res.send({
     message: "Jimov API is up and running 🎬🎉🎉",
     status: "success",
