@@ -35,69 +35,30 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
-var AnimeLatinoHD_1 = require("../../../../scraper/sites/anime/animelatinohd/AnimeLatinoHD");
-var Anime = new AnimeLatinoHD_1.AnimeLatinoHD();
-var router = (0, express_1.Router)();
-// Filter
-router.get("/anime/animelatinohd/filter", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var _a, search, type, page, year, genre, data;
-    return __generator(this, function (_b) {
-        switch (_b.label) {
-            case 0:
-                _a = req.query, search = _a.search, type = _a.type, page = _a.page, year = _a.year, genre = _a.genre;
-                return [4 /*yield*/, Anime.GetAnimeByFilter(search, type, page, year, genre)];
-            case 1:
-                data = _b.sent();
-                res.send(data);
+//import * as puppeteer from "puppeteer";
+var all_video_downloader_1 = __importDefault(require("all-video-downloader"));
+var AnimeExtractor = /** @class */ (function () {
+    function AnimeExtractor() {
+    }
+    AnimeExtractor.prototype.getSouruces = function (link) {
+        return __awaiter(this, void 0, void 0, function () {
+            return __generator(this, function (_a) {
+                (0, all_video_downloader_1.default)(link).then(function (result) {
+                    console.log(result);
+                    return result;
+                });
                 return [2 /*return*/];
-        }
-    });
-}); });
-// Anime Info +(Episodes list)
-router.get("/anime/animelatinohd/name/:name", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var name, data;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                name = req.params.name;
-                return [4 /*yield*/, Anime.GetAnimeInfo(name)];
-            case 1:
-                data = _a.sent();
-                res.send(data);
-                return [2 /*return*/];
-        }
-    });
-}); });
-// Episode Info +(Video Servers)
-router.get("/anime/animelatinohd/episode/:episode", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var episode, data;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                episode = req.params.episode;
-                return [4 /*yield*/, Anime.GetEpisodeServers(episode)];
-            case 1:
-                data = _a.sent();
-                res.send(data);
-                return [2 /*return*/];
-        }
-    });
-}); });
-router.get("/anime/animelatinohd/episode/:episode", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var episode, data;
-    return __generator(this, function (_a) {
-        switch (_a.label) {
-            case 0:
-                episode = req.params.episode;
-                return [4 /*yield*/, Anime.GetEpisodeServers(episode)];
-            case 1:
-                data = _a.sent();
-                res.send(data);
-                return [2 /*return*/];
-        }
-    });
-}); });
-exports.default = router;
-//# sourceMappingURL=AnimeLatinoHDRoutes.js.map
+            });
+        });
+    };
+    return AnimeExtractor;
+}());
+var g = new AnimeExtractor();
+g.getSouruces("https://9anime.to/watch/urusei-yatsura.rllzm/ep-18").then(function (f) {
+    console.log(f);
+});
+//# sourceMappingURL=extractor.js.map

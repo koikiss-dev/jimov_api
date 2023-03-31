@@ -1,58 +1,123 @@
 "use strict";
+var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
+    function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
+    return new (P || (P = Promise))(function (resolve, reject) {
+        function fulfilled(value) { try { step(generator.next(value)); } catch (e) { reject(e); } }
+        function rejected(value) { try { step(generator["throw"](value)); } catch (e) { reject(e); } }
+        function step(result) { result.done ? resolve(result.value) : adopt(result.value).then(fulfilled, rejected); }
+        step((generator = generator.apply(thisArg, _arguments || [])).next());
+    });
+};
+var __generator = (this && this.__generator) || function (thisArg, body) {
+    var _ = { label: 0, sent: function() { if (t[0] & 1) throw t[1]; return t[1]; }, trys: [], ops: [] }, f, y, t, g;
+    return g = { next: verb(0), "throw": verb(1), "return": verb(2) }, typeof Symbol === "function" && (g[Symbol.iterator] = function() { return this; }), g;
+    function verb(n) { return function (v) { return step([n, v]); }; }
+    function step(op) {
+        if (f) throw new TypeError("Generator is already executing.");
+        while (g && (g = 0, op[0] && (_ = 0)), _) try {
+            if (f = 1, y && (t = op[0] & 2 ? y["return"] : op[0] ? y["throw"] || ((t = y["return"]) && t.call(y), 0) : y.next) && !(t = t.call(y, op[1])).done) return t;
+            if (y = 0, t) op = [op[0] & 2, t.value];
+            switch (op[0]) {
+                case 0: case 1: t = op; break;
+                case 4: _.label++; return { value: op[1], done: false };
+                case 5: _.label++; y = op[1]; op = [0]; continue;
+                case 7: op = _.ops.pop(); _.trys.pop(); continue;
+                default:
+                    if (!(t = _.trys, t = t.length > 0 && t[t.length - 1]) && (op[0] === 6 || op[0] === 2)) { _ = 0; continue; }
+                    if (op[0] === 3 && (!t || (op[1] > t[0] && op[1] < t[3]))) { _.label = op[1]; break; }
+                    if (op[0] === 6 && _.label < t[1]) { _.label = t[1]; t = op; break; }
+                    if (t && _.label < t[2]) { _.label = t[2]; _.ops.push(op); break; }
+                    if (t[2]) _.ops.pop();
+                    _.trys.pop(); continue;
+            }
+            op = body.call(thisArg, _);
+        } catch (e) { op = [6, e]; y = 0; } finally { f = t = 0; }
+        if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
+    }
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const express_1 = require("express");
-const AnimeFlv_1 = require("../../../../scraper/sites/anime/animeflv/AnimeFlv");
-const r = (0, express_1.Router)();
+var express_1 = require("express");
+var AnimeFlv_1 = require("../../../../scraper/sites/anime/animeflv/AnimeFlv");
+var r = (0, express_1.Router)();
 //anime info
-r.get("/anime/flv/name/:name", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { name } = req.params;
-        const flv = new AnimeFlv_1.AnimeFlv();
-        const animeInfo = yield flv.GetAnimeInfo(name);
-        res.send({
-            data: [{ animeInfo }],
-        });
-    }
-    catch (error) {
-        console.log(error);
-        res.status(500).send(error);
-    }
-}));
+r.get("/anime/flv/name/:name", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var name_1, flv, animeInfo, error_1;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                name_1 = req.params.name;
+                flv = new AnimeFlv_1.AnimeFlv();
+                return [4 /*yield*/, flv.GetAnimeInfo(name_1)];
+            case 1:
+                animeInfo = _a.sent();
+                res.send({
+                    data: [{ animeInfo: animeInfo }],
+                });
+                return [3 /*break*/, 3];
+            case 2:
+                error_1 = _a.sent();
+                console.log(error_1);
+                res.status(500).send(error_1);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 //episode servers
-r.get("/anime/flv/episode/:episode", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const { episode } = req.params;
-        const flv = new AnimeFlv_1.AnimeFlv();
-        const animeInfo = yield flv.GetEpisodeServers(episode);
-        res.send({
-            data: [{ animeInfo }],
-        });
-    }
-    catch (error) {
-        console.log(error);
-        res.status(500).send(error);
-    }
-}));
+r.get("/anime/flv/episode/:episode", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var episode, flv, animeInfo, error_2;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                episode = req.params.episode;
+                flv = new AnimeFlv_1.AnimeFlv();
+                return [4 /*yield*/, flv.GetEpisodeServers(episode)];
+            case 1:
+                animeInfo = _a.sent();
+                res.send({
+                    data: [{ animeInfo: animeInfo }],
+                });
+                return [3 /*break*/, 3];
+            case 2:
+                error_2 = _a.sent();
+                console.log(error_2);
+                res.status(500).send(error_2);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 //filter
-r.get("/anime/flv/filter", (req, res) => tslib_1.__awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const gen = req.query.gen;
-        const date = req.query.date;
-        const type = req.query.type;
-        const status = req.query.status;
-        const ord = req.query.ord;
-        const page = req.query.page;
-        const flv = new AnimeFlv_1.AnimeFlv();
-        const animeInfo = yield flv.Filter(gen, date, type, status, ord, page);
-        res.send({
-            data: [{ animeInfo }],
-        });
-    }
-    catch (error) {
-        console.log(error);
-        res.status(500).send(error);
-    }
-}));
+r.get("/anime/flv/filter", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var gen, date, type, status_1, ord, page, flv, animeInfo, error_3;
+    return __generator(this, function (_a) {
+        switch (_a.label) {
+            case 0:
+                _a.trys.push([0, 2, , 3]);
+                gen = req.query.gen;
+                date = req.query.date;
+                type = req.query.type;
+                status_1 = req.query.status;
+                ord = req.query.ord;
+                page = req.query.page;
+                flv = new AnimeFlv_1.AnimeFlv();
+                return [4 /*yield*/, flv.Filter(gen, date, type, status_1, ord, page)];
+            case 1:
+                animeInfo = _a.sent();
+                res.send({
+                    data: [{ animeInfo: animeInfo }],
+                });
+                return [3 /*break*/, 3];
+            case 2:
+                error_3 = _a.sent();
+                console.log(error_3);
+                res.status(500).send(error_3);
+                return [3 /*break*/, 3];
+            case 3: return [2 /*return*/];
+        }
+    });
+}); });
 exports.default = r;
 //# sourceMappingURL=AnimeflvRoutes.js.map
