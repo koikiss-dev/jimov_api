@@ -1,12 +1,8 @@
----
-description: Introduction
----
-
 # JIMOV - Media Content API
 
 ![image description](src/images/JIMOV\_logo.png)
 
-[![discordBadge](https://img.shields.io/badge/Chat-Click%20here-7289d9?style=for-the-badge\&logo=discord)](https://discord.com/invite/tyZ39GCX7R)[![documentationBadge](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://choosealicense.com/licenses/mit/)[![documentationBadge](https://img.shields.io/badge/Documentation-Click%20here-blue?style=for-the-badge)](https://app.gitbook.com/o/ePAmUgJxNNvrc3sJqZGq/s/JTaA8UtbQA9Mn3IKor1y/)
+[![discordBadge](https://img.shields.io/badge/Chat-Click%20here-7289d9?style=for-the-badge\&logo=discord)](https://discord.com/invite/tyZ39GCX7R)[![documentationBadge](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://choosealicense.com/licenses/mit/)[![documentationBadge](https://img.shields.io/badge/Documentation-Click%20here-blue?style=for-the-badge)](https://jimov.gitbook.io/jimov-api/)
 
 ## **Overview**
 
