@@ -17,7 +17,7 @@ This project is an open-source API for retrieving multimedia content such as ani
 5. [MonosChinos](https://monoschinos2.com) (Spanish)
 6. [TioAnime](https://tioanime.com) (Spanish)—Completed
 7. [AnimeLatinoHD](https://www.animelatinohd.com) (Spanish)—Completed
-8. [AnimeFLV](https://www2.animeflv.bz) (Spanish)—Completed
+8. [AnimeFLV](https://www2.animeflv.bz) (Spanish)—Completed /anime/flv/name/one-piece-tv
 
 ## **Installation**
 
