@@ -1,9 +1,9 @@
 import express from "express";
 import morgan from "morgan";
 import bodyparser from "body-parser";
-import index from "./routes/app.js";
+import index from "./routes/app";
 import flv from "./routes/v1/anime/animeflv/AnimeflvRoutes";
-import latinhd from "./routes/v1/anime/animelatinohd/animelatinohdRoutes";
+import latinhd from "./routes/v1/anime/animelatinohd/AnimeLatinoHDRoutes";
 import helmet from "helmet";
 
 const app = express();

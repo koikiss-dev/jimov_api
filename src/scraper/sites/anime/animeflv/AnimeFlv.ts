@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios'
 import { load } from "cheerio";
 import { Anime, Chronology } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
@@ -133,4 +133,3 @@ export class AnimeFlv {
     }
   }
 }
-

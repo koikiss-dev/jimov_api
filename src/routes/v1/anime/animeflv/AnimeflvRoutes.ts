@@ -5,7 +5,7 @@ import {
   TypeAnimeflv,
   StatusAnimeflv,
   OrderAnimeflv,
-} from "src/scraper/sites/anime/animeflv/animeflv_helper";
+} from "../../../../scraper/sites/anime/animeflv/animeflv_helper";
 const r = Router();
 
 
