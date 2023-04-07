@@ -29,7 +29,7 @@ export interface IEpisodeServer {
  */
 export interface IEpisode {
   name: string;
-  url: `/anime/${string}/episode/${string | number}`;
+  url: `/anime/${string}/episode/${string | number}` | string;
   number: number | string;
   servers?: IEpisodeServer[];
   image: string;
@@ -40,11 +40,16 @@ export interface IEpisode {
 export class EpisodeServer implements IEpisodeServer {
   name: string;
   url: string;
+
+  constructor(name: string, url: string) {
+    this.name = name;
+    this.url = url;
+  }
 }
 
 export class Episode implements IEpisode {
   name: string;
-  url: `/anime/${string}/episode/${string | number}`;
+  url: `/anime/${string}/episode/${string | number}` | string;
   number: number | string;
   servers?: IEpisodeServer[] = [];
   image: string;
