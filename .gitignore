@@ -1,4 +1,5 @@
 node_modules
 build
 .env
+/.vscode
 /src/scraper/sites/anime/tioanime/testing.js
