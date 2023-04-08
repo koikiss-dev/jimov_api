@@ -28,7 +28,7 @@ export const api = {
      * @returns 
      */
     getEpisodeURL(info: IPageInfo, url: string): string {
-        return url.replace(`https://${ info.domain }/ver/`, `/anime/${ info.name }/servers/`);
+        return url.replace(`https://${ info.domain }/ver/`, `/anime/${ info.name }/episode/`);
     },
 
     /**
