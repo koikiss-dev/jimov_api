@@ -1,7 +1,8 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { api, utils } from "@animetypes/utils"
+import { api, utils } from "@animetypes/utils";
 import * as types from "@animetypes/.";
+import { ResultSearch, IResultSearch } from "@animetypes/search";
 
 const PageInfo = {
     name: 'monoschinos',
@@ -169,10 +170,23 @@ async function getLastAnimes(url?: string): Promise<types.Anime[]> {
 
 //console.log(await getLastAnimes())
 
-export default 
+export class Monoschinos 
 { 
-    getLastEpisodes, 
-    getLastAnimes,
-    getEpisodeServers,
-    getAnime
+    getLastEpisodes = getLastEpisodes;
+    getLastAnimes = getLastEpisodes;
+    getEpisodeServers = getEpisodeServers;
+    getAnime = getAnime;
+
+    async filter(category: string, genre: string, year: string, letter: string): Promise<IResultSearch> {
+        const animes = new ResultSearch();
+        (await getLastAnimes(`https://monoschinos2.com/animes?categoria=${category ?? false}&genero=${genre ?? false}&fecha=${year ?? false}&letra=${letter ?? false}`))
+            .forEach(element => {
+                if (utils.isUsableValue(element)) {
+                    animes.results.push({ name: element.name, image: element.image.url, 
+                        url: element.url, type: category
+                    });
+                }
+            });
+        return animes;
+    }
 };
