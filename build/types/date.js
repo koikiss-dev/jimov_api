@@ -16,11 +16,11 @@ exports.DatePeriod = exports.Calendar = void 0;
  * @author Zukaritasu
  * @extends ICalendar
  */
-class Calendar {
+var Calendar = /** @class */ (function () {
     /**
      * @param year
      */
-    constructor(year) {
+    function Calendar(year) {
         this.year = year;
     }
     /**
@@ -28,10 +28,11 @@ class Calendar {
      * @param date
      * @returns
      */
-    static getCalendar(date) {
+    Calendar.getCalendar = function (date) {
         return { year: new Date(date).getFullYear() };
-    }
-}
+    };
+    return Calendar;
+}());
 exports.Calendar = Calendar;
 /**
  *
@@ -39,7 +40,10 @@ exports.Calendar = Calendar;
  * @author Zukaritasu
  * @extends IDatePeriod
  */
-class DatePeriod {
-}
+var DatePeriod = /** @class */ (function () {
+    function DatePeriod() {
+    }
+    return DatePeriod;
+}());
 exports.DatePeriod = DatePeriod;
 //# sourceMappingURL=date.js.map

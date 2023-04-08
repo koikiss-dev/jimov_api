@@ -47,7 +47,7 @@ var Genres;
 })(Genres = exports.Genres || (exports.Genres = {}));
 var StatusAnimeflv;
 (function (StatusAnimeflv) {
-    StatusAnimeflv["OnGoing"] = "En emisi\u00F3n";
+    StatusAnimeflv["OnGoing"] = "En emision";
     StatusAnimeflv["Finished"] = "Finalizado";
     StatusAnimeflv["Upcoming"] = "Pr\u00F3ximamente";
 })(StatusAnimeflv = exports.StatusAnimeflv || (exports.StatusAnimeflv = {}));

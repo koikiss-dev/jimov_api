@@ -1,23 +1,19 @@
 # JIMOV - Media Content API
 
-![image description](.gitbook/assets/JIMOV\_logo.png)
+![image description](src/images/JIMOV\_logo.png)
+
+[![discordBadge](https://img.shields.io/badge/Chat-Click%20here-7289d9?style=for-the-badge\&logo=discord)](https://discord.com/invite/tyZ39GCX7R)[![documentationBadge](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://choosealicense.com/licenses/mit/)[![documentationBadge](https://img.shields.io/badge/Documentation-Click%20here-blue?style=for-the-badge)](https://jimov.gitbook.io/jimov-api/)
 
 ## **Overview**
 
 This project is an open-source API for retrieving multimedia content such as anime, movies and series, news, and manga in both Spanish and English. The API is built using JavaScript and the Express.js framework. The API allows users to search for content by keywords and retrieve detailed information about the content such as title, description, and language. The API also allows users to filter results by language and content type.
 
-## Providers
+### Table of contents
 
-### Anime
-
-1. [GOGOAnime](https://ww4.gogoanimes.org) (English)
-2. [ZoroTo](https://zoro.to) (English)—Completed
-3. [9Anime](https://9anime.to/) (English)
-4. [OtakusTv](https://app.gitbook.com/s/V5QZYEOnv5nTMcwPqHnl/fundamentals/getting-set-up) (Spanish)
-5. [MonosChinos](https://monoschinos2.com) (Spanish)
-6. [TioAnime](https://tioanime.com) (Spanish)—Completed
-7. [AnimeLatinoHD](https://www.animelatinohd.com) (Spanish)—Completed
-8. [AnimeFLV](https://www2.animeflv.bz) (Spanish)—Completed
+* [List of providers](list-of-providers.md)
+* [Routes](routes/)
+  * [Animeflv](routes/animeflv/)
+  * AnimeLatinoHD
 
 ## **Installation**
 
@@ -34,17 +30,12 @@ npm install
 The API can be started by running the following command:
 
 ```bash
-npm run server
+npm run build && npm start
 ```
-
-## **Technologies Used**
-
-* JavaScript: The primary programming language used for building the API.
-* Express.js: The framework used for building the API. It is a fast and flexible Node.js web application framework that provides a robust set of features for web and mobile applications.
 
 ## **How to Contribute**
 
-If you are interested in contributing to the project follow these instructions:
+If you are interested in contributing to the project, follow these instructions:
 
 1. Fork the repository.
 2. Make changes and test.
@@ -66,5 +57,3 @@ Permission is hereby granted, free of charge, to any person obtaining a copy of 
 The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 
 THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
-[![MIT License](https://img.shields.io/badge/License-MIT-green.svg)](https://choosealicense.com/licenses/mit/)

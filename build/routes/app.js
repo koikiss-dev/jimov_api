@@ -1,9 +1,9 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = require("express");
-const r = (0, express_1.Router)();
+var express_1 = require("express");
+var r = (0, express_1.Router)();
 //raiz
-r.get("/", (_req, res) => {
+r.get("/", function (_req, res) {
     res.send({
         message: "Jimov API is up and running 🎬🎉🎉",
         status: "success",
