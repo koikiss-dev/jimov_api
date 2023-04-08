@@ -1,6 +1,5 @@
 import express from "express";
 import morgan from "morgan";
-import bodyparser from "body-parser";
 import index from "./routes/app";
 import flv from "./routes/v1/anime/animeflv/AnimeflvRoutes";
 import latinhd from "./routes/v1/anime/animelatinohd/AnimeLatinoHDRoutes";
@@ -11,17 +10,11 @@ const port = process.env.PORT || 3000;
 
 app.use(index);
 //config
-app.set("json spaces", 2);
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-/*middleware*/
 app.use(morgan("dev"));
-app.use(bodyparser.urlencoded({ extended: false }));
-app.use(bodyparser.json());
-/*middleware*/
-
-/*headers */
-app.use(helmet()); //segurity
-/*headers */
+app.use(helmet());
 
 //routes
 

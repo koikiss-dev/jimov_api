@@ -43,7 +43,7 @@ export enum Genres {
   }
 
   export enum StatusAnimeflv {
-    OnGoing = "En emisión",
+    OnGoing = "En emision",
     Finished = "Finalizado",
     Upcoming = "Próximamente",
   }
