@@ -11,6 +11,7 @@ interface ProviderScraper {
   status: number | string;
   icon: string;
   url: string;
+  fav_icon: string | string[];
 }
 
 /* async function getDataProvider() {
@@ -27,7 +28,7 @@ interface ProviderScraper {
   for (let i = 0; i < urls.length; i++) {
     const {data} = await axios.get(urls[i]);
     const $ = load(data);
-    const title = $('title').text().trim();
+    const title = $("meta[property=og:site_name]").attr("content") || ""
     const favicon = $('link[rel="icon"]').attr('href') || $('link[rel="shortcut icon"]').attr('href') || '';
     const description = $('meta[name="description"]').attr('content') || '';
     results.push({title, favicon, description});
@@ -45,6 +46,7 @@ const providers: ProviderScraper[] = [
     url: "https://www2.animeflv.bz",
     status: 200,
     icon: "https://animeflv.vc/static/img/icon/logo.png",
+    fav_icon: "https://animeflv.vc/favicon.png"
   },
   {
     name: "AnimeLatinoHD",
@@ -53,7 +55,8 @@ const providers: ProviderScraper[] = [
     language: "Spanish",
     url: "https://www.animelatinohd.com/",
     status: 200,
-    icon: "NA"
+    icon: "NA",
+    fav_icon: "https://www.animelatinohd.com/favicon.ico"
   },
   {
     name: "MonosChinos",
@@ -62,7 +65,8 @@ const providers: ProviderScraper[] = [
     language: "Spanish",
     url: "https://monoschinos2.com/",
     status: 200,
-    icon: "https://monoschinos2.com/public/img/logo6.png"
+    icon: "https://monoschinos2.com/public/img/logo6.png",
+    fav_icon: "https://monoschinos2.com/public/favicon.ico"
   },
   {
     name: "OtakusTv",
@@ -72,6 +76,7 @@ const providers: ProviderScraper[] = [
     url: "https://www1.otakustv.com/",
     status: 200,
     icon: "https://www1.otakustv.com/images/logo.png?v=1",
+    fav_icon: "https://www1.otakustv.com/favicon.png"
   },
   {
     name: "TioAnime",
@@ -80,7 +85,8 @@ const providers: ProviderScraper[] = [
     language: "Spanish",
     url: "https://tioanime.com/",
     status: 200,
-    icon: "https://tioanime.com/assets/img/logo-dark.png"
+    icon: "https://tioanime.com/assets/img/logo-dark.png",
+    fav_icon: "https://tioanime.com/assets/img/icon-32x32.png"
   },
   {
     name: "GogoAnime",
@@ -89,7 +95,8 @@ const providers: ProviderScraper[] = [
     language: "English",
     url: "https://www3.gogoanimes.fi/",
     status: 200,
-    icon: "https://gogoanime.llc/img/icon/logo.png"
+    icon: "https://gogoanime.llc/img/icon/logo.png",
+    fav_icon: "https://cdn.gogocdn.net/files/gogo/img/favicon.ico",
   },
   {
     name: "Zoro",
@@ -98,7 +105,8 @@ const providers: ProviderScraper[] = [
     language: "English",
     url: "https://zoro.to/home",
     status: 200,
-    icon: "https://zoro.to/images/logo.png"
+    icon: "https://zoro.to/images/logo.png",
+    fav_icon: ["https://zoro.to/favicon-32x32.png", "https://zoro.to/images/favicon.png?v=0.1"]
   },
   {
     name: "9Anime",
@@ -107,7 +115,8 @@ const providers: ProviderScraper[] = [
     language: "English",
     url: "https://9anime.to/home",
     status: 200,
-    icon: "https://9animeapp.pro/wp-content/uploads/2023/02/cropped-9anime-logo-for-app-1.png"
+    icon: "https://9animeapp.pro/wp-content/uploads/2023/02/cropped-9anime-logo-for-app-1.png",
+    fav_icon: "https://9anime.to/assets/sites/9anime/icons/favicon.png"
   },
 ];
 
