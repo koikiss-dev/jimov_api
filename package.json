@@ -20,10 +20,13 @@
     "series",
     "manga"
   ],
-  "engines": { "node": "v19.7.0", "npm": "9.5.0" },
+  "engines": {
+    "node": "v19.7.0",
+    "npm": "9.5.0"
+  },
   "commitlint": {
     "extends": "@commitlint/config-conventional"
-   },
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -33,7 +36,6 @@
   "dependencies": {
     "@types/cheerio": "^0.22.31",
     "axios": "^1.3.4",
-    "cheerio": "^1.0.0-rc.12",
     "express": "^4.18.2",
     "helmet": "^6.0.1",
     "morgan": "^1.10.0",
@@ -48,6 +50,7 @@
     "@types/jest": "^29.5.0",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.15.8",
+    "cheerio": "^1.0.0-rc.12",
     "commitlint": "^17.5.1",
     "dotenv": "^16.0.3",
     "husky": "^8.0.3",
