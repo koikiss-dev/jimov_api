@@ -4,7 +4,8 @@
   "description": "API for scraping multimedia content such as anime, movies, series, and manga",
   "main": "src/index.ts",
   "scripts": {
-    "start": "node build/index.js",
+    "start": "ts-node src/index.ts",
+    "server": "nodemon src/index.ts",
     "build": "tsc",
     "heroku-postbuild": "npm run build",
     "start:dev": "nodemon src/index.ts",

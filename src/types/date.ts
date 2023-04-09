@@ -74,4 +74,9 @@ export class Calendar implements ICalendar {
 export class DatePeriod implements IDatePeriod {
   begin: ICalendar;
   end?: ICalendar;
+
+  constructor(begin: ICalendar, end?: ICalendar) {
+    this.begin = begin;
+    this.end = end;
+  }
 }
