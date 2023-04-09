@@ -36,7 +36,9 @@ export interface IEpisode {
 }
 
 
-
+/**
+ * @author Zukaritasu
+ */
 export class EpisodeServer implements IEpisodeServer {
   name: string;
   url: string;
