@@ -35,15 +35,15 @@ export interface IAnime {
   alt_name?: string | string[];
   id?: number;
   url: `/anime/${string}/name/${string}` | string;
-  synopsis: string;
+  synopsis?: string;
   image: IImage;
   date?: IDatePeriod | ICalendar;
   type?: AnimeType;
-  genres: string[];
+  genres?: string[];
   station?: ClimaticStation | string;
   stats?: IAnimeStats;
   chronology?: IChronology[];
-  episodes: IEpisode[];
+  episodes?: IEpisode[];
   status?: string | boolean;
   nsfw?: boolean;
 }
