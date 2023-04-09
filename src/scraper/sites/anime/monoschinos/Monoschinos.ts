@@ -1,8 +1,8 @@
 import axios from "axios";
 import * as cheerio from "cheerio";
-import { api, utils } from "@animetypes/utils";
-import * as types from "@animetypes/.";
-import { ResultSearch, IResultSearch } from "@animetypes/search";
+import { api, utils } from "../../../../types/utils";
+import * as types from "../../../../types/.";
+import { ResultSearch, IResultSearch } from "../../../../types/search";
 
 const PageInfo = {
     name: 'monoschinos',
@@ -197,4 +197,4 @@ export class Monoschinos
 };
 
 
-
+//console.log(await getAnime("https://monoschinos2.com/anime/world-dai-star-sub-espanol"));
