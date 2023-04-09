@@ -170,6 +170,11 @@ async function getLastAnimes(url?: string): Promise<types.Anime[]> {
 
 //console.log(await getLastAnimes())
 
+/**
+ * 
+ * 
+ * @author Zukaritasu
+ */
 export class Monoschinos 
 { 
     getLastEpisodes = getLastEpisodes;
@@ -190,3 +195,6 @@ export class Monoschinos
         return animes;
     }
 };
+
+
+
