@@ -20,10 +20,13 @@
     "series",
     "manga"
   ],
-  "engines": { "node": "v19.7.0", "npm": "9.5.0" },
+  "engines": {
+    "node": "v19.7.0",
+    "npm": "9.5.0"
+  },
   "commitlint": {
     "extends": "@commitlint/config-conventional"
-   },
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
