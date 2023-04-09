@@ -35,7 +35,7 @@ async function getEpisodeServers(url: string): Promise<types.EpisodeServer[]> {
  * @param element 
  * @returns 
  */
-async function getEpisodeByElement($: cheerio.CheerioAPI, element: cheerio.Element): Promise<types.Episode> {
+async function getEpisodeByElement($, element): Promise<types.Episode> {
 	const episode  = new types.Episode();
     episode.number = parseInt($(element).find('div.positioning p').text().trim());
     episode.image  = $(element).find('div.animeimgdiv img.animeimghv').attr('data-src');
@@ -66,7 +66,7 @@ async function getLastEpisodes(): Promise<types.Episode[]> {
  * @param $ 
  * @returns 
  */
-function getGenres($: cheerio.CheerioAPI): string[] {
+function getGenres($): string[] {
     let genres: string[] = [];
     $('div.chapterdetls2 table tbody a').each((_i, element) => {
         genres.push($(element).text().trim())
@@ -79,7 +79,7 @@ function getGenres($: cheerio.CheerioAPI): string[] {
  * @param $ 
  * @returns 
  */
-function getAnimeEpisodes($: cheerio.CheerioAPI): types.Episode[] {
+function getAnimeEpisodes($): types.Episode[] {
 	let episodes: types.Episode[] = [];
 	$('div.heromain2 div.allanimes div.row').children().each((_i, element) => {
         const episode  = new types.Episode();
@@ -111,7 +111,7 @@ interface ClimaticCalendar {
  * @param element 
  * @returns the calendar of anime
  */
-function getAnimeCalendar(element: cheerio.Cheerio<cheerio.Element>): ClimaticCalendar {
+function getAnimeCalendar(element): ClimaticCalendar {
     const date  = element.find('ol.breadcrumb li.breadcrumb-item').text().trim().split(' ');
     if (date.length != 5)
         return { year: 0, station: null };
