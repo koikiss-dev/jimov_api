@@ -38,7 +38,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.GogoanimeServer = exports.GogoanimeFilter = exports.GogoanimeInfo = void 0;
 var getHTML_1 = require("./assets/getHTML");
-var anime_1 = require("../../../../../src/types/anime");
+var anime_1 = require("../../../../types/anime");
 var getAllAnimesHTML_1 = require("./assets/getAllAnimesHTML");
 var episode_1 = require("../../../../types/episode");
 var GogoanimeInfo = /** @class */ (function () {
