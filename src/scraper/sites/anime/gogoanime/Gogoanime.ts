@@ -1,7 +1,7 @@
 import { getHTML } from "./assets/getHTML";
 import { Anime } from "../../../../../src/types/anime";
 import { getAllAnimes } from "./assets/getAllAnimesHTML";
-import { Episode, EpisodeServer } from "../../../../types/episode";
+import { Episode } from "../../../../types/episode";
 
 export class GogoanimeInfo {
 
@@ -36,7 +36,6 @@ export class GogoanimeInfo {
 
       anime.genres.push($(elementHTML).html());
 
-
     })
 
 
@@ -61,21 +60,17 @@ export class GogoanimeInfo {
 
 
 
-
-
     let getNumberEpisodes: any = $('#episode_page li').last().text().trim().split("-")[1];
     getNumberEpisodes = parseInt(getNumberEpisodes);
 
     for (let index = 1; index <= getNumberEpisodes; index++) {
       anime.episodes.push({
           name: `${animeName}-cap-${index}`,
-          url: `/anime/${animeName}/episode/${index}`,
+          url: `/anime//gogoanime/${animeName}/episode/${index}`,
           number: `${index}`,
           image: "That isn't image"
       })
     }
-
-      console.log(anime);
 
       return anime
 
@@ -90,15 +85,15 @@ export class GogoanimeInfo {
 
 export class GogoanimeFilter {
 
-    async getAnimesfilterByGenre(genre: string) {
+    async getAnimesfilterByGenre(genre: string, numPage: number) {
 
 
       let animesByGenre = await getAllAnimes(
       
-      `https://www3.gogoanimes.fi/genre/${genre}`
+      `https://www3.gogoanimes.fi/genre/${genre}`, numPage
     
     )
-  
+
       console.log(animesByGenre);
 
       return animesByGenre;
@@ -106,12 +101,13 @@ export class GogoanimeFilter {
     }
 
 
-  async filterBySeasons( season: string, year: string  ) {
+  async filterBySeasons( season: string, year: string, numPage: number  ) {
 
     let animes = await getAllAnimes(
-      `https://www3.gogoanimes.fi/sub-category/${season}-${year}-anime`,
+      `https://www3.gogoanimes.fi/sub-category/${season}-${year}-anime`, numPage
     );
-   
+
+    console.log(animes);
 
     return animes
      
@@ -127,6 +123,9 @@ export class GogoanimeServer {
   async getAnimeServerEpisode(animeName: string, episodeNumber: number) { 
 
 
+    let serverUrl: string;
+    let serverName: string;
+
     const $ = await getHTML(
         `https://www3.gogoanimes.fi/${animeName}-episode-${episodeNumber}`
     );
@@ -134,34 +133,46 @@ export class GogoanimeServer {
     const episode = new Episode();
    
     episode.name = "This isn't name";
-    episode.servers = [];
+    episode.servers  = [];
     
 
     
     $(".anime_muti_link ul li ").each((iterator, element) => { 
 
-    
-    const servers = new EpisodeServer();
 
     if (iterator == 0 || iterator == 1){
    
-      servers.name = $(element).find("a").text(). 
+       serverName = $(element).find("a").text(). 
           replace(" this server", "").trim();
 
-      servers.url = `http:${$(element).find("a").attr("data-video")}`;
+        serverUrl = `http:${$(element).find("a").attr("data-video")}`;
 
-      episode.servers.push(servers);
+
+      episode.servers.push({
+          name: serverName,
+          url: serverUrl
+        });
     
     }if(iterator > 2) { 
     
-      servers.name = $(element).find("a").text(). 
+
+    
+
+       serverName = $(element).find("a").text(). 
           replace(" this server", "").trim();
       
-      servers.url = $(element).find("a").attr("data-video");
+       serverUrl = $(element).find("a").attr("data-video");
+
+
      
-      episode.servers.push(servers);
+
+      episode.servers.push({
+          name: serverName,
+          url: serverUrl
+        });
 
       }
+    
     })
 
     console.log(episode);
@@ -174,6 +185,7 @@ export class GogoanimeServer {
 (async () => {
 
   await new GogoanimeServer().getAnimeServerEpisode("bocchi-the-rock", 2);
+  await new GogoanimeFilter().filterBySeasons("summer", "2017", 2);
 
 })()
 

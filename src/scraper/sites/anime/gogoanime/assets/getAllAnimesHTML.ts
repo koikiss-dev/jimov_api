@@ -3,11 +3,10 @@ import { getHTML } from "./getHTML";
 
 
 
-export async function getAllAnimes(url: string) {
+export async function getAllAnimes(url: string, numPage: number) {
 
     try {
     
-    let numPage = 1;
 
     let animes: IAnime[] = [];
  
@@ -20,18 +19,7 @@ export async function getAllAnimes(url: string) {
         replace("ADVERTISEMENTSRECENT RELEASESeason", ""). 
         trim();
 
-
-    while (pageState != "404 Not Found") {
-
-      $ = await getHTML(
-        `${url}?page=${numPage}`
-      );
-    
-      
-      pageState = $(".anime_name h2").text(). 
-        replace("ADVERTISEMENTSRECENT RELEASESeason", ""). 
-        trim();
-
+    if ( pageState != "404 Not found" ) { 
 
       $(".last_episodes ul li").each((_, element) => {
 
@@ -72,11 +60,9 @@ export async function getAllAnimes(url: string) {
 
 	    })
 
-   
+    }
 
-      numPage++
 
-	  } 
 
   
     return animes
