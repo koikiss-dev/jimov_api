@@ -41,7 +41,9 @@ exports.Calendar = Calendar;
  * @extends IDatePeriod
  */
 var DatePeriod = /** @class */ (function () {
-    function DatePeriod() {
+    function DatePeriod(begin, end) {
+        this.begin = begin;
+        this.end = end;
     }
     return DatePeriod;
 }());

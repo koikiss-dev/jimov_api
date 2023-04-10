@@ -1,5 +1,5 @@
 import { getHTML } from "./assets/getHTML";
-import { Anime } from "../../../../../src/types/anime";
+import { Anime } from "../../../../types/anime";
 import { getAllAnimes } from "./assets/getAllAnimesHTML";
 import { Episode } from "../../../../types/episode";
 
