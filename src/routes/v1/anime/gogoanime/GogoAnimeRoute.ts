@@ -46,14 +46,15 @@ r.get("/anime/gogoanime/filter", async (req, res) => {
     const gen = req.query.gen as string;
     const season = req.query.season as string;
     const year = req.query.year as string;
+    const page = req.query.page as undefined as number
 
     const gogo = new GogoanimeFilter();
     let animeInfo: unknown;
 
     if (gen) {
-      animeInfo = await gogo.getAnimesfilterByGenre(gen);
+      animeInfo = await gogo.getAnimesfilterByGenre(gen, page);
     } else if (season && year) {
-      animeInfo = await gogo.filterBySeasons(season, year);
+      animeInfo = await gogo.filterBySeasons(season, year, page);
     } else {
       throw new Error("Missing parameters");
     }
