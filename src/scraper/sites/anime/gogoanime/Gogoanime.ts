@@ -94,7 +94,6 @@ export class GogoanimeFilter {
     
     )
 
-      console.log(animesByGenre);
 
       return animesByGenre;
 
@@ -107,7 +106,6 @@ export class GogoanimeFilter {
       `https://www3.gogoanimes.fi/sub-category/${season}-${year}-anime`, numPage
     );
 
-    console.log(animes);
 
     return animes
      
@@ -156,15 +154,11 @@ export class GogoanimeServer {
     }if(iterator > 2) { 
     
 
-    
-
        serverName = $(element).find("a").text(). 
           replace(" this server", "").trim();
       
        serverUrl = $(element).find("a").attr("data-video");
 
-
-     
 
       episode.servers.push({
           name: serverName,
@@ -175,17 +169,10 @@ export class GogoanimeServer {
     
     })
 
-    console.log(episode);
-
     return episode;
   }
 
 }
 
-(async () => {
 
-  await new GogoanimeServer().getAnimeServerEpisode("bocchi-the-rock", 2);
-  await new GogoanimeFilter().filterBySeasons("summer", "2017", 2);
-
-})()
 
