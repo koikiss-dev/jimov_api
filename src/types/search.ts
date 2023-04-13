@@ -12,7 +12,7 @@
 export interface IAnimeSearch {
   name: string;
   image: string;
-  url: `/anime/${string}/name/${string}`; // API url
+  url: `/anime/${string}/name/${string}` | string; // API url
   type?: string;
 }
 
@@ -31,7 +31,7 @@ export interface IResultSearch {
 export class AnimeSearch implements IAnimeSearch {
   name: string;
   image: string;
-  url: `/anime/${string}/name/${string}`; // API url
+  url: `/anime/${string}/name/${string}` | string; // API url
   type?: string;
 }
 

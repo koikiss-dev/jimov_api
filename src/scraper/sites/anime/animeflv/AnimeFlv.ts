@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios from 'axios'
 import { load } from "cheerio";
 import { Anime, Chronology } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
@@ -39,7 +39,7 @@ export class AnimeFlv {
         cro.name = $(e).text().trim();
         cro.url = `/anime/flv/name/${$(e)
           .attr("href")
-          .replace("/anime", "anime/flv")}`;
+          .replace("/anime/", "")}`;
         AnimeReturn.chronology.push(cro);
       });
       //get genres

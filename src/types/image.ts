@@ -19,4 +19,9 @@ export interface IImage {
 export class Image implements IImage {
   url: string;
   banner?: string;
+
+  constructor(url: string, banner?: string) {
+    this.url = url;
+    this.banner = banner;
+  }
 }

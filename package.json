@@ -2,12 +2,14 @@
   "name": "jimov_scraper",
   "version": "1.0.0",
   "description": "API for scraping multimedia content such as anime, movies, series, and manga",
-  "main": "index.js",
+  "main": "src/index.ts",
   "scripts": {
-    "start": "node src/index.js",
+    "start": "ts-node src/index.ts",
     "server": "nodemon src/index.ts",
     "build": "tsc",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "heroku-postbuild": "npm run build",
+    "start:dev": "nodemon src/index.ts",
+    "test": "jest --coverage"
   },
   "keywords": [
     "scraper",
@@ -18,6 +20,13 @@
     "series",
     "manga"
   ],
+  "engines": {
+    "node": "v19.7.0",
+    "npm": "9.5.0"
+  },
+  "commitlint": {
+    "extends": "@commitlint/config-conventional"
+  },
   "license": "MIT",
   "repository": {
     "type": "git",
@@ -25,8 +34,8 @@
   },
   "homepage": "https://github.com/koikiss-dev/jimov_api",
   "dependencies": {
-    "axios": "^1.2.3",
-    "body-parser": "^1.20.1",
+    "@types/cheerio": "^0.22.31",
+    "axios": "^1.3.4",
     "cheerio": "^1.0.0-rc.12",
     "express": "^4.18.2",
     "helmet": "^6.0.1",
@@ -36,13 +45,20 @@
     "underscore": "^1.13.6"
   },
   "devDependencies": {
+    "@commitlint/config-conventional": "^17.4.4",
     "@tsconfig/recommended": "^1.0.2",
     "@types/express": "^4.17.17",
+    "@types/jest": "^29.5.0",
     "@types/morgan": "^1.9.4",
+    "@types/node": "^18.15.8",
+    "commitlint": "^17.5.1",
     "dotenv": "^16.0.3",
+    "husky": "^8.0.3",
+    "jest": "^29.5.0",
     "nodemon": "^2.0.20",
     "npm-check-updates": "^16.6.2",
     "pretty": "^2.0.0",
+    "ts-jest": "^29.1.0",
     "tslib": "^2.5.0",
     "typescript": "^4.9.5"
   }

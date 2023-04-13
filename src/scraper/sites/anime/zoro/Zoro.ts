@@ -2,7 +2,6 @@ import axios from "axios";
 import { load } from "cheerio";
 import { Anime, Chronology } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
-import {} from "../../../../types/search";
 
 export class Zoro {
   readonly url = "https://zoro.to";
@@ -59,7 +58,7 @@ export class Zoro {
   //filter
 
   //episode server
-  async GetEpisodeServer(episode: string, ep: string): Promise<Episode> {
+  async GetEpisodeServer(episode: string, ep: string) {
     try {
       const animename = episode.toLowerCase().replace(/\s/g, "-");
       const { data } = await axios.get(
@@ -67,46 +66,52 @@ export class Zoro {
         {
           headers: {
             "Accept-Encoding": "*r",
-            Referer: `https://zoro.to/watch/${animename}`,
+            Referer: `https://zoro.to/watch/${animename + "-" + ep}`,
             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
           },
         }
       );
       const $ = load(data.html);
-      const episodeReturn = new Episode();
-      episodeReturn.name = animename + "-" + ep;
-      episodeReturn.url = `/anime/zoro/episode/${animename + "-" + ep}`;
-      episodeReturn.servers = [];
-      //const sources = await this.getServers(data.id);
-      async function getServers(id: string) {
-        const { data } = await axios.get(
-          `${this.url}/ajax/v2/episode/sources?id=${id}`
-        );
-        return data;
-      }
+      const epi = new Episode();
+      epi.name = animename
+      epi.url = `/anime/zoro/episode/${animename}/${ep}`
+      epi.servers = [];
 
-      $(
-        "body > div.ps_-block.ps_-block-sub.servers-sub > div.ps__-list > div.item"
-      ).each((_i, e) => {
-        const servers = new EpisodeServer();
-        servers.name = $(e).text().trim();
-        servers.url = $(e).attr("data-video");
-        const type = e.attribs["data-type"];
-        const name = $(e).text().trim();
-        const serverId = e.attribs["data-id"];
-        const serverId2 = e.attribs["data-server-id"];
-        const url = `/anime/zoro/iframe/${serverId}`;
-        episodeReturn.name = episode;
-      });
+      const promises = $("div.ps__-list div.item")
+        .map((_i, e) => {
+          const servers = new EpisodeServer();
+          const serverId = $(e).attr("data-id").trim();
+          return this.getServers(serverId)
+            .then((response) => {
+              servers.name = $(e).find('a').text().trim();
+              servers.url = response.link;
+              epi.servers.push(servers);
+            })
+            .catch((error) => {
+              console.log("Error getting servers for episode", error);
+              throw new Error("Error getting servers for episode");
+            });
+        })
+        .get();
+
+      await Promise.all(promises);
+      return epi;
     } catch (error) {
       console.log("An error occurred while getting the episode servers", error);
       throw new Error("An error occurred while getting the episode servers");
     }
   }
-  async getServers(id): Promise<any> {
+
+  private async getServers(id): Promise<any> {
     const { data } = await axios.get(
       `${this.url}/ajax/v2/episode/sources?id=${id}`
     );
     return data;
   }
 }
+/* 
+const g = new Zoro();
+
+g.GetEpisodeServer("hunter-x-hunter-2", "65").then((f) => {
+  console.log(f);
+}); */
