@@ -66,7 +66,7 @@ export class GogoanimeInfo {
     for (let index = 1; index <= getNumberEpisodes; index++) {
       anime.episodes.push({
           name: `${animeName}-cap-${index}`,
-          url: `/anime//gogoanime/${animeName}/episode/${index}`,
+          url: `/anime/gogoanime/episode/${animeName}/${index}`,//sorry for the change
           number: `${index}`,
           image: "That isn't image"
       })
