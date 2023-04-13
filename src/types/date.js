@@ -7,7 +7,7 @@
  *
  *
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.DatePeriod = exports.Calendar = void 0;
 /**
  * Specifies the year, month and day in which the anime or other content
@@ -41,11 +41,8 @@ exports.Calendar = Calendar;
  * @extends IDatePeriod
  */
 var DatePeriod = /** @class */ (function () {
-    function DatePeriod(begin, end) {
-        this.begin = begin;
-        this.end = end;
+    function DatePeriod() {
     }
     return DatePeriod;
 }());
 exports.DatePeriod = DatePeriod;
-//# sourceMappingURL=date.js.map

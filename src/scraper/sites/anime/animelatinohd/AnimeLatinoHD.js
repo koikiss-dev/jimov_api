@@ -1,27 +1,4 @@
 "use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
 var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, generator) {
     function adopt(value) { return value instanceof P ? value : new P(function (resolve) { resolve(value); }); }
     return new (P || (P = Promise))(function (resolve, reject) {
@@ -67,13 +44,10 @@ var __spreadArray = (this && this.__spreadArray) || function (to, from, pack) {
     }
     return to.concat(ar || Array.prototype.slice.call(from));
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.AnimeLatinoHD = void 0;
-var cheerio = __importStar(require("cheerio"));
-var axios_1 = __importDefault(require("axios"));
+var cheerio = require("cheerio");
+var axios_1 = require("axios");
 var AnimeLatinoHD = /** @class */ (function () {
     function AnimeLatinoHD() {
         this.url = "https://www.animelatinohd.com";
@@ -86,7 +60,7 @@ var AnimeLatinoHD = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.get("".concat(this.url, "/anime/").concat(anime))];
+                        return [4 /*yield*/, axios_1["default"].get("".concat(this.url, "/anime/").concat(anime))];
                     case 1:
                         data = (_a.sent()).data;
                         $ = cheerio.load(data);
@@ -135,7 +109,7 @@ var AnimeLatinoHD = /** @class */ (function () {
                         _a.trys.push([0, 2, , 3]);
                         number = episode.substring(episode.lastIndexOf("-") + 1);
                         anime = episode.substring(0, episode.lastIndexOf("-"));
-                        return [4 /*yield*/, axios_1.default.get("".concat(this.url, "/ver/").concat(anime, "/").concat(number))];
+                        return [4 /*yield*/, axios_1["default"].get("".concat(this.url, "/ver/").concat(anime, "/").concat(number))];
                     case 1:
                         data = (_a.sent()).data;
                         $_1 = cheerio.load(data);
@@ -158,7 +132,7 @@ var AnimeLatinoHD = /** @class */ (function () {
                             animeEpisodeParseObj_1.players[v].map(function (e) {
                                 var Server = {
                                     name: e.server.title,
-                                    url: "https://api.animelatinohd.com/stream/" + e.id,
+                                    url: "https://api.animelatinohd.com/stream/" + e.id
                                 };
                                 /*let ServerObj = {
                                     lang_id: String,
@@ -187,7 +161,7 @@ var AnimeLatinoHD = /** @class */ (function () {
                 switch (_a.label) {
                     case 0:
                         _a.trys.push([0, 2, , 3]);
-                        return [4 /*yield*/, axios_1.default.get("".concat(this.api, "/api/anime/list"), {
+                        return [4 /*yield*/, axios_1["default"].get("".concat(this.api, "/api/anime/list"), {
                                 params: {
                                     search: search,
                                     type: type,
@@ -230,4 +204,3 @@ var AnimeLatinoHD = /** @class */ (function () {
     return AnimeLatinoHD;
 }());
 exports.AnimeLatinoHD = AnimeLatinoHD;
-//# sourceMappingURL=AnimeLatinoHD.js.map

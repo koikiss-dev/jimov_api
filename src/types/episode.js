@@ -7,15 +7,10 @@
  *
  *
  */
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.Episode = exports.EpisodeServer = void 0;
-/**
- * @author Zukaritasu
- */
 var EpisodeServer = /** @class */ (function () {
-    function EpisodeServer(name, url) {
-        this.name = name;
-        this.url = url;
+    function EpisodeServer() {
     }
     return EpisodeServer;
 }());
@@ -27,4 +22,3 @@ var Episode = /** @class */ (function () {
     return Episode;
 }());
 exports.Episode = Episode;
-//# sourceMappingURL=episode.js.map

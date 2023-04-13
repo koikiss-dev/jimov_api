@@ -35,24 +35,24 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
         if (op[0] & 5) throw op[1]; return { value: op[0] ? op[1] : void 0, done: true };
     }
 };
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 var express_1 = require("express");
-var Monoschinos_1 = require("../../../../scraper/sites/anime/monoschinos/Monoschinos");
+var AnimeFlv_1 = require("../../../../scraper/sites/anime/animeflv/AnimeFlv");
 var r = (0, express_1.Router)();
 //anime info
-r.get("/anime/monoschinos/name/:name", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var name_1, monos, animeInfo, error_1;
+r.get("/anime/flv/name/:name", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var name_1, flv, animeInfo, error_1;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 name_1 = req.params.name;
-                monos = new Monoschinos_1.Monoschinos();
-                return [4 /*yield*/, monos.getAnime("https://monoschinos2.com/anime/".concat(name_1))];
+                flv = new AnimeFlv_1.AnimeFlv();
+                return [4 /*yield*/, flv.GetAnimeInfo(name_1)];
             case 1:
                 animeInfo = _a.sent();
                 res.send({
-                    data: [{ animeInfo: animeInfo }],
+                    data: [{ animeInfo: animeInfo }]
                 });
                 return [3 /*break*/, 3];
             case 2:
@@ -65,19 +65,19 @@ r.get("/anime/monoschinos/name/:name", function (req, res) { return __awaiter(vo
     });
 }); });
 //episode servers
-r.get("/anime/monoschinos/episode/:episode", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var episode, monos, animeInfo, error_2;
+r.get("/anime/flv/episode/:episode", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var episode, flv, animeInfo, error_2;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
                 episode = req.params.episode;
-                monos = new Monoschinos_1.Monoschinos();
-                return [4 /*yield*/, monos.getEpisodeServers("https://monoschinos2.com/ver/".concat(episode))];
+                flv = new AnimeFlv_1.AnimeFlv();
+                return [4 /*yield*/, flv.GetEpisodeServers(episode)];
             case 1:
                 animeInfo = _a.sent();
                 res.send({
-                    data: [{ animeInfo: animeInfo }],
+                    data: [{ animeInfo: animeInfo }]
                 });
                 return [3 /*break*/, 3];
             case 2:
@@ -90,22 +90,24 @@ r.get("/anime/monoschinos/episode/:episode", function (req, res) { return __awai
     });
 }); });
 //filter
-r.get("/anime/monoschinos/filter", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
-    var cat, gen, year, letter, monos, animeInfo, error_3;
+r.get("/anime/flv/filter", function (req, res) { return __awaiter(void 0, void 0, void 0, function () {
+    var gen, date, type, status_1, ord, page, flv, animeInfo, error_3;
     return __generator(this, function (_a) {
         switch (_a.label) {
             case 0:
                 _a.trys.push([0, 2, , 3]);
-                cat = req.query.category;
                 gen = req.query.gen;
-                year = req.query.year;
-                letter = req.query.letter;
-                monos = new Monoschinos_1.Monoschinos();
-                return [4 /*yield*/, monos.filter(cat, gen, year, letter)];
+                date = req.query.date;
+                type = req.query.type;
+                status_1 = req.query.status;
+                ord = req.query.ord;
+                page = req.query.page;
+                flv = new AnimeFlv_1.AnimeFlv();
+                return [4 /*yield*/, flv.Filter(gen, date, type, status_1, ord, page)];
             case 1:
                 animeInfo = _a.sent();
                 res.send({
-                    data: [{ animeInfo: animeInfo }],
+                    data: [{ animeInfo: animeInfo }]
                 });
                 return [3 /*break*/, 3];
             case 2:
@@ -117,5 +119,4 @@ r.get("/anime/monoschinos/filter", function (req, res) { return __awaiter(void 0
         }
     });
 }); });
-exports.default = r;
-//# sourceMappingURL=MonosChinosRoute.js.map
+exports["default"] = r;

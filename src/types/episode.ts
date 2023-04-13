@@ -21,12 +21,7 @@ export interface IEpisodeServer {
   url: string;
 }
 
-/**
- * Specify the structure episode, in the first url field is anime's name
- * and the second is the episode number
- * 
- * @author Mawfyy 
- */
+
 export interface IEpisode {
   name: string;
   url: `/anime/${string}/episode/${string | number}` | string;

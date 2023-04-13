@@ -1,6 +1,6 @@
 "use strict";
 //anime data return standard
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.Anime = exports.Chronology = exports.AnimeStats = void 0;
 var AnimeStats = /** @class */ (function () {
     function AnimeStats() {
@@ -22,4 +22,3 @@ var Anime = /** @class */ (function () {
     return Anime;
 }());
 exports.Anime = Anime;
-//# sourceMappingURL=anime.js.map

@@ -1,6 +1,6 @@
 "use strict";
 //Spanish Providers - TypeScript version
-Object.defineProperty(exports, "__esModule", { value: true });
+exports.__esModule = true;
 exports.ResultSearch = exports.AnimeSearch = void 0;
 var AnimeSearch = /** @class */ (function () {
     function AnimeSearch() {
@@ -16,4 +16,3 @@ var ResultSearch = /** @class */ (function () {
 }());
 exports.ResultSearch = ResultSearch;
 /** end */
-//# sourceMappingURL=search.js.map
