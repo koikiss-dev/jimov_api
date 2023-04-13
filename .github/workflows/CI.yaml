@@ -1,0 +1,31 @@
+name: CI
+
+
+on: 
+  push:
+    branches:
+      - main
+
+
+jobs:
+  build:
+    runs-on: ubuntu-20.04
+
+
+    steps:
+      - name: Set up git
+        uses: actions/checkout@v3
+
+      - name: Set up node
+        uses: actions/setup-node@v3
+
+      - name: Set up dependencys
+        run: npm i 
+
+      - name: Install typescript
+        run: npm i typescript
+
+      - name: Set up the project
+        run: npm run build
+
+
