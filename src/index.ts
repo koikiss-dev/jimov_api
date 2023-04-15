@@ -5,6 +5,7 @@ import providersList from "./routes/providers";
 import flv from "./routes/v1/anime/animeflv/AnimeflvRoutes";
 import latinhd from "./routes/v1/anime/animelatinohd/AnimeLatinoHDRoutes";
 import gogoanime from "./routes/v1/anime/gogoanime/GogoAnimeRoute";
+import zoro from "./routes/v1/anime/zoro/ZoroRoutes";
 import monoschinos from "./routes/v1/anime/monoschinos/MonosChinosRoute";
 import helmet from "helmet";
 
@@ -27,6 +28,7 @@ app.use(flv);
 app.use(latinhd);
 app.use(gogoanime);
 app.use(monoschinos);
+app.use(zoro);
 /*anime*/
 
 /*error */
