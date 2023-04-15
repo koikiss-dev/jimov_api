@@ -8,7 +8,7 @@ WORKDIR /anime
 
 RUN npm i 
 
-EXPOSE 3000
+
 
 WORKDIR /anime/src/
 
