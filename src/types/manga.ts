@@ -1,95 +1,77 @@
 import { IImage } from "./image";
 
-/* export interface IChapter{
-    name?: string;
-    url: `/manga/${string}/chapter/${string | number}`;
-    number?: number | string;
-    image?: string;
+export interface IDate {
+  year: number;
+  month: number;
+  day: number;
 }
 
 export interface IMangaChapter {
   id: string;
-  name: string;
+  title: string;
   volume?: number;
-  pages?: number;
-  releaseDate?: string;
-  url: `/manga/${string}/chapter/${string | number}`;
+  chapterNumber?: number;
+  releaseDate?: Date;
+  url: `/manga/${string}/chapter/${string}`;
 }
-export interface IMangaChapterPage {
-  img: string;
-  page: number;
-}
-export interface IMangaResult {
-    id?: number | string;
-    name: string;
-    alt_name?: string | string[];
-    image?: IImage;
-    description?: string;
-    status?: string | boolean;
-    date?: number | string;
-}
-
-
-export interface IMangaInfo extends IMangaResult {
-    malId?: number | string;
-    authors?: string[];
-    genres?: string[];
-    characters?: any[];
-    recommendations?: IMangaResult[];
-    chapters?: IMangaChapter[];
-    nsfw?: boolean;
-  }
-   */
-
-export interface IMangaChapter {
-  id: string;
-  name: string;
-  volume?: number;
-  pages?: number;
-  releaseDate?: string;
-  url: `/manga/${string}/chapter/${string | number}`;
-}
-
 export interface IManga {
-  name: string;
-  alt_name?: string | string[];
-  image?: IImage;
+  id: string;
+  title: string;
+  altTitles?: string[];
+  thumbnail?: IImage;
   description?: string;
-  status?: string | boolean;
-  date?: number | string;
-  malId?: number | string;
+  status?: "ongoing" | "completed";
   authors?: string[];
   genres?: string[];
-  characters?: any[];
+  characters?: string[];
   chapters?: IMangaChapter[];
-  nsfw?: boolean;
+  isNSFW: boolean;
+}
+export interface IChapterPages {
+  cap?: number | string;
+  page?: number | string;
+  results: IImage[];
 }
 
-export interface IMangaSearch {
-  name: string;
-  image?: string;
-  date?: number | string;
+export interface IMangaSearchResult {
+  id: string;
+  title: string;
+  thumbnail?: IImage;
   url: `/manga/${string}/title/${string}`;
 }
 
 export class Manga implements IManga {
-  name: string;
-  alt_name?: string | string[];
-  image?: IImage;
+  id: string;
+  title: string;
+  altTitles?: string[];
+  thumbnail?: IImage;
   description?: string;
-  status?: string | boolean;
-  date?: number | string;
-  malId?: number | string;
+  status?: "ongoing" | "completed";
   authors?: string[];
   genres?: string[];
-  characters?: any[];
+  characters?: string[];
   chapters?: IMangaChapter[];
-  nsfw?: boolean;
+  isNSFW: boolean;
 }
 
-export class MangaSearch implements IMangaSearch {
-  name: string;
-  image?: string;
-  date?: number | string;
+export class MangaSearch implements IMangaSearchResult {
+  id: string;
+  title: string;
+  thumbnail?: IImage;
   url: `/manga/${string}/title/${string}`;
+}
+
+export class MangaChapter implements IMangaChapter {
+  id: string;
+  title: string;
+  volume?: number;
+  chapterNumber?: number;
+  releaseDate?: Date;
+  url: `/manga/${string}/chapter/${string}`;
+}
+
+export class Chapter implements IChapterPages{
+  cap?: number | string;
+  page?: number | string;
+  results: IImage[];
 }
