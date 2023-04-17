@@ -62,8 +62,8 @@ export class AnimeFlv {
       });
       return AnimeReturn;
     } catch (error) {
-      console.log("An error occurred while getting the anime info", error);
-      throw new Error("An error occurred while getting the anime info");
+      console.log("An error occurred while getting the anime info: invalid name", error);
+      throw new Error("An error occurred while getting the anime info: invalid name");
     }
   }
 
