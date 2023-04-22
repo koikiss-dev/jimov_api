@@ -11,7 +11,7 @@ const PageInfo = {
 
 function getAnimeChronology($) {
     let chrono_list: types.IChronology[] = [];
-    $('section.w-history ul.list-unstyled li').each((i, element) => {
+    $('section.w-history ul.list-unstyled li').each((_i, element) => {
 		// The chronological anime has to access its year and type as extra
 		// information that is not included in the Chronology class
 		chrono_list.push(new types.Chronology(
@@ -29,16 +29,15 @@ async function getEpisodeServers(url) {
     const $ = cheerio.load((await axios.get(url)).data);
 	const script = $($('script').get().pop()).text().trim();
 	try {
-		// The variable 'videos' of the script is accessed
-		eval?.(script.substring(0, script.indexOf('$(document)')));
-		eval(script.substring(0, script.indexOf('$(document)')));
-		for (let i = 0; i < globalThis.videos.length; i++) {
-			servers.push(new types.EpisodeServer(globalThis.videos[i][0], 
-				globalThis.videos[i][1].replace('\\', '')
+		const videos = new Function(script.substring(0, script.indexOf('$(document)'))
+			.replace("var videos =", "return"))();
+		for (let i = 0; i < videos.length; i++) {
+			servers.push(new types.EpisodeServer(videos[i][0], 
+				videos[i][1].replace('\\', '')
 			));
 		}
 	} catch (error) {
-        
+        console.log(error)
     }
 	return servers;
 }
@@ -95,18 +94,15 @@ function getGenres($, elements) {
 }
 
 function getScriptAnimeInfo($) {
-	'use strict'
+	let script = $($('script').get().pop()).text().trim();
 	try {
-		const script = $($('script').get().pop()).text().trim();
-		eval?.(script.substring(0, script.indexOf('$(document)')));
-        eval(script.substring(0, script.indexOf('$(document)')));
-		return {
-			// An object with the variables initialized in the script is returned.
-			info: globalThis.anime_info,
-			episodes: globalThis.episodes
-		}
-	} catch(error) {
-		console.log(error);
+		script = script.substring(0, script.indexOf('$(document)'));
+		script = script.substring(0, script.indexOf("var episodes_details"))
+				 + "return { info: anime_info, episodes: episodes };";
+		const variables = new Function(script)()
+		return { info: variables.info, episodes: variables.episodes };
+	} catch (error) {
+		console.log(error + "\n Script code: " + script);
 	}
 	return null;
 }
@@ -116,8 +112,8 @@ async function getAnime(url) {
 	const $ = cheerio.load((await axios.get(url)).data);
 	const data       = getScriptAnimeInfo($);
 	// It is possible that the object returned by the getScriptAnimeInfo function is null.
-	if (data == null) return null;
-	
+	if (data == null)
+		throw new Error('The getScriptAnimeInfo() function returns a null value.');
 	const anime      = new types.Anime();
     anime.name       = $('div.container h1.title').text();
     //anime.url        = url;
@@ -141,11 +137,11 @@ async function getAnime(url) {
 	anime.date       = new types.DatePeriod(new types.Calendar(data.info.length < 4 ? 
                                 parseInt($('div.meta span.year').text().trim().substring(0, 4)) : 
                                 new Date(data.info[3]).getFullYear())
-                             ) ;
+								);
     anime.synopsis   = $('p.sinopsis').text().trim();
     anime.genres     = getGenres($, $('div.container p.genres span'));
     anime.image      = new types.Image(PageInfo.url + $('div.container div.thumb figure img').attr('src'), 
-											    	  $('figure.backdrop img').attr('src') == undefined ? null :
+											    	  $('figure.backdrop img').attr('src') == undefined ? "" :
 								 					  PageInfo.url + $('figure.backdrop img').attr('src')
 												);
     anime.status     = $('div.thumb a.status').text().trim() === 'En emision';
@@ -200,7 +196,9 @@ async function getLastOnas() {
     return await getSectionContents(3);
 }
 
-//console.log(await getEpisodeServers('https://tioanime.com/ver/getsuyoubi-no-tawawa-2-11'));
+/*getAnime('https://tioanime.com/anime/oniichan-wa-oshimai').then(result => { 
+	console.log(result)
+})*/
 
 export interface IYearRange {
 	begin: number;
@@ -250,3 +248,8 @@ export class TioAnime
 		return animes;
 	}
 };
+
+
+
+new TioAnime().filter(["1"], ["accion"], { begin: 1950, end: 2023 }, 2, "recent").then(result => { console.log(result) } )
+
