@@ -7,7 +7,7 @@ import { IImage } from './image';
 //spanish providers - TypeScript version
 
 /** Specifies the type of anime to which its content refers. */
-export type AnimeType = "Anime" | "Movie" | "OVA" | "ONA";
+export type AnimeType = "Anime" | "Movie" | "OVA" | "ONA" | "Null";
 /** Specify the climatic season in which the anime was published. */
 export type ClimaticStation = "Summer" | "Autumn" | "Winter" | "Spring";
 
@@ -25,7 +25,7 @@ export interface IAnimeStats {
  */
 export interface IChronology {
   name: string;
-  url: `/anime/${string}/name/${string}`;
+  url: `/anime/${string}/name/${string}`| string;
   image?: string;
 }
 
@@ -56,8 +56,14 @@ export class AnimeStats implements IAnimeStats {
 
 export class Chronology implements IChronology {
   name: string;
-  url: `/anime/${string}/name/${string}`;
+  url: `/anime/${string}/name/${string}` | string;
   image?: string;
+
+  constructor(name?: string, url?: string, image?: string) {
+    this.name = name;
+    this.url = url;
+    this.image = image;
+  }
 }
 
 export class Anime implements IAnime {
