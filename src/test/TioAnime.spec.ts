@@ -7,10 +7,10 @@ describe("TioAnime", () => {
         tioanime = new TioAnime();
     })
      it('should get anime info successfully', async () => {
-      const animeInfo = await tioanime.getAnime('https://tioanime.com/anime/oniichan-wa-oshimai');
+      const animeInfo = await tioanime.getAnime('https://tioanime.com/anime/date-a-live');
       if (animeInfo == null) return;
 
-      expect(animeInfo.name).toBe('Oniichan wa Oshimai!');
+      expect(animeInfo.name).toBe('Date A Live');
       expect(animeInfo.image.url).toContain('.jpg');
       expect(animeInfo.synopsis.length).toBeGreaterThan(0);
       expect(animeInfo.chronology?.length).toBeGreaterThan(0);
