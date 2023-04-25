@@ -34,6 +34,7 @@ export interface IManga {
   genres?: string[];
   characters?: string[];
   chapters?: IMangaChapter[];
+  volumes?: IVolume[];
   isNSFW: boolean;
 }
 export interface IPages {
@@ -60,6 +61,7 @@ export class Manga implements IManga {
   genres?: string[];
   characters?: string[];
   chapters?: IMangaChapter[];
+  volumes?: IVolume[];
   isNSFW: boolean;
 }
 
