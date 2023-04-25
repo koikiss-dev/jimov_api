@@ -84,8 +84,11 @@ export interface IAnime {
 
 
 export class AnimeStats implements IAnimeStats {
+  /** Anime score */
   score?: string | number;
+  /** The number of views of the anime */
   views?: string | number;
+  /**  */
   rating?: string | number;
 }
 

@@ -1,19 +1,9 @@
-/***********************************************************************
- * 
- * 
- * 
- * 
- * 
- * 
- */
-
-
 //Spanish Providers - TypeScript version
 
 /**
  * This interface only puts the server name where host episode, 
-* and url to that episode
-*
+ * and url to that episode
+ * 
  * @author Mawfyy 
  */
 export interface IEpisodeServer {
@@ -29,7 +19,6 @@ export interface IEpisode {
   servers?: IEpisodeServer[];
   image: string;
 }
-
 
 /**
  * @author Zukaritasu
