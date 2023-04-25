@@ -1,3 +1,5 @@
+//example
+
 export class MangaProvider {
   readonly url = "link";
 
