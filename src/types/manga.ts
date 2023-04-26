@@ -11,7 +11,7 @@ export interface IMangaChapter {
   title: string;
   chapterNumber?: number;
   releaseDate?: Date;
-  url: `/manga/${string}/chapter/${string}`;
+  url: `/manga/${string}/readchapter/${string}`;
 }
 
 export interface IVolume {
@@ -20,7 +20,7 @@ export interface IVolume {
   volumeNumber?: number;//number
   releaseDate?: Date;
   thumbnail?: IImage;
-  url?: `/manga/${string}/volume/${string}`;//title or number
+  url?: `/manga/${string}/readvolume/${string}`;//title or number
 }
 
 export interface IManga {
@@ -41,14 +41,14 @@ export interface IPages {
   cap?: number | string;
   page?: number | string;
   results: IImage[];
-}
+}//use in mangachapter function
 
 export interface IMangaSearchResult {
   id: string;
   title: string;
   thumbnail?: IImage;
   url: `/manga/${string}/title/${string}`;
-}
+}//filter
 
 export class Manga implements IManga {
   id: string;
@@ -84,7 +84,7 @@ export class Pages implements IPages{
   cap?: number | string;
   page?: number | string;
   results: IImage[];
-}
+}//use in mangachapter function
 
 export class MangaVolume implements IVolume {
   id: string;
