@@ -25,7 +25,6 @@ export class MangaReader {
       const thumbnailUrl = $("div.manga-poster img.manga-poster-img").attr("src");
       const description = $("div.description").text().trim();
       const status = $("div.anisc-info div.item").find("span.name").first().text().trim();
-      const authors = $("div.anisc-info div.item").find("a").last().text().trim();
 
       const mangaGenres: Array<string> = [];
       // Manga genres
@@ -45,7 +44,6 @@ export class MangaReader {
       if (status === "Finished") manga.status = "completed";
       else manga.status = "ongoing";
 
-      manga.authors = [authors];
       manga.genres = mangaGenres;
 
       // Get manga chapters
