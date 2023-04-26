@@ -82,13 +82,25 @@ export interface IAnime {
 
 /**---------------- Interfaces implementation ---------------- **/
 
-
+/**
+ * Spectify the rating and stats in the anime
+ * @author Zukaritasu
+ */
 export class AnimeStats implements IAnimeStats {
+  /** Anime score */
   score?: string | number;
+  /** The number of views of the anime */
   views?: string | number;
+  /**  */
   rating?: string | number;
 }
 
+/** 
+ * Spectify chronology to that anime, in some pages puts what anime
+ * should you see before to that anime 
+ *
+ * @author Mawfyy
+ */
 export class Chronology implements IChronology {
   /** @inheritdoc */
   name: string;
@@ -104,6 +116,10 @@ export class Chronology implements IChronology {
   }
 }
 
+/**
+ * Spectify the anime structure that you scrapped
+ * @author Zukaritasu
+ */
 export class Anime implements IAnime {
   /** @inheritdoc */
   name: string;
