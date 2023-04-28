@@ -129,7 +129,7 @@ export interface IMangaResult {
   thumbnail?: IImage;
   /** {@inheritdoc IManga.url} */
   url: `/manga/${string}/title/${string}`;
-}
+}//filter
 
 /**
  * This class defines the basic properties that a manga website can 
