@@ -3,6 +3,8 @@ import { Anime } from "../../../../types/anime";
 import { getAllAnimes } from "./assets/getAllAnimesHTML";
 import { Episode } from "../../../../types/episode";
 
+
+//This is a class
 export class GogoanimeInfo {
 
   async getAnimeInfo(animeName: string) {

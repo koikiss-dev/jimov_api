@@ -8,7 +8,7 @@ import {
   StatusAnimeflv,
   TypeAnimeflv,
 } from "./animeflv_helper";
-import { AnimeSearch, ResultSearch } from "../../../../types/search";
+import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "../../../../types/search";
 
 export class AnimeFlv {
   readonly url = "https://www2.animeflv.bz";
@@ -62,8 +62,8 @@ export class AnimeFlv {
       });
       return AnimeReturn;
     } catch (error) {
-      console.log("An error occurred while getting the anime info", error);
-      throw new Error("An error occurred while getting the anime info");
+      console.log("An error occurred while getting the anime info: invalid name", error);
+      throw new Error("An error occurred while getting the anime info: invalid name");
     }
   }
 
@@ -74,7 +74,7 @@ export class AnimeFlv {
     status?: StatusAnimeflv,
     ord?: OrderAnimeflv,
     page?: number
-  ): Promise<ResultSearch> {
+  ): Promise <IResultSearch<IAnimeSearch>> {
     try {
       const { data } = await axios.get(`${this.url}/browse`, {
         params: {
@@ -88,7 +88,7 @@ export class AnimeFlv {
       });
       const $ = load(data);
       const info = $("ul.ListAnimes li article.Anime div.Description");
-      const data_filter = new ResultSearch();
+      const data_filter = new ResultSearch<IAnimeSearch>();
       data_filter.results = [];
       info.each((_i, e) => {
         const info = new AnimeSearch();
