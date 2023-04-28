@@ -2,7 +2,7 @@ import * as cheerio from "cheerio";
 import axios from "axios";
 import { Anime } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
-import { AnimeSearch, ResultSearch } from "../../../../types/search";
+import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "../../../../types/search";
 
 export class AnimeLatinoHD {
     readonly url = "https://www.animelatinohd.com";
@@ -105,7 +105,7 @@ export class AnimeLatinoHD {
         }
     }
 
-    async GetAnimeByFilter(search?: string, type?: number, page?: number, year?: string, genre?: string): Promise<ResultSearch> {
+    async GetAnimeByFilter(search?: string, type?: number, page?: number, year?: string, genre?: string): Promise<IResultSearch<IAnimeSearch>> {
         try {
             const { data } = await axios.get(`${this.api}/api/anime/list`, {
                 params: {
@@ -119,7 +119,7 @@ export class AnimeLatinoHD {
 
             let animeSearchParseObj = data
 
-            const animeSearch: ResultSearch = {
+            const animeSearch: ResultSearch<IAnimeSearch> = {
                 nav: {
                     count: animeSearchParseObj.data.length,
                     current: animeSearchParseObj.current_page,
