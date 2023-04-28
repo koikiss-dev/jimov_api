@@ -8,7 +8,7 @@ import {
   StatusAnimeflv,
   TypeAnimeflv,
 } from "./animeflv_helper";
-import { AnimeSearch, ResultSearch } from "../../../../types/search";
+import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "../../../../types/search";
 
 export class AnimeFlv {
   readonly url = "https://www2.animeflv.bz";
@@ -74,7 +74,7 @@ export class AnimeFlv {
     status?: StatusAnimeflv,
     ord?: OrderAnimeflv,
     page?: number
-  ): Promise<ResultSearch> {
+  ): Promise <IResultSearch<IAnimeSearch>> {
     try {
       const { data } = await axios.get(`${this.url}/browse`, {
         params: {
@@ -88,7 +88,7 @@ export class AnimeFlv {
       });
       const $ = load(data);
       const info = $("ul.ListAnimes li article.Anime div.Description");
-      const data_filter = new ResultSearch();
+      const data_filter = new ResultSearch<IAnimeSearch>();
       data_filter.results = [];
       info.each((_i, e) => {
         const info = new AnimeSearch();
