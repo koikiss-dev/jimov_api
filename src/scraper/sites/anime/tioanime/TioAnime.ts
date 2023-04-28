@@ -2,7 +2,7 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import { utils } from "../../../../types/utils";
 import * as types from "../../../../types/.";
-import { ResultSearch, IResultSearch } from "../../../../types/search";
+import { ResultSearch, IResultSearch, IAnimeSearch } from "../../../../types/search";
 
 const PageInfo = {
     url: 'https://tioanime.com' // url page
@@ -234,8 +234,9 @@ export class TioAnime
  	// <status> 2: Finalizado, 1: En emision, 3: Proximamente
  	// <sort> recent, -recent
  	
-	async filter(types: string[], genres: string[], year_range: IYearRange, status: number, sort: string): Promise<IResultSearch> {
-		const animes = new ResultSearch();
+	async filter(types: string[], genres: string[], year_range: IYearRange, status: number, sort: string): 
+		Promise<IResultSearch<IAnimeSearch>> {
+		const animes = new ResultSearch<IAnimeSearch>();
 		// If any of the arguments is null or undefined, a default value will be assigned.
 		year_range ?? (year_range = { begin: 1950, end: new Date().getFullYear() });
 		(await getLastAnimes(`https://tioanime.com/directorio?${this.arrayToURLParams('type', types)}&${this.arrayToURLParams('genre', genres)}&year=${year_range.begin}%2C${year_range.end}&status=${status ?? 2}&sort=${sort ?? 'recent'}`))

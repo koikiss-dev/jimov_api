@@ -41,15 +41,15 @@ export interface IPageNavigation {
 
 /**
  * Search results including information on the page number of the
- * searched anime web site
+ * searched web site
  * 
  * @author Zukaritasu
  */
-export interface IResultSearch {
+export interface IResultSearch<T> {
   /** Search by navigation */
   nav?: IPageNavigation;
   /** A list of the results obtained */
-  results: IAnimeSearch[];
+  results: T[];
 }
 
 /**
@@ -73,15 +73,15 @@ export class AnimeSearch implements IAnimeSearch {
 
 /**
  * Search results including information on the page number of the
- * searched anime web site
+ * searched web site
  * 
  * @author Zukaritasu
  */
-export class ResultSearch implements IResultSearch {
+export class ResultSearch<T> implements IResultSearch<T> {
   /** @inheritdoc */
   nav?: IPageNavigation;
   /** @inheritdoc */
-  results: IAnimeSearch[] = [];
+  results: T[] = [];
 }
 
 /** end */
