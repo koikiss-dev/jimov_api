@@ -2,12 +2,12 @@ import * as cheerio from "cheerio";
 import axios from "axios";
 import { Anime } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
-import { AnimeSearch, ResultSearch } from "../../../../types/search";
+import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "../../../../types/search";
 
 export class AnimeLatinoHD {
     readonly url = "https://www.animelatinohd.com";
     readonly api = "https://api.animelatinohd.com";
-    async GetAnimeInfo(anime: string) {
+    async GetAnimeInfo(anime: string): Promise<Anime> {
         try {
             const { data } = await axios.get(`${this.url}/anime/${anime}`);
             const $ = cheerio.load(data);
@@ -39,15 +39,16 @@ export class AnimeLatinoHD {
                     name: animeInfoParseObj.name,
                     number: e.number + "",
                     image: "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.banner + "?&w=280&q=95",
-                    url: `/anime/animelatinohd/episode/${animeInfoParseObj.name.replace(" ", "-") + "-" + e.number}`
+                    url: `/anime/animelatinohd/episode/${animeInfoParseObj.slug + "-" + e.number}`
                 }
+               
                 AnimeInfo.episodes.push(AnimeEpisode);
             })
+        
             return AnimeInfo;
 
         } catch (error) {
             console.log("An error occurred while getting the anime info");
-            return {};
         }
     }
     async GetEpisodeServers(episode: string) {
@@ -58,7 +59,6 @@ export class AnimeLatinoHD {
 
             const { data } = await axios.get(`${this.url}/ver/${anime}/${number}`);
             const $ = cheerio.load(data);
-            console.log(this.url + number + anime)
 
             let animeEpisodeParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
 
@@ -105,7 +105,7 @@ export class AnimeLatinoHD {
         }
     }
 
-    async GetAnimeByFilter(search?: string, type?: number, page?: number, year?: string, genre?: string) {
+    async GetAnimeByFilter(search?: string, type?: number, page?: number, year?: string, genre?: string): Promise<IResultSearch<IAnimeSearch>> {
         try {
             const { data } = await axios.get(`${this.api}/api/anime/list`, {
                 params: {
@@ -119,7 +119,7 @@ export class AnimeLatinoHD {
 
             let animeSearchParseObj = data
 
-            const animeSearch: ResultSearch = {
+            const animeSearch: ResultSearch<IAnimeSearch> = {
                 nav: {
                     count: animeSearchParseObj.data.length,
                     current: animeSearchParseObj.current_page,
@@ -128,7 +128,6 @@ export class AnimeLatinoHD {
                 },
                 results: []
             }
-
             animeSearchParseObj.data.map(e => {
                 const animeSearchData: AnimeSearch = {
                     name: e.name,
@@ -140,8 +139,9 @@ export class AnimeLatinoHD {
             })
             return animeSearch;
         } catch (error) {
+            
             console.log("An error occurred while getting the episode servers", error);
-            return {};
+          
         }
     }
 
