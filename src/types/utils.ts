@@ -52,6 +52,6 @@ export const utils = {
      * @returns 
      */
     isUsableValue(object: any): boolean {
-        return object != null && object != undefined;
+        return object == null || object == undefined;
     }
 }
