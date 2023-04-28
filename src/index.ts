@@ -74,7 +74,7 @@ app.use((err, res, _next) => {
   res.status(response.error.status).send(response);
 });
 
-//init
+
 app.listen(port, () => {
   console.log(`Servidor iniciado en el puerto ${port} listo para trabajar :)`);
 });
