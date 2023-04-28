@@ -48,7 +48,7 @@ async function getAnimeEpisodes(data) {
 		let episode     = new types.Episode();
 		episode.name    = `${data.info[2]} Capitulo ${episode_number}`;
 		episode.image   = PageInfo.url +`/uploads/thumbs/${data.info[0]}.jpg`;
-		episode.url     = `/anime/tioanime/servers/${data.info[1]}-${episode_number}`;
+		episode.url     = `/anime/tioanime/episode/${data.info[1]}-${episode_number}`;
 		episode.number  = episode_number;
         __episodes.push(episode);
 	});
