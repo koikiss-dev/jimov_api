@@ -3,7 +3,7 @@ import morgan from "morgan";
 import index from "./routes/app";
 import providersList from "./routes/providers";
 import flv from "./routes/v1/anime/animeflv/AnimeflvRoutes";
-//import latinhd from "./routes/v1/anime/animelatinohd/AnimeLatinoHDRoutes";
+import latinhd from "./routes/v1/anime/animelatinohd/AnimeLatinoHDRoutes";
 import gogoanime from "./routes/v1/anime/gogoanime/GogoAnimeRoute";
 import zoro from "./routes/v1/anime/zoro/ZoroRoutes";
 import monoschinos from "./routes/v1/anime/monoschinos/MonosChinosRoute";
@@ -26,7 +26,7 @@ app.use(helmet());
 
 /*anime*/
 app.use(flv);
-//app.use(latinhd);
+app.use(latinhd);
 app.use(gogoanime);
 app.use(monoschinos);
 app.use(zoro);
