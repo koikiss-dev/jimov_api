@@ -2,7 +2,7 @@ import axios from "axios";
 import { load } from "cheerio";
 import { Anime, Chronology } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
-import { AnimeSearch, ResultSearch, IAnimeSearch } from "../../../../types/search";
+import { AnimeSearch, ResultSearch } from "../../../../types/search";
 
 export class Zoro {
   readonly url = "https://zoro.to";
@@ -84,7 +84,7 @@ export class Zoro {
       const $ = load(data);
       const most_cards = $("div.film_list div.film_list-wrap div.flw-item");
       //const page_index = $("div.pre-pagination nav ul li.active");
-      const filter_return = new ResultSearch<IAnimeSearch>();
+      const filter_return = new ResultSearch();
       filter_return.results = [];
       most_cards.each((_i, e) => {
         const anime = new AnimeSearch();

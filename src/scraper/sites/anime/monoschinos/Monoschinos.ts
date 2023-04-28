@@ -2,7 +2,7 @@ import axios from "axios";
 import * as cheerio from "cheerio";
 import { api, utils } from "../../../../types/utils";
 import * as types from "../../../../types/.";
-import { ResultSearch, IResultSearch, IAnimeSearch } from "../../../../types/search";
+import { ResultSearch, IResultSearch } from "../../../../types/search";
 
 const PageInfo = {
     name: 'monoschinos',
@@ -182,8 +182,8 @@ export class Monoschinos
     getEpisodeServers = getEpisodeServers;
     getAnime = getAnime;
 
-    async filter(category: string, genre: string, year: string, letter: string): Promise<IResultSearch<IAnimeSearch>> {
-        const animes = new ResultSearch<IAnimeSearch>();
+    async filter(category: string, genre: string, year: string, letter: string): Promise<IResultSearch> {
+        const animes = new ResultSearch();
         (await getLastAnimes(`https://monoschinos2.com/animes?categoria=${category ?? false}&genero=${genre ?? false}&fecha=${year ?? false}&letra=${letter ?? false}`))
             .forEach(element => {
                 if (utils.isUsableValue(element)) {
