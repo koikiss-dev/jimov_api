@@ -7,7 +7,6 @@ import latinhd from "./routes/v1/anime/animelatinohd/AnimeLatinoHDRoutes";
 import gogoanime from "./routes/v1/anime/gogoanime/GogoAnimeRoute";
 import zoro from "./routes/v1/anime/zoro/ZoroRoutes";
 import monoschinos from "./routes/v1/anime/monoschinos/MonosChinosRoute";
-import tioanime from './routes/v1/anime/tioanime/TioAnimeRoute'
 import helmet from "helmet";
 
 const app = express();
@@ -30,7 +29,6 @@ app.use(latinhd);
 app.use(gogoanime);
 app.use(monoschinos);
 app.use(zoro);
-app.use(tioanime)
 /*anime*/
 
 /*error */
