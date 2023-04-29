@@ -2,7 +2,7 @@ import { Router } from "express";
 import { TioAnime } from "../../../../scraper/sites/anime/tioanime/TioAnime";
 const r = Router();
 
-//anime info
+//anime info with name
 r.get("/anime/tioanime/name/:name", async (req, res) => {
   try {
     const { name } = req.params;
