@@ -10,9 +10,7 @@ r.get("/anime/tioanime/name/:name", async (req, res) => {
     const animeInfo = await tioanime.getAnime(
       `https://tioanime.com/anime/${name}`
     );
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -27,9 +25,7 @@ r.get("/anime/tioanime/episode/:episode", async (req, res) => {
     const animeInfo = await tioanime.getEpisodeServers(
       `https://tioanime.com/ver/${episode}`
     );
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -50,9 +46,7 @@ r.get("/anime/tioanime/filter", async (req, res) => {
 
     const tioanime = new TioAnime();
     const animeInfo = await tioanime.filter(types, genres, {begin, end}, status, sort);
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
    //console.log(tioanime.filter(types, genres, { begin: begin, end: end }, status, sort).then(result => { console.log(result) } ));
   } catch (error) {
     console.log(error);
