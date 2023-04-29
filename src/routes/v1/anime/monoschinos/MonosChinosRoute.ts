@@ -11,9 +11,7 @@ r.get("/anime/monoschinos/name/:name", async (req, res) => {
     const animeInfo = await monos.getAnime(
       `https://monoschinos2.com/anime/${name}`
     );
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -28,9 +26,7 @@ r.get("/anime/monoschinos/episode/:episode", async (req, res) => {
     const animeInfo = await monos.getEpisodeServers(
       `https://monoschinos2.com/ver/${episode}`
     );
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -47,9 +43,7 @@ r.get("/anime/monoschinos/filter", async (req, res) => {
 
     const monos = new Monoschinos();
     const animeInfo = await monos.filter(cat, gen, year, letter);
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);

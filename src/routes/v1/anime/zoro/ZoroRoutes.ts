@@ -8,9 +8,7 @@ r.get("/anime/zoro/name/:name", async (req, res) => {
     const { name } = req.params;
     const zoro = new Zoro();
     const animeInfo = await zoro.GetAnimeInfo(name);
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -23,9 +21,7 @@ r.get("/anime/zoro/episode/:episode/:ep", async (req, res) => {
     const { episode, ep } = req.params;
     const zoro = new Zoro();
     const animeInfo = await zoro.GetEpisodeServer(episode, ep);
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -46,9 +42,7 @@ r.get("/anime/zoro/filter", async (req, res) => {
 
     const zoro = new Zoro();
     const animeInfo = await zoro.Filter(type, rated, score, season, language, sort, gen, page);
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
