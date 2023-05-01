@@ -73,7 +73,8 @@ export class AnimeFlv {
     type?: TypeAnimeflv,
     status?: StatusAnimeflv,
     ord?: OrderAnimeflv,
-    page?: number
+    page?: number,
+    title?: string
   ): Promise <IResultSearch<IAnimeSearch>> {
     try {
       const { data } = await axios.get(`${this.url}/browse`, {
@@ -84,6 +85,7 @@ export class AnimeFlv {
           Tipo: type || "all",
           order: ord || 1,
           page: page || 1,
+          q: title
         },
       });
       const $ = load(data);

@@ -44,9 +44,10 @@ r.get("/anime/flv/filter", async (req, res) => {
     const status = req.query.status as StatusAnimeflv;
     const ord = req.query.ord as OrderAnimeflv;
     const page = req.query.page as unknown as number;
+    const title = req.query.title as string;
 
     const flv = new AnimeFlv();
-    const animeInfo = await flv.Filter(gen, date, type, status, ord, page);
+    const animeInfo = await flv.Filter(gen, date, type, status, ord, page, title);
     res.send(animeInfo);
   } catch (error) {
     console.log(error);

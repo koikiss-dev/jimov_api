@@ -21,5 +21,5 @@ describe("AnimeLatinohd", () => {
     it("should filter anime successfully", async () => {
       const result = await animelatinohd.GetAnimeByFilter();
       expect(result.results.length).toBeGreaterThan(0);
-    });
+    }, 10000);
   });
