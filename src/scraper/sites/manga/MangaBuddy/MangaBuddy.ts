@@ -1,6 +1,6 @@
 import axios from "axios";
 import { load } from "cheerio";
-import { Manga } from "../../../../types/manga";
+import { Manga, IMangaChapter } from "../../../../types/manga";
 export class MangaBuddy {
   readonly url = "https://mangabuddy.com";
 
@@ -19,11 +19,13 @@ export class MangaBuddy {
 
       //details
       mangaReturn.title = titleManga;
+      mangaReturn.url = `/manga/mangabuddy/title/${title}`
       mangaReturn.altTitles = [...altTitles];
       mangaReturn.thumbnail = {
         url: `https://thumb.youmadcdn.xyz/thumb/${title}.png`, //acces denied
       };
       mangaReturn.genres = [];
+      mangaReturn.chapters = []
 
       //genres
       $('p:contains("Genres")')
@@ -34,6 +36,19 @@ export class MangaBuddy {
             mangaReturn.genres.push(genre);
           }
         });
+        
+        $("div#chapter-list-inner ul.chapter-list li").each((_i, e)=> {
+          const titleChapter = $(e).find("a").attr("title").split("-")[1].toLowerCase().trim().replace(" ", "-");
+          const chapterList: IMangaChapter = {
+            title: title.toUpperCase(),
+            id: titleChapter,
+            url: `/manga/mangabuddy/chapter/${title}-${titleChapter}`,
+            number: Number($(e).find("strong").text().trim().split(" ")[1]),
+            images: ["No images"],
+            cover: "No cover"
+          }
+          mangaReturn.chapters.push(chapterList)
+        })
 
       return mangaReturn;
     } catch (error) {
