@@ -14,9 +14,9 @@ export interface ICalendar {
    * The year of publication. This property is not optional 
    * because in many anime pages they only say the year of publication but
    * not the month and day. */
-  year: number;
-  month?: number;
-  day?: number;
+  year: number | string;
+  month?: number | string;
+  day?: number | string;
 }
 
 /**
