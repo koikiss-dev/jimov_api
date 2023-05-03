@@ -1,11 +1,11 @@
 import { Router } from "express";
-import { AnimeFlv } from "../../../../scraper/sites/anime/animeflv/AnimeFlv";
+import { AnimeFlv } from "@providers/animeflv/AnimeFlv";
 import {
   Genres,
   TypeAnimeflv,
   StatusAnimeflv,
   OrderAnimeflv,
-} from "../../../../scraper/sites/anime/animeflv/animeflv_helper";
+} from "@providers/animeflv/animeflv_helper";
 const r = Router();
 
 

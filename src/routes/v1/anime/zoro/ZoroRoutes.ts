@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Zoro } from "../../../../scraper/sites/anime/zoro/Zoro";
+import { Zoro } from "@providers/zoro/Zoro";
 const r = Router();
 
 //anime info

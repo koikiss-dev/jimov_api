@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AnimeLatinoHD } from "../../../../scraper/sites/anime/animelatinohd/AnimeLatinoHD";
+import { AnimeLatinoHD } from "@providers/animelatinohd/AnimeLatinoHD";
 const Anime = new AnimeLatinoHD();
 const router = Router();
 
