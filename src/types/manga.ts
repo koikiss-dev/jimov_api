@@ -115,7 +115,7 @@ export interface IManga {
  * At the end of the search the provider function returns an array with
  * the results of the filter, each result is stored in an instance of
  * this interface with enough basic information to perform a specific
- * query, so the API must return an array of IMangaSearchResult. All this
+ * query, so the API must return an array of IMangaResult. All this
  * information is encapsulated in the {@link IResultSearch} interface.
  *
  * @author Zukaritasu

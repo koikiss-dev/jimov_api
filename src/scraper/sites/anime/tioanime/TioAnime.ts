@@ -238,7 +238,7 @@ export class TioAnime
 		Promise<IResultSearch<IAnimeSearch>> {
 		const animes = new ResultSearch<IAnimeSearch>();
 		let usable;
-		if (!(usable = utils.isUsableValue(name)))
+		if (!(usable = (utils.isUsableValue(name) || name.trim().length == 0)))
 			year_range ?? (year_range = { begin: 1950, end: new Date().getFullYear() });
 		(await getLastAnimes(`${PageInfo.url}/directorio?${(usable ? "q=" : `${this.arrayToURLParams('type', types)}&${this.arrayToURLParams('genre', genres)}&year=${year_range.begin}%2C${year_range.end}&status=${status ?? 2}&sort=${sort ?? 'recent'}`)}`))
 			.forEach(element => {
