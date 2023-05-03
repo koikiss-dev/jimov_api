@@ -182,9 +182,11 @@ export class Monoschinos
     getEpisodeServers = getEpisodeServers;
     getAnime = getAnime;
 
-    async filter(category: string, genre: string, year: string, letter: string): Promise<IResultSearch<IAnimeSearch>> {
+    async filter(name: (string | null), category?: string, genre?: string, year?: string, letter?: string): Promise<IResultSearch<IAnimeSearch>> {
         const animes = new ResultSearch<IAnimeSearch>();
-        (await getLastAnimes(`https://monoschinos2.com/animes?categoria=${category ?? false}&genero=${genre ?? false}&fecha=${year ?? false}&letra=${letter ?? false}`))
+        const link = utils.isUsableValue(name) ? `${PageInfo.url}/buscar?q=${name}` : 
+            `${PageInfo.url}/animes?categoria=${category ?? false}&genero=${genre ?? false}&fecha=${year ?? false}&letra=${letter ?? false}`;
+        (await getLastAnimes(link))
             .forEach(element => {
                 if (utils.isUsableValue(element)) {
                     animes.results.push({ name: element.name, image: element.image.url, 
