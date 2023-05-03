@@ -1,8 +1,8 @@
 import axios from "axios";
 import { load } from "cheerio";
-import { Anime, Chronology } from "@animetypes/anime";
-import { Episode, EpisodeServer } from "@animetypes/episode";
-import { AnimeSearch, ResultSearch, IAnimeSearch } from "@animetypes/search";
+import { Anime, Chronology } from "../../../../types/anime";
+import { Episode, EpisodeServer } from "../../../../types/episode";
+import { AnimeSearch, ResultSearch, IAnimeSearch } from "../../../../types/search";
 
 export class Zoro {
   readonly url = "https://zoro.to";

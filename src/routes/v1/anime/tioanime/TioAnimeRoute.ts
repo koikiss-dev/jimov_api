@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { TioAnime } from "@providers/tioanime/TioAnime";
+import { TioAnime } from "../../../../scraper/sites/anime/tioanime/TioAnime";
 const r = Router();
 
 //anime info with name

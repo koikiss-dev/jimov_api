@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Monoschinos } from "@providers/monoschinos/Monoschinos";
+import { Monoschinos } from "../../../../scraper/sites/anime/monoschinos/Monoschinos";
 
 const r = Router();
 

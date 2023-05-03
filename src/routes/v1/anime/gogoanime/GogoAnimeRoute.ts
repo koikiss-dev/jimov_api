@@ -3,7 +3,7 @@ import {
   GogoanimeInfo,
   GogoanimeServer,
   GogoanimeFilter,
-} from "@providers/gogoanime/Gogoanime"
+} from "../../../../scraper/sites/anime/gogoanime/Gogoanime"
 
 const r = Router();
 
