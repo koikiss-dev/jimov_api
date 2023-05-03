@@ -15,9 +15,7 @@ r.get("/anime/flv/name/:name", async (req, res) => {
     const { name } = req.params;
     const flv = new AnimeFlv();
     const animeInfo = await flv.GetAnimeInfo(name);
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -30,9 +28,7 @@ r.get("/anime/flv/episode/:episode", async (req, res) => {
     const { episode } = req.params;
     const flv = new AnimeFlv();
     const animeInfo = await flv.GetEpisodeServers(episode);
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -48,12 +44,11 @@ r.get("/anime/flv/filter", async (req, res) => {
     const status = req.query.status as StatusAnimeflv;
     const ord = req.query.ord as OrderAnimeflv;
     const page = req.query.page as unknown as number;
+    const title = req.query.title as string;
 
     const flv = new AnimeFlv();
-    const animeInfo = await flv.Filter(gen, date, type, status, ord, page);
-    res.send({
-      data: [{ animeInfo }],
-    });
+    const animeInfo = await flv.Filter(gen, date, type, status, ord, page, title);
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);

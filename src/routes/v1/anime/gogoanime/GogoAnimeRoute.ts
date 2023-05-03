@@ -13,9 +13,7 @@ r.get("/anime/gogoanime/name/:name", async (req, res) => {
     const { name } = req.params;
     const gogo = new GogoanimeInfo();
     const animeInfo = await gogo.getAnimeInfo(name);
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -31,9 +29,7 @@ r.get("/anime/gogoanime/episode/:name/:episode", async (req, res) => {
       name,
       episode as unknown as number
     );
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
@@ -59,9 +55,7 @@ r.get("/anime/gogoanime/filter", async (req, res) => {
       throw new Error("Missing parameters");
     }
 
-    res.send({
-      data: [{ animeInfo }],
-    });
+    res.send(animeInfo);
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
