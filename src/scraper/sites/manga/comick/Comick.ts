@@ -112,8 +112,8 @@ export class Comick {
 
             const { data } = await axios.get(`${this.url}/comic/${title}/${urlchange}`);
             const $ = cheerio.load(data);
-
-            if (idNumber != "err") {
+            console.log(JSON.parse($("#__NEXT_DATA__").html()).isFallback)
+            if (JSON.parse($("#__NEXT_DATA__").html()).isFallback = false) {
                 const mangaChapterInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps
                 const mindate = new Date(mangaChapterInfoParseObj.chapter.created_at);
 
@@ -141,9 +141,9 @@ export class Comick {
 
             } else {
                 let buildid = JSON.parse($("#__NEXT_DATA__").html()).buildId
-
-                let dataBuild = await axios.get(`${this.url}/_next/data/${buildid}/comic/${title}/${hid}.json?slug=${title}&chapter=${hid}`);
-
+                let currentUrl = idNumber == "err" ? `${title}/${hid}.json?slug=${title}&chapter=${hid}`:`${title}/${hid}-chapter-${idNumber}${currentLang}.json?slug=${title}&chapter=${hid}-chapter-${idNumber}${currentLang}`
+                let dataBuild = await axios.get(`${this.url}/_next/data/${buildid}/comic/${currentUrl}`);
+                console.log(dataBuild)
                 const mindate = new Date(dataBuild.data.pageProps.chapter.created_at);
 
                 const MangaChapterInfoChapter: MangaChapter = {
