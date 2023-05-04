@@ -30,11 +30,6 @@ export class AnimeLatinoHD {
                 episodes: []
             }
 
-
-            //AnimeInfo.self = animeInfoParseObj.slug
-
-            //AnimeInfo.banner = "https://www.themoviedb.org/t/p/original" +  animeInfoParseObj.banner + "?&w=280&q=95"
-
             animeInfoParseObj.episodes.map(e => {
                 let AnimeEpisode: Episode = {
                     name: animeInfoParseObj.name,
@@ -69,35 +64,17 @@ export class AnimeLatinoHD {
                 image: "",
                 servers: []
             }
-
-            /*animeEpisodeParseObj.anterior ? AnimeEpisodeInfo.episode_prev = animeEpisodeUrl + "/episode/" + animeEpisodeParseObj.anterior.number : AnimeEpisodeInfo.episode_prev = false
-            animeEpisodeParseObj.siguiente ? AnimeEpisodeInfo.episode_next = animeEpisodeUrl + "/episode/" + animeEpisodeParseObj.siguiente.number : AnimeEpisodeInfo.episode_next = false
-
-            AnimeEpisodeInfo.episode_list = animeEpisodeUrl*/
-
-
-
             $("#languaje option").each((_i, el) => {
                 let v = Number($(el).val());
-                //let t = $(el).text();
-
-                animeEpisodeParseObj.players[v].map(e => {
+                animeEpisodeParseObj.players[v].map((e: { server: { title: any; }; id: string; }) => {
                     let Server: EpisodeServer = {
                         name: e.server.title,
                         url: "https://api.animelatinohd.com/stream/" + e.id,
                     }
-
-                    /*let ServerObj = {
-                        lang_id: String,
-                        lang_name: String,
-                    }
-
-                    ServerObj.lang_id = e.languaje
-                    ServerObj.lang_name = t*/
-
-                    AnimeEpisodeInfo.servers.push(Server)
+                    AnimeEpisodeInfo.servers.push(Server);
                 })
             })
+
             return AnimeEpisodeInfo;
         } catch (error) {
         }

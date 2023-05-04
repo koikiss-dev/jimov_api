@@ -91,11 +91,11 @@ export class Comick {
     async GetChapterInfo(manga: string, lang: string) {
         try {
 
-            let currentLang = lang ? "-" + lang : "-en"
-            let hid = manga.substring(0, manga.indexOf("-"))
-            let idTitle = manga.substring(manga.indexOf("-") + 1)
-            let idNumber = idTitle.substring(idTitle.lastIndexOf("-") + 1)
-            let title = idTitle.substring(0, idTitle.lastIndexOf("-"))
+            let currentLang = lang ? "-" + lang : "-en";
+            let hid = manga.substring(0, manga.indexOf("-"));
+            let idTitle = manga.substring(manga.indexOf("-") + 1);
+            let idNumber = idTitle.substring(idTitle.lastIndexOf("-") + 1);
+            let title = idTitle.substring(0, idTitle.lastIndexOf("-"));
 
             //https://comick.app/_next/data/geGERMF1d3wyN2FCesUvE/comic/00-eleceed/3mwkO-chapter-1-en.json?slug=00-eleceed&chapter=3mwkO-chapter-1-en
 
