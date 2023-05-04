@@ -7,6 +7,7 @@ import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "../../..
 export class AnimeLatinoHD {
     readonly url = "https://www.animelatinohd.com";
     readonly api = "https://api.animelatinohd.com";
+
     async GetAnimeInfo(anime: string): Promise<Anime> {
         try {
             const { data } = await axios.get(`${this.url}/anime/${anime}`);
@@ -41,19 +42,18 @@ export class AnimeLatinoHD {
                     image: "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.banner + "?&w=280&q=95",
                     url: `/anime/animelatinohd/episode/${animeInfoParseObj.slug + "-" + e.number}`
                 }
-               
+
                 AnimeInfo.episodes.push(AnimeEpisode);
             })
-        
+
             return AnimeInfo;
 
         } catch (error) {
-            console.log("An error occurred while getting the anime info");
         }
     }
     async GetEpisodeServers(episode: string) {
         try {
-          
+
             let number = episode.substring(episode.lastIndexOf("-") + 1)
             let anime = episode.substring(0, episode.lastIndexOf("-"))
 
@@ -100,8 +100,6 @@ export class AnimeLatinoHD {
             })
             return AnimeEpisodeInfo;
         } catch (error) {
-            console.log("An error occurred while getting the episode servers", error);
-            return {};
         }
     }
 
@@ -139,9 +137,6 @@ export class AnimeLatinoHD {
             })
             return animeSearch;
         } catch (error) {
-            
-            console.log("An error occurred while getting the episode servers", error);
-          
         }
     }
 

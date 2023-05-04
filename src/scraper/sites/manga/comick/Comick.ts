@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 import { Manga, MangaChapter, IMangaResult } from "../../../../types/manga";
-
+import { IResultSearch } from "@animetypes/search";
 export class Comick {
     readonly url = "https://comick.app";
     readonly api = "https://api.comick.app"
@@ -17,28 +17,28 @@ export class Comick {
                 }
             });
 
-            
-            let tempList = []
-            data.map((e, _i) => {
+            let ResultList: IResultSearch<IMangaResult> = {
+                results: []
+            }
+            data.map((e: { id: any; title: any; md_covers: { b2key: string; }[]; slug: any; }, _i: any) => {
                 let ListMangaResult: IMangaResult = {
                     id: e.id,
                     title: e.title,
-                    thumbnail:{
-                        url:"https://meo.comick.pictures/" + e.md_covers[0].b2key
+                    thumbnail: {
+                        url: "https://meo.comick.pictures/" + e.md_covers[0].b2key
                     },
                     url: `/manga/comick/title/${e.slug}`
                 }
-                tempList.push(ListMangaResult)
+                ResultList.results.push(ListMangaResult)
             })
 
-
-            return tempList
+            return ResultList
         } catch (error) {
-            console.log("An error occurred while getting the manga servers", error);
+
         }
     }
 
-    async GetMangaInfo(manga: string, lang: string) {
+    async GetMangaInfo(manga: string, lang: string): Promise<Manga> {
         try {
             const { data } = await axios.get(`${this.url}/comic/${manga}`);
             const $ = cheerio.load(data);
@@ -77,15 +77,14 @@ export class Comick {
                     date: {
                         year: mindate.getFullYear(),
                         month: null,
-                        day:null
+                        day: null
                     }
                 }
-                MangaInfo.chapters.push(MangaInfoChapter)
+                return MangaInfo.chapters.push(MangaInfoChapter)
             })
 
             return MangaInfo
         } catch (error) {
-            console.log("An error occurred while getting the episode servers", error);
         }
     }
 
@@ -128,7 +127,6 @@ export class Comick {
             }
             return MangaChapterInfoChapter;
         } catch (error) {
-            console.log("An error occurred while getting the episode servers", error);
         }
     }
 
