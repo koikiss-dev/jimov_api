@@ -17,11 +17,11 @@ export class Comick {
                 }
             });
 
-            let ResultList: IResultSearch<IMangaResult> = {
+            const ResultList: IResultSearch<IMangaResult> = {
                 results: []
             }
             data.map((e: { id: any; title: any; md_covers: { b2key: string; }[]; slug: any; }, _i: any) => {
-                let ListMangaResult: IMangaResult = {
+                const ListMangaResult: IMangaResult = {
                     id: e.id,
                     title: e.title,
                     thumbnail: {
@@ -43,12 +43,12 @@ export class Comick {
             const { data } = await axios.get(`${this.url}/comic/${manga}`);
             const $ = cheerio.load(data);
 
-            let currentLang = lang ? `?lang=${lang}` : ""
-            let mangaInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps
-            let dataApi = await axios.get(`${this.api}/comic/${mangaInfoParseObj.comic.hid}/chapters${currentLang}`);
+            const currentLang = lang ? `?lang=${lang}` : ""
+            const mangaInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps
+            const dataApi = await axios.get(`${this.api}/comic/${mangaInfoParseObj.comic.hid}/chapters${currentLang}`);
 
 
-            let MangaInfo: Manga = {
+            const MangaInfo: Manga = {
                 id: mangaInfoParseObj.comic.id,
                 title: mangaInfoParseObj.comic.title,
                 altTitles: mangaInfoParseObj.comic.md_titles.map((e: { title: any; }, _i: any) => e.title),
@@ -65,9 +65,9 @@ export class Comick {
             }
 
             dataApi.data.chapters.map((e: { id: any; title: any; hid: any; chap: any; created_at: any; lang: any; }, _i: any) => {
-                let mindate = new Date(e.created_at);
-                let langChapter = currentLang ? currentLang : "?lang=" + e.lang
-                let MangaInfoChapter: MangaChapter = {
+                const mindate = new Date(e.created_at);
+                const langChapter = currentLang ? currentLang : "?lang=" + e.lang
+                const MangaInfoChapter: MangaChapter = {
                     id: e.id,
                     title: e.title,
                     url: `/manga/comick/chapter/${e.hid}-${mangaInfoParseObj.comic.slug}-${e.chap}${langChapter}`,
@@ -91,21 +91,21 @@ export class Comick {
     async GetChapterInfo(manga: string, lang: string) {
         try {
 
-            let currentLang = lang ? "-" + lang : "-en";
-            let hid = manga.substring(0, manga.indexOf("-"));
-            let idTitle = manga.substring(manga.indexOf("-") + 1);
-            let idNumber = idTitle.substring(idTitle.lastIndexOf("-") + 1);
-            let title = idTitle.substring(0, idTitle.lastIndexOf("-"));
+            const currentLang = lang ? "-" + lang : "-en";
+            const hid = manga.substring(0, manga.indexOf("-"));
+            const idTitle = manga.substring(manga.indexOf("-") + 1);
+            const idNumber = idTitle.substring(idTitle.lastIndexOf("-") + 1);
+            const title = idTitle.substring(0, idTitle.lastIndexOf("-"));
 
             //https://comick.app/_next/data/geGERMF1d3wyN2FCesUvE/comic/00-eleceed/3mwkO-chapter-1-en.json?slug=00-eleceed&chapter=3mwkO-chapter-1-en
 
             const { data } = await axios.get(`${this.url}/comic/${title}/${hid}-chapter-${idNumber}${currentLang}`);
             const $ = cheerio.load(data);
 
-            let mangaChapterInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps
-            let mindate = new Date(mangaChapterInfoParseObj.chapter.created_at);
+            const mangaChapterInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps
+            const mindate = new Date(mangaChapterInfoParseObj.chapter.created_at);
 
-            let MangaChapterInfoChapter: MangaChapter = {
+            const MangaChapterInfoChapter: MangaChapter = {
                 id: mangaChapterInfoParseObj.chapter.id,
                 title: mangaChapterInfoParseObj.chapter.title,
                 url: `/manga/comick/chapter/`,
