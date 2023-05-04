@@ -7,6 +7,7 @@ import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "../../..
 export class AnimeLatinoHD {
     readonly url = "https://www.animelatinohd.com";
     readonly api = "https://api.animelatinohd.com";
+
     async GetAnimeInfo(anime: string): Promise<Anime> {
         try {
             const { data } = await axios.get(`${this.url}/anime/${anime}`);
@@ -29,11 +30,6 @@ export class AnimeLatinoHD {
                 episodes: []
             }
 
-
-            //AnimeInfo.self = animeInfoParseObj.slug
-
-            //AnimeInfo.banner = "https://www.themoviedb.org/t/p/original" +  animeInfoParseObj.banner + "?&w=280&q=95"
-
             animeInfoParseObj.episodes.map(e => {
                 let AnimeEpisode: Episode = {
                     name: animeInfoParseObj.name,
@@ -41,19 +37,18 @@ export class AnimeLatinoHD {
                     image: "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.banner + "?&w=280&q=95",
                     url: `/anime/animelatinohd/episode/${animeInfoParseObj.slug + "-" + e.number}`
                 }
-               
+
                 AnimeInfo.episodes.push(AnimeEpisode);
             })
-        
+
             return AnimeInfo;
 
         } catch (error) {
-            console.log("An error occurred while getting the anime info");
         }
     }
     async GetEpisodeServers(episode: string) {
         try {
-          
+
             let number = episode.substring(episode.lastIndexOf("-") + 1)
             let anime = episode.substring(0, episode.lastIndexOf("-"))
 
@@ -69,39 +64,19 @@ export class AnimeLatinoHD {
                 image: "",
                 servers: []
             }
-
-            /*animeEpisodeParseObj.anterior ? AnimeEpisodeInfo.episode_prev = animeEpisodeUrl + "/episode/" + animeEpisodeParseObj.anterior.number : AnimeEpisodeInfo.episode_prev = false
-            animeEpisodeParseObj.siguiente ? AnimeEpisodeInfo.episode_next = animeEpisodeUrl + "/episode/" + animeEpisodeParseObj.siguiente.number : AnimeEpisodeInfo.episode_next = false
-
-            AnimeEpisodeInfo.episode_list = animeEpisodeUrl*/
-
-
-
             $("#languaje option").each((_i, el) => {
                 let v = Number($(el).val());
-                //let t = $(el).text();
-
-                animeEpisodeParseObj.players[v].map(e => {
+                animeEpisodeParseObj.players[v].map((e: { server: { title: any; }; id: string; }) => {
                     let Server: EpisodeServer = {
                         name: e.server.title,
                         url: "https://api.animelatinohd.com/stream/" + e.id,
                     }
-
-                    /*let ServerObj = {
-                        lang_id: String,
-                        lang_name: String,
-                    }
-
-                    ServerObj.lang_id = e.languaje
-                    ServerObj.lang_name = t*/
-
-                    AnimeEpisodeInfo.servers.push(Server)
+                    AnimeEpisodeInfo.servers.push(Server);
                 })
             })
+
             return AnimeEpisodeInfo;
         } catch (error) {
-            console.log("An error occurred while getting the episode servers", error);
-            return {};
         }
     }
 
@@ -139,9 +114,6 @@ export class AnimeLatinoHD {
             })
             return animeSearch;
         } catch (error) {
-            
-            console.log("An error occurred while getting the episode servers", error);
-          
         }
     }
 
