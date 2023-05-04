@@ -26,7 +26,7 @@ export interface IMangaChapter {
    * The first image may contain the cover of the chapter. */
   images: string[];
   /** The cover page of the chapter. Refers to the first page of the chapter. */
-  cover: string;
+  cover?: string;
   /** 
    * The date on which the chapter was published. This is optional because
    * in some cases it is not specified. */
@@ -188,7 +188,7 @@ export class MangaChapter implements IMangaChapter {
   /** @inheritdoc */
   images: string[] = [];
   /** @inheritdoc */
-  cover: string;
+  cover?: string;
   /** @inheritdoc */
   date?: ICalendar;
 }
