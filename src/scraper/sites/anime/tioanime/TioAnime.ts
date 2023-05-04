@@ -234,12 +234,13 @@ export class TioAnime
  	// <status> 2: Finalizado, 1: En emision, 3: Proximamente
  	// <sort> recent, -recent
  	
-	async filter(types: string[], genres: string[], year_range: IYearRange, status: number, sort: string): 
+	async filter(name: (string | null), types?: string[], genres?: string[], year_range?: IYearRange, status?: number, sort?: string): 
 		Promise<IResultSearch<IAnimeSearch>> {
 		const animes = new ResultSearch<IAnimeSearch>();
-		// If any of the arguments is null or undefined, a default value will be assigned.
-		year_range ?? (year_range = { begin: 1950, end: new Date().getFullYear() });
-		(await getLastAnimes(`https://tioanime.com/directorio?${this.arrayToURLParams('type', types)}&${this.arrayToURLParams('genre', genres)}&year=${year_range.begin}%2C${year_range.end}&status=${status ?? 2}&sort=${sort ?? 'recent'}`))
+		let usable;
+		if (!(usable = utils.isUsableValue(name) && name.trim().length != 0))
+			year_range ?? (year_range = { begin: 1950, end: new Date().getFullYear() });
+		(await getLastAnimes(`${PageInfo.url}/directorio?${(usable ? `q=${name}` : `${this.arrayToURLParams('type', types)}&${this.arrayToURLParams('genre', genres)}&year=${year_range.begin}%2C${year_range.end}&status=${status ?? 2}&sort=${sort ?? 'recent'}`)}`))
 			.forEach(element => {
 				if (utils.isUsableValue(element)) {
 					animes.results.push({ name: element.name, image: element.image.url, 
