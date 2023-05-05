@@ -9,7 +9,11 @@ import zoro from "./routes/v1/anime/zoro/ZoroRoutes";
 import monoschinos from "./routes/v1/anime/monoschinos/MonosChinosRoute";
 import tioanime from './routes/v1/anime/tioanime/TioAnimeRoute'
 import helmet from "helmet";
+<<<<<<< HEAD
 import comick from "./routes/v1/manga/comick/ComickRoutes";
+=======
+import nhentai from "./routes/v1/manga/nhentai/NhentaiRoutes"
+>>>>>>> 42b0e2b (feat(filter): i added nhentai feature!)
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -19,7 +23,6 @@ app.use(providersList);
 //config
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
-
 app.use(morgan("dev"));
 app.use(helmet());
 
@@ -34,11 +37,21 @@ app.use(zoro);
 app.use(tioanime)
 /*anime*/
 
+<<<<<<< HEAD
 /*Manga*/
 
 app.use(comick);
 
 /*Manga*/
+=======
+
+/* manga */
+
+app.use(nhentai)
+
+
+/* manga */
+>>>>>>> 42b0e2b (feat(filter): i added nhentai feature!)
 
 /*error */
 
