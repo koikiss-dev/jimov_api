@@ -3,15 +3,11 @@ import { load } from "cheerio";
 import { Manga, IMangaChapter, IMangaResult } from "../../../../types/manga";
 import { IResultSearch } from "@animetypes/search";
 export class MangaBuddy {
-  readonly url = "https://mangabuddy.com";
+  readonly url = "https://www.mangapill.com";
 
   async GetMangaInfo(title: string) {
     try {
-      const { data } = await axios.get(`${this.url}/${title}`, {
-        headers: {
-          Referer: "https://mangabuddy.com/",
-        },
-      });
+      const { data } = await axios.get(`${this.url}/${title}`);
       const $ = load(data);
       const titleManga = $("div.book-info div.detail div.name h1")
         .text()
