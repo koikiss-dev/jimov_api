@@ -10,6 +10,8 @@ import monoschinos from "./routes/v1/anime/monoschinos/MonosChinosRoute";
 import tioanime from './routes/v1/anime/tioanime/TioAnimeRoute'
 import helmet from "helmet";
 import comick from "./routes/v1/manga/comick/ComickRoutes";
+import inmanga from "./routes/v1/manga/inmanga/InmangaRoutes";
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -37,7 +39,7 @@ app.use(tioanime)
 /*Manga*/
 
 app.use(comick);
-
+app.use(inmanga);
 /*Manga*/
 
 /*error */
