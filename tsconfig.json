@@ -24,6 +24,13 @@
     "paths": {
       "@animetypes/*": [
         "./src/types/*"
+      ],
+      "@providers/*":[
+        "./src/scraper/sites/anime/*",
+        "./src/scraper/sites/manga/*"
+      ],
+      "@routesAnime/*": [
+        "./src/routes/v1/anime/*"
       ]
     }
   },

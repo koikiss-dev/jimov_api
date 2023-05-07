@@ -1,12 +1,17 @@
 import axios from "axios";
 import { load } from "cheerio";
-import { Manga, IMangaChapter } from "../../../../types/manga";
+import { Manga, IMangaChapter, IMangaResult } from "../../../../types/manga";
+import { IResultSearch } from "@animetypes/search";
 export class MangaBuddy {
   readonly url = "https://mangabuddy.com";
 
   async GetMangaInfo(title: string) {
     try {
-      const { data } = await axios.get(`${this.url}/${title}`);
+      const { data } = await axios.get(`${this.url}/${title}`, {
+        headers: {
+          Referer: "https://mangabuddy.com/",
+        },
+      });
       const $ = load(data);
       const titleManga = $("div.book-info div.detail div.name h1")
         .text()
@@ -103,10 +108,47 @@ export class MangaBuddy {
     }
   }
 
-  async Filter() {}
+  async Filter(genre?: string, status?: string, sort?: string, title?: string) {
+    try {
+      const { data } = await axios.get(`${this.url}/search`, {
+        params: {
+          genre: genre,
+          status: status || "all",
+          sort: sort,
+          q: title,
+        },
+        headers: {
+          Referer: "https://mangabuddy.com/",
+        },
+      });
+      const $ = load(data);
+
+      const ItemList: IResultSearch<IMangaResult> = {
+        results: [],
+      };
+
+      $("div.manga-list div.book-item").each((_i, e) => {
+        const ItemCard: IMangaResult = {
+          title: $(e).find("h3 > a").attr("title"),
+          url: `/manga/mangabuddy/title/${$(e)
+            .find("h3 > a")
+            .attr("href")
+            .replace("/", "")}`,
+          id: "No ID",
+          thumbnail: {
+            url: $(e).find("img").attr("data-src"),
+          },
+        };
+        ItemList.results.push(ItemCard);
+      });
+      return ItemList;
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   async GetMangaChapters() {}
 }
 
 const m = new MangaBuddy();
-m.GetMangaInfo("mashle").then((f) => console.log(f));
+m.Filter("", "", "", "one piece").then((f) => console.log(f));
