@@ -11,7 +11,7 @@ import tioanime from './routes/v1/anime/tioanime/TioAnimeRoute'
 import comick from "./routes/v1/manga/comick/ComickRoutes";
 import nhentai from "./routes/v1/manga/nhentai/NhentaiRoutes"
 import helmet from "helmet";
-
+import cors from 'cors'
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -22,6 +22,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 app.use(helmet());
+app.use(cors())
 
 //routes
 
