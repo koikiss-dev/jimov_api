@@ -8,12 +8,12 @@ export class Inmanga {
 
     async GetMangaByFilter(search?: string, type?: Number, genre?: string[]) {
         try {
-            let formdata = new FormData();
+            const formdata = new FormData();
             formdata.append("filter[queryString]", search);
             formdata.append("filter[broadcastStatus]", String(type))
             formdata.append("filter[skip]", "0");
             formdata.append("filter[take]", "10");
-            let genreList = ['33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83', '84', '85', '86', '87', '88', '-1']
+            const genreList = ['33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83', '84', '85', '86', '87', '88', '-1']
 
             if (genre) {
                 genre.map((e, _i) => {
@@ -25,7 +25,7 @@ export class Inmanga {
                 formdata.append("filter[generes][]", "-1");
             }
 
-            let bodyContent = formdata;
+            const bodyContent = formdata;
             const { data } = await axios.post(`${this.url}/manga/getMangasConsultResult`, bodyContent);
             const $ = cheerio.load(data);
 
@@ -34,10 +34,10 @@ export class Inmanga {
             }
 
             $("a").each((_i, e) => {
-                let idtd = $(e).attr("href").split("/")
-                let name = idtd[3]
-                let cid = idtd[4]
-                let title = $(e).find(".list-group.col-xs-12 .m0.list-group-item.ellipsed-text").text().trim()
+                const idtd = $(e).attr("href").split("/")
+                const name = idtd[3]
+                const cid = idtd[4]
+                const title = $(e).find(".list-group.col-xs-12 .m0.list-group-item.ellipsed-text").text().trim()
 
                 const ListMangaResult: IMangaResult = {
                     id: null,
@@ -58,21 +58,21 @@ export class Inmanga {
 
     async GetMangaInfo(manga: string): Promise<Manga> {
         try {
-            let formdata = new FormData();
-            let mangaSearch = manga.replace(/[^a-zA-Z:]/g, " ");
+            const formdata = new FormData();
+            const mangaSearch = manga.replace(/[^a-zA-Z:]/g, " ");
             formdata.append("filter[queryString]", mangaSearch);
             formdata.append("filter[generes][]", "-1");
             formdata.append("filter[skip]", "0");
             formdata.append("filter[take]", "10");
 
-            let bodyContent = formdata;
+            const bodyContent = formdata;
 
             const { data } = await axios.post(`${this.url}/manga/getMangasConsultResult`, bodyContent);
             const $ = cheerio.load(data);
 
-            let idtd = $("a").first().attr("href").split("/")
-            let name = idtd[3]
-            let cid = idtd[4]
+            const idtd = $("a").first().attr("href").split("/")
+            const name = idtd[3]
+            const cid = idtd[4]
 
             const dataPost = await axios.get(`${this.url}/ver/manga/${name}/${cid}`);
             const $_ = cheerio.load(dataPost.data);
@@ -133,7 +133,7 @@ export class Inmanga {
             const { data } = await axios.get(`${this.url}/chapter/chapterIndexControls?identification=${cid}`)
             const $ = cheerio.load(data);
 
-            let allimages = []
+            const allimages = []
 
             const MangaChapterInfoChapter: MangaChapter = {
                 id: 1,
@@ -150,9 +150,9 @@ export class Inmanga {
             }
 
             $(".p0.col-sm-12.col-xs-12.PagesContainer a").each((_i, e) => {
-                let id = $(e).find("img").attr("id")
-                let alt = $(e).find("img").attr("alt")
-                let page = $(e).find("img").attr("data-pagenumber")
+                const id = $(e).find("img").attr("id")
+                const alt = $(e).find("img").attr("alt")
+                const page = $(e).find("img").attr("data-pagenumber")
 
                 allimages.push({
                     width: "",
