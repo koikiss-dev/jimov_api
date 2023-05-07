@@ -9,13 +9,11 @@ import zoro from "./routes/v1/anime/zoro/ZoroRoutes";
 import monoschinos from "./routes/v1/anime/monoschinos/MonosChinosRoute";
 import tioanime from './routes/v1/anime/tioanime/TioAnimeRoute'
 import comick from "./routes/v1/manga/comick/ComickRoutes";
-<<<<<<< HEAD
-import inmanga from "./routes/v1/manga/inmanga/InmangaRoutes";
 
-=======
+import inmanga from "./routes/v1/manga/inmanga/InmangaRoutes";
 import nhentai from "./routes/v1/manga/nhentai/NhentaiRoutes"
 import helmet from "helmet";
->>>>>>> dev
+
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -41,14 +39,14 @@ app.use(tioanime)
 
 /*Manga*/
 
-app.use(comick);
-<<<<<<< HEAD
-app.use(inmanga);
+
 /*Manga*/
-=======
+app.use(comick);
+app.use(inmanga);
+
 app.use(nhentai)
 /* manga */
->>>>>>> dev
+
 
 /*error */
 
