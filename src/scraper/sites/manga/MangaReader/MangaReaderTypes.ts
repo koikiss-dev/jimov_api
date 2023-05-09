@@ -61,3 +61,17 @@ export enum MangaReaderFilterSort {
 }
 
 export type MangaReaderChapterType = "chapter" | "volume";
+
+export interface MangaReaderFilterData {
+  type?: MangaReaderFilterType;
+  status?: MangaReaderFilterStatus;
+  ratingType?: MangaReaderFilterRatingType;
+  score?: MangaReaderFilterScore;
+  language?: MangaReaderFilterLanguage;
+  /** Format date: YY/MM/DD. */
+  startDate?: [number, number, number];
+  /** Format date: YY/MM/DD. */
+  endDate?: [number, number, number];
+  sort?: MangaReaderFilterSort;
+  numPage?: number;
+}

@@ -9,12 +9,8 @@ import axios from "axios";
 import { load } from "cheerio";
 import {
   MangaReaderFilterLanguage,
-  MangaReaderFilterRatingType,
-  MangaReaderFilterScore,
-  MangaReaderFilterSort,
-  MangaReaderFilterStatus,
-  MangaReaderFilterType,
-  MangaReaderChapterType
+  MangaReaderChapterType,
+  MangaReaderFilterData
 } from "./MangaReaderTypes";
 import { IResultSearch, ResultSearch } from "../../../../types/search";
 import { DEFAULT_INTERCEPT_RESOLUTION_PRIORITY } from "puppeteer";
@@ -214,43 +210,27 @@ export class MangaReader {
     }
   }
 
-  async Filter(options: {
-    type?: MangaReaderFilterType;
-    status?: MangaReaderFilterStatus;
-    ratingType?: MangaReaderFilterRatingType;
-    score?: MangaReaderFilterScore;
-    language?: MangaReaderFilterLanguage;
-    startYear?: number;
-    startMonth?: number;
-    startDay?: number;
-    endYear?: number;
-    endMonth?: number;
-    endDay?: number;
-    sort?: MangaReaderFilterSort;
-    numPage?: number;
-  }): Promise<IResultSearch<IMangaResult>> {
+  async Filter(
+    options: MangaReaderFilterData
+  ): Promise<IResultSearch<IMangaResult>> {
     const {
       type,
       status,
       ratingType,
       score,
       language,
-      startYear,
-      startMonth,
-      startDay,
-      endYear,
-      endMonth,
-      endDay,
+      startDate,
+      endDate,
       sort,
       numPage
     } = options;
     if (
-      startDay <= 0 ||
-      startMonth <= 0 ||
-      startYear <= 0 ||
-      endDay <= 0 ||
-      endMonth <= 0 ||
-      endYear <= 0 ||
+      startDate[0] <= 0 ||
+      startDate[1] <= 0 ||
+      startDate[2] <= 0 ||
+      endDate[0] <= 0 ||
+      endDate[1] <= 0 ||
+      endDate[2] <= 0 ||
       numPage <= 0
     )
       throw new Error("No parameter can be equal to or less than 0.");
@@ -262,12 +242,12 @@ export class MangaReader {
         rating_type: ratingType ?? "",
         score: score ?? "",
         language: language ?? "",
-        sy: startYear ?? "",
-        sm: startMonth ?? "",
-        sd: startDay ?? "",
-        ey: endYear ?? "",
-        em: endMonth ?? "",
-        ed: endDay ?? "",
+        sy: startDate[0] ?? "",
+        sm: startDate[1] ?? "",
+        sd: startDate[2] ?? "",
+        ey: endDate[0] ?? "",
+        em: endDate[1] ?? "",
+        ed: endDate[2] ?? "",
         sort: sort ?? "",
         page: numPage ?? 1
       }
