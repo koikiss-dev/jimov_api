@@ -29,16 +29,16 @@ export class MangaReader {
     const { data } = await axios.get(`${this.url}/a-${mangaId}`);
     const $ = load(data);
 
-    let rangeResult: Array<number> = [];
+    const rangeResult: Array<number> = [];
 
     $("div.volume-list-ul div.manga_list div.manga_list-wrap")
       .find("div.item")
       .each((_, element) => {
-        let mangaVolumeTitle = $(element)
+        const mangaVolumeTitle = $(element)
           .find("div.manga-poster span.tick-item")
           .text()
           .trim();
-        let mangaVolumeNumber = mangaVolumeTitle.split(" ").at(-1);
+        const mangaVolumeNumber = mangaVolumeTitle.split(" ").at(-1);
 
         rangeResult.push(Number(mangaVolumeNumber));
       });
@@ -151,13 +151,16 @@ export class MangaReader {
       manga.chapters = [];
       $("div.chapters-list-ul ul.ulclear li.chapter-item").each(
         (_, element) => {
-          let mangaChapter = new MangaChapter();
+          const mangaChapter = new MangaChapter();
 
-          let mangaTitle = $(element)
+          const mangaTitle = $(element)
             .find("a.item-link span.name")
             .text()
             .trim();
-          let mangaChapterNumber = mangaTitle.split(" ").at(1).replace(":", "");
+          const mangaChapterNumber = mangaTitle
+            .split(" ")
+            .at(1)
+            .replace(":", "");
 
           mangaChapter.title = mangaTitle;
           mangaChapter.id = mangaId.toString();
@@ -168,20 +171,20 @@ export class MangaReader {
       );
 
       // Get manga volumes
-      let mangaVolumeRange = await this.GetMangaVolumeRange(mangaId);
+      const mangaVolumeRange = await this.GetMangaVolumeRange(mangaId);
 
       manga.volumes = [];
       $("div.volume-list-ul div.manga_list div.manga_list-wrap")
         .find("div.item")
         .each((_, element) => {
-          let mangaVolume = new MangaVolume();
+          const mangaVolume = new MangaVolume();
 
-          let mangaVolumeTitle = $(element)
+          const mangaVolumeTitle = $(element)
             .find("div.manga-poster span.tick-item")
             .text()
             .trim();
-          let mangaVolumeNumber = mangaVolumeTitle.split(" ").at(-1);
-          let mangaVolumeThumbnail = $(element)
+          const mangaVolumeNumber = mangaVolumeTitle.split(" ").at(-1);
+          const mangaVolumeThumbnail = $(element)
             .find("div.manga-poster img.manga-poster-img")
             .attr("src");
 
@@ -226,32 +229,47 @@ export class MangaReader {
     sort?: MangaReaderFilterSort;
     numPage?: number;
   }): Promise<IResultSearch<IMangaResult>> {
+    const {
+      type,
+      status,
+      ratingType,
+      score,
+      language,
+      startYear,
+      startMonth,
+      startDay,
+      endYear,
+      endMonth,
+      endDay,
+      sort,
+      numPage
+    } = options;
     if (
-      options.startDay <= 0 ||
-      options.startMonth <= 0 ||
-      options.startYear <= 0 ||
-      options.endDay <= 0 ||
-      options.endMonth <= 0 ||
-      options.endYear <= 0 ||
-      options.numPage <= 0
+      startDay <= 0 ||
+      startMonth <= 0 ||
+      startYear <= 0 ||
+      endDay <= 0 ||
+      endMonth <= 0 ||
+      endYear <= 0 ||
+      numPage <= 0
     )
       throw new Error("No parameter can be equal to or less than 0.");
 
     const { data } = await axios.get(`${this.url}/filter`, {
       params: {
-        type: options.type ?? "",
-        status: options.status ?? "",
-        rating_type: options.ratingType ?? "",
-        score: options.score ?? "",
-        language: options.language ?? "",
-        sy: options.startYear ?? "",
-        sm: options.startMonth ?? "",
-        sd: options.startDay ?? "",
-        ey: options.endYear ?? "",
-        em: options.endMonth ?? "",
-        ed: options.endDay ?? "",
-        sort: options.sort ?? "",
-        page: options.numPage ?? 1
+        type: type ?? "",
+        status: status ?? "",
+        rating_type: ratingType ?? "",
+        score: score ?? "",
+        language: language ?? "",
+        sy: startYear ?? "",
+        sm: startMonth ?? "",
+        sd: startDay ?? "",
+        ey: endYear ?? "",
+        em: endMonth ?? "",
+        ed: endDay ?? "",
+        sort: sort ?? "",
+        page: numPage ?? 1
       }
     });
 
