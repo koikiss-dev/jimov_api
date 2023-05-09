@@ -1,4 +1,4 @@
-import axios from 'axios'
+import axios from "axios";
 import { load } from "cheerio";
 import { Anime, Chronology } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
@@ -8,7 +8,12 @@ import {
   StatusAnimeflv,
   TypeAnimeflv,
 } from "./animeflv_helper";
-import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "../../../../types/search";
+import {
+  AnimeSearch,
+  ResultSearch,
+  IResultSearch,
+  IAnimeSearch,
+} from "../../../../types/search";
 
 export class AnimeFlv {
   readonly url = "https://www2.animeflv.bz";
@@ -37,9 +42,7 @@ export class AnimeFlv {
       $("ul.ListAnmRel li a").each((_i, e) => {
         const cro = new Chronology();
         cro.name = $(e).text().trim();
-        cro.url = `/anime/flv/name/${$(e)
-          .attr("href")
-          .replace("/anime/", "")}`;
+        cro.url = `/anime/flv/name/${$(e).attr("href").replace("/anime/", "")}`;
         AnimeReturn.chronology.push(cro);
       });
       //get genres
@@ -62,8 +65,13 @@ export class AnimeFlv {
       });
       return AnimeReturn;
     } catch (error) {
-      console.log("An error occurred while getting the anime info: invalid name", error);
-      throw new Error("An error occurred while getting the anime info: invalid name");
+      console.log(
+        "An error occurred while getting the anime info: invalid name",
+        error
+      );
+      throw new Error(
+        "An error occurred while getting the anime info: invalid name"
+      );
     }
   }
 
@@ -75,7 +83,7 @@ export class AnimeFlv {
     ord?: OrderAnimeflv,
     page?: number,
     title?: string
-  ): Promise <IResultSearch<IAnimeSearch>> {
+  ): Promise<IResultSearch<IAnimeSearch>> {
     try {
       const { data } = await axios.get(`${this.url}/browse`, {
         params: {
@@ -85,22 +93,26 @@ export class AnimeFlv {
           Tipo: type || "all",
           order: ord || 1,
           page: page || 1,
-          q: title
+          q: title,
         },
       });
       const $ = load(data);
-      const info = $("ul.ListAnimes li article.Anime div.Description");
+      const infoList = $("ul.ListAnimes li");
       const data_filter = new ResultSearch<IAnimeSearch>();
       data_filter.results = [];
-      info.each((_i, e) => {
+      infoList.each((_i, e) => {
         const info = new AnimeSearch();
-        info.name = $(e).find(".Title").last().text().trim();
-        info.image = $("figure").children("img").attr("src");
+        info.name = $(e).find("h3").text().trim();
+        info.image =
+          $(e)
+            .find("a")
+            .attr("href")
+            .replace("/anime/", "https://img.animeflv.bz/cover/") + ".jpg";
         info.url = `/anime/flv/name/${$(e)
           .find("a")
           .attr("href")
           .replace("/anime/", "")}`;
-        info.type = $(e).find("p").children("span.Type").text().trim();
+        info.type = $(e).find("span.Type").first().text().trim();
         data_filter.results.push(info);
       });
       return data_filter;
