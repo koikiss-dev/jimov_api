@@ -13,8 +13,7 @@ import comick from "./routes/v1/manga/comick/ComickRoutes";
 import inmanga from "./routes/v1/manga/inmanga/InmangaRoutes";
 import nhentai from "./routes/v1/manga/nhentai/NhentaiRoutes"
 import helmet from "helmet";
-
-
+import cors from 'cors'
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -25,6 +24,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 app.use(helmet());
+app.use(cors())
 
 //routes
 
@@ -38,14 +38,11 @@ app.use(tioanime)
 /*anime*/
 
 /*Manga*/
-
-
-/*Manga*/
 app.use(comick);
 app.use(inmanga);
-
 app.use(nhentai)
-/* manga */
+/*Manga*/
+
 
 
 /*error */
@@ -93,3 +90,5 @@ app.use((err, res, _next) => {
 app.listen(port, () => {
   console.log(`Servidor iniciado en el puerto ${port} listo para trabajar :)`);
 });
+
+module.exports = app;

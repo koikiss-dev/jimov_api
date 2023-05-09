@@ -1,6 +1,6 @@
 # JIMOV - Media Content API
 
-![image description](src/images/JIMOV\_logo.png)
+![image description](<.gitbook/assets/JIMOV\_logo (1).png>)
 
 [![discordBadge](https://img.shields.io/badge/Chat-Click%20here-7289d9?style=for-the-badge\&logo=discord)](https://discord.com/invite/tyZ39GCX7R)[![documentationBadge](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://choosealicense.com/licenses/mit/)[![documentationBadge](https://img.shields.io/badge/Documentation-Click%20here-blue?style=for-the-badge)](https://jimov.gitbook.io/jimov-api/)
 
@@ -11,9 +11,11 @@ This project is an open-source API for retrieving multimedia content such as ani
 ### Table of contents
 
 * [List of providers](list-of-providers.md)
-* [Routes](routes/)
-  * [Animeflv](routes/animeflv/)
-  * AnimeLatinoHD
+* [Routes](broken-reference)
+  * [Animeflv](routes/anime/animeflv/)
+  * [AnimeLatinoHD](routes/anime/animelatinohd/)
+  * [TioAnime](routes/anime/tioanime/)
+  * [GogoAnime](routes/anime/gogoanime/)
 
 ## **Installation**
 
@@ -30,7 +32,7 @@ npm install
 The API can be started by running the following command:
 
 ```bash
-npm run build && npm start
+npm run test && npm run start:dev
 ```
 
 ## **How to Contribute**

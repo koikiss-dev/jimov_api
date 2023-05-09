@@ -6,7 +6,7 @@ import { IMangaChapter, Manga } from '../../../../types/manga';
 export class Nhentai {
 
   async filter(mangaName: string) {
-    return new NhentaiFilter().Filter(mangaName);
+    return new NhentaiFilter().filter(mangaName);
   }
 
   async  getMangaInfo(mangaId: string) {
@@ -24,7 +24,7 @@ class NhentaiFilter {
 
    url = "https://nhentai.to/search?q=";
 
-  async Filter(mangaName: string) {
+  async filter(mangaName: string) {
 
     let { data } = await axios.get(`${this.url}${mangaName}`);
 
@@ -32,7 +32,11 @@ class NhentaiFilter {
 
     let numPages = $("section.pagination a").length;
 
-    numPages = numPages - 2;
+    if (numPages != 0) {
+      numPages = numPages - 2;
+    }else {
+      numPages = 1;
+    }
 
     let getResults = await getFilterByPages(mangaName, numPages);
 

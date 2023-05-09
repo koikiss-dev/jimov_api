@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Nhentai } from "../../../../../src/scraper/sites/manga/nhentai/Nhentai";
+import { Nhentai } from "../../../../scraper/sites/manga/nhentai/Nhentai";
 
 const router = Router();
 
