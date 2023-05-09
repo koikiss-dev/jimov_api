@@ -22,7 +22,7 @@
     "manga"
   ],
   "engines": {
-    "node": "v19.7.0",
+    "node": "18.x",
     "npm": "9.5.0"
   },
   "commitlint": {
