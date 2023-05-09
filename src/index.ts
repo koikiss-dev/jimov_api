@@ -86,3 +86,5 @@ app.use((err, res, _next) => {
 app.listen(port, () => {
   console.log(`Servidor iniciado en el puerto ${port} listo para trabajar :)`);
 });
+
+module.exports = app;

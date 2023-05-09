@@ -6,6 +6,7 @@
   "scripts": {
     "start": "ts-node src/index.ts",
     "server": "nodemon src/index.ts",
+    "start:vercel": "node build/index.js",
     "build": "tsc",
     "zoro": "ts-node src/scraper/sites/anime/zoro/Zoro.ts",
     "heroku-postbuild": "npm run build",
