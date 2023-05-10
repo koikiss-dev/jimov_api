@@ -68,10 +68,12 @@ export interface MangaReaderFilterData {
   ratingType?: MangaReaderFilterRatingType;
   score?: MangaReaderFilterScore;
   language?: MangaReaderFilterLanguage;
-  /** Format date: YY/MM/DD. */
-  startDate?: [number, number, number];
-  /** Format date: YY/MM/DD. */
-  endDate?: [number, number, number];
+  startYear?: number;
+  startMonth?: number;
+  startDay?: number;
+  endYear?: number;
+  endMonth?: number;
+  endDay?: number;
   sort?: MangaReaderFilterSort;
   numPage?: number;
 }

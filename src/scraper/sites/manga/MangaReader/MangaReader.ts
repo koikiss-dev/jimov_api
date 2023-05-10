@@ -219,18 +219,22 @@ export class MangaReader {
       ratingType,
       score,
       language,
-      startDate,
-      endDate,
+      startYear,
+      startMonth,
+      startDay,
+      endYear,
+      endMonth,
+      endDay,
       sort,
       numPage
     } = options;
     if (
-      startDate[0] <= 0 ||
-      startDate[1] <= 0 ||
-      startDate[2] <= 0 ||
-      endDate[0] <= 0 ||
-      endDate[1] <= 0 ||
-      endDate[2] <= 0 ||
+      startYear <= 0 ||
+      startMonth <= 0 ||
+      startDay <= 0 ||
+      endYear <= 0 ||
+      endMonth <= 0 ||
+      endDay <= 0 ||
       numPage <= 0
     )
       throw new Error("No parameter can be equal to or less than 0.");
@@ -242,12 +246,12 @@ export class MangaReader {
         rating_type: ratingType ?? "",
         score: score ?? "",
         language: language ?? "",
-        sy: startDate[0] ?? "",
-        sm: startDate[1] ?? "",
-        sd: startDate[2] ?? "",
-        ey: endDate[0] ?? "",
-        em: endDate[1] ?? "",
-        ed: endDate[2] ?? "",
+        sy: startYear ?? "",
+        sm: startMonth ?? "",
+        sd: startDay ?? "",
+        ey: endYear ?? "",
+        em: endMonth ?? "",
+        ed: endDay ?? "",
         sort: sort ?? "",
         page: numPage ?? 1
       }
