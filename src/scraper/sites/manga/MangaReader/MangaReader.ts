@@ -310,7 +310,7 @@ export class MangaReader {
         })
       );
 
-      const browser = await puppeteer.launch();
+      const browser = await puppeteer.launch({ args: ["--disable-cache"] });
       const page = await browser.newPage();
 
       await page.goto(
@@ -321,18 +321,6 @@ export class MangaReader {
       );
 
       await page.setViewport({ width: 1080, height: 1024 });
-      const initPageHtml = await page.content();
-      const initPage = load(initPageHtml);
-
-      const buttons = initPage(
-        "#first-read > div.read-tips > div > div.rtl-rows > a:nth-child(1)"
-      );
-
-      if (!buttons.length)
-        throw new Error(
-          `I could not found pages for this manga ${type}. Try to be more specific in their manga.`
-        );
-
       await page.waitForSelector(".rtl-row", { visible: true });
       const selectors = await page.$$(".rtl-row");
       const lastSelector = selectors.pop();

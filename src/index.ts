@@ -12,6 +12,7 @@ import comick from "./routes/v1/manga/comick/ComickRoutes";
 
 import inmanga from "./routes/v1/manga/inmanga/InmangaRoutes";
 import nhentai from "./routes/v1/manga/nhentai/NhentaiRoutes"
+import mangareader from "./routes/v1/manga/mangareader/MangaReaderRoutes";
 import helmet from "helmet";
 import cors from 'cors'
 const app = express();
@@ -41,6 +42,7 @@ app.use(tioanime)
 app.use(comick);
 app.use(inmanga);
 app.use(nhentai)
+app.use(mangareader);
 /*Manga*/
 
 
