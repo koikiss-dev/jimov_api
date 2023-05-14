@@ -17,7 +17,7 @@ describe("TioAnime", () => {
       expect(animeInfo.episodes.length).toBeGreaterThan(0);
     });
     it('should filter anime successfully', async () => {
-      const result = await tioanime.filter(["1"], ["accion"], { begin: 1950, end: 2023 }, 2, "recent");
+      const result = await tioanime.filter("", ["1"], ["accion"], { begin: 1950, end: 2023 }, 2, "recent");
       expect(result.results.length).toBeGreaterThan(0);
     }, 15000);
 })

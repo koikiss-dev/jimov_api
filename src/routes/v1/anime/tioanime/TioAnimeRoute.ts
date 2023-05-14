@@ -34,7 +34,8 @@ r.get("/anime/tioanime/episode/:episode", async (req, res) => {
 
 //filter
 r.get("/anime/tioanime/filter", async (req, res) => {
-  try {
+  try { 
+    const title = req.query.title as string;
     const types = (req.query.type as string[]) ?? [];
     const genres = (req.query.gen as string[]) ?? [];
 
@@ -45,7 +46,7 @@ r.get("/anime/tioanime/filter", async (req, res) => {
     const sort = (req.query.sort as string) ?? "recent";
 
     const tioanime = new TioAnime();
-    const animeInfo = await tioanime.filter(types, genres, {begin, end}, status, sort);
+    const animeInfo = await tioanime.filter(title, types, genres, {begin, end}, status, sort);
     res.send(animeInfo);
    //console.log(tioanime.filter(types, genres, { begin: begin, end: end }, status, sort).then(result => { console.log(result) } ));
   } catch (error) {
