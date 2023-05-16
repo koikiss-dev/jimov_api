@@ -64,9 +64,9 @@ router.get("/manga/mangareader/filter", async (req, res) => {
   }
 });
 
-router.get("/manga/mangareader/chapter/info", async (req, res) => {
+router.get("/manga/mangareader/chapter/:id", async (req, res) => {
   try {
-    const id = req.query.id as unknown as number;
+    const id = req.params.id as unknown as number;
     const chapterNumber = req.query.number as unknown as number;
     const language = req.query.lang as MangaReaderFilterLanguage;
 
@@ -85,9 +85,9 @@ router.get("/manga/mangareader/chapter/info", async (req, res) => {
   }
 });
 
-router.get("/manga/mangareader/volume/info", async (req, res) => {
+router.get("/manga/mangareader/volume/:id", async (req, res) => {
   try {
-    const id = req.query.id as unknown as number;
+    const id = req.params.id as unknown as number;
     const chapterNumber = req.query.number as unknown as number;
     const language = req.query.lang as MangaReaderFilterLanguage;
 

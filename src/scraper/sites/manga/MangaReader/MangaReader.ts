@@ -164,7 +164,7 @@ export class MangaReader {
 
         mangaChapter.title = mangaTitle;
         mangaChapter.id = mangaId.toString();
-        mangaChapter.url = `/manga/mangareader/chapter/info?id=${mangaId.toString()}&number=${mangaChapterNumber}&lang=${langCode}`;
+        mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${mangaChapterNumber}&lang=${langCode}`;
 
         manga.chapters.push(mangaChapter);
       });
@@ -202,7 +202,7 @@ export class MangaReader {
         mangaVolume.title = mangaVolumeTitle;
         mangaVolume.number = Number(mangaVolumeNumber);
         mangaVolume.thumbnail = mangaVolumeThumbnail;
-        mangaVolume.url = `/manga/mangareader/volume/info?id=${mangaId.toString()}&number=${mangaVolumeNumber}&lang=${langVolumeCode}`;
+        mangaVolume.url = `/manga/mangareader/volume/${mangaId.toString()}?number=${mangaVolumeNumber}&lang=${langVolumeCode}`;
 
         manga.volumes.push(mangaVolume);
       });
@@ -370,7 +370,7 @@ export class MangaReader {
         mangaChapter.id = mangaId;
         mangaChapter.images = mangaPagesArray;
         mangaChapter.number = chapterNumber;
-        mangaChapter.url = `/manga/mangareader/chapter/info?id=${mangaId.toString()}&number=${chapterNumber}&lang=${language}`;
+        mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${chapterNumber}&lang=${language}`;
 
         return mangaChapter;
       } else {
@@ -382,7 +382,7 @@ export class MangaReader {
         mangaVolume.range = [mangaVolumeRange.at(-1), mangaVolumeRange.at(0)];
         mangaVolume.images = mangaPagesArray;
         mangaVolume.number = chapterNumber;
-        mangaVolume.url = `/manga/mangareader/volume/info?id=${mangaId.toString()}&number=${chapterNumber}&lang=${language}`;
+        mangaVolume.url = `/manga/mangareader/volume/${mangaId.toString()}?number=${chapterNumber}&lang=${language}`;
 
         return mangaVolume;
       }
