@@ -1,7 +1,6 @@
 import { Router } from "express";
 import { MangaReader } from "../../../../scraper/sites/manga/MangaReader/MangaReader";
 import {
-  MangaReaderChapterType,
   MangaReaderFilterLanguage,
   MangaReaderFilterRatingType,
   MangaReaderFilterScore,
@@ -13,9 +12,9 @@ import {
 const mangaReader = new MangaReader();
 const router = Router();
 
-router.get("/manga/mangareader/title", async (req, res) => {
+router.get("/manga/mangareader/title/:id", async (req, res) => {
   try {
-    const id = req.query.id as unknown as number;
+    const id = req.params.id as unknown as number;
 
     const data = await mangaReader.GetMangaInfo(id);
 
@@ -65,19 +64,39 @@ router.get("/manga/mangareader/filter", async (req, res) => {
   }
 });
 
-router.get("/manga/mangareader/chapter", async (req, res) => {
+router.get("/manga/mangareader/chapter/info", async (req, res) => {
   try {
     const id = req.query.id as unknown as number;
     const chapterNumber = req.query.number as unknown as number;
     const language = req.query.lang as MangaReaderFilterLanguage;
-    const type = req.query.type as MangaReaderChapterType;
 
 
     const data = await mangaReader.GetMangaChapters(
       id,
       chapterNumber,
       language,
-      type
+      "chapter"
+    );
+
+    return res.send(data);
+  } catch (e) {
+    console.error(e);
+    res.status(500).send(e);
+  }
+});
+
+router.get("/manga/mangareader/volume/info", async (req, res) => {
+  try {
+    const id = req.query.id as unknown as number;
+    const chapterNumber = req.query.number as unknown as number;
+    const language = req.query.lang as MangaReaderFilterLanguage;
+
+
+    const data = await mangaReader.GetMangaChapters(
+      id,
+      chapterNumber,
+      language,
+      "volume"
     );
 
     return res.send(data);
