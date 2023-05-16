@@ -18,7 +18,7 @@ export interface IMangaChapter {
    * is optional because not all websites have it available. */
   description?: string;
   /** URL of the chapter in the API location */
-  url: `/manga/${string}/chapter/${string}` | `/manga/${string}/chapter`;
+  url: `/manga/${string}/chapter/${string}`;
   /** Chapter number */
   number: number;
   /**
@@ -70,7 +70,7 @@ export interface IMangaVolume {
    * This property contains the URL of the image */
   thumbnail?: string;
   /** URL of the volume in the API location */
-  url?: `/manga/${string}/volume/${string}` | `/manga/${string}/volume`; // title or number
+  url?: `/manga/${string}/volume/${string}`; // title or number
 }
 
 /**
@@ -184,7 +184,7 @@ export class MangaChapter implements IMangaChapter {
   /** @inheritdoc */
   description?: string;
   /** @inheritdoc */
-  url: `/manga/${string}/chapter/${string}` | `/manga/${string}/chapter`;
+  url: `/manga/${string}/chapter/${string}`;
   /** @inheritdoc */
   number: number;
   /** @inheritdoc */
@@ -223,5 +223,5 @@ export class MangaVolume implements IMangaVolume {
   /** @inheritdoc */
   thumbnail?: string;
   /** @inheritdoc */
-  url?:`/manga/${string}/volume/${string}` | `/manga/${string}/volume`; // title or number
+  url?:`/manga/${string}/volume/${string}`; // title or number
 }
