@@ -145,54 +145,67 @@ export class MangaReader {
 
       // Get manga chapters
       manga.chapters = [];
-      $("div.chapters-list-ul ul.ulclear li.chapter-item").each(
-        (_, element) => {
-          const mangaChapter = new MangaChapter();
-
-          const mangaTitle = $(element)
-            .find("a.item-link span.name")
-            .text()
-            .trim();
-          const mangaChapterNumber = mangaTitle
-            .split(" ")
-            .at(1)
-            .replace(":", "");
-
-          mangaChapter.title = mangaTitle;
-          mangaChapter.id = mangaId.toString();
-          mangaChapter.url = `/manga/mangareader/chapter/${mangaChapterNumber}`;
-
-          manga.chapters.push(mangaChapter);
-        }
+      const mangaChapterItemSection = $(
+        "div.chapters-list-ul ul.ulclear li.chapter-item"
       );
+      let langCode: string = ``;
+
+      if (mangaChapterItemSection?.parent().attr("id"))
+        langCode = mangaChapterItemSection.parent().attr("id").split("-")[0];
+
+      mangaChapterItemSection.each((_, element) => {
+        const mangaChapter = new MangaChapter();
+
+        const mangaTitle = $(element)
+          .find("a.item-link span.name")
+          .text()
+          .trim();
+        const mangaChapterNumber = mangaTitle.split(" ").at(1).replace(":", "");
+
+        mangaChapter.title = mangaTitle;
+        mangaChapter.id = mangaId.toString();
+        mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${mangaChapterNumber}&lang=${langCode}`;
+
+        manga.chapters.push(mangaChapter);
+      });
 
       // Get manga volumes
       const mangaVolumeRange = await this.GetMangaVolumeRange(mangaId);
 
       manga.volumes = [];
-      $("div.volume-list-ul div.manga_list div.manga_list-wrap")
-        .find("div.item")
-        .each((_, element) => {
-          const mangaVolume = new MangaVolume();
+      const mangaVolumeItemSection = $(
+        "div.volume-list-ul div.manga_list div.manga_list-wrap div.item"
+      );
 
-          const mangaVolumeTitle = $(element)
-            .find("div.manga-poster span.tick-item")
-            .text()
-            .trim();
-          const mangaVolumeNumber = mangaVolumeTitle.split(" ").at(-1);
-          const mangaVolumeThumbnail = $(element)
-            .find("div.manga-poster img.manga-poster-img")
-            .attr("src");
+      let langVolumeCode: string = ``;
 
-          mangaVolume.range = [mangaVolumeRange.at(-1), mangaVolumeRange.at(0)];
-          mangaVolume.id = mangaId.toString();
-          mangaVolume.title = mangaVolumeTitle;
-          mangaVolume.number = Number(mangaVolumeNumber);
-          mangaVolume.thumbnail = mangaVolumeThumbnail;
-          mangaVolume.url = `/manga/mangareader/volume/${mangaVolumeNumber}`;
+      if (mangaVolumeItemSection?.parent().attr("id"))
+        langVolumeCode = mangaChapterItemSection
+          .parent()
+          .attr("id")
+          .split("-")[0];
 
-          manga.volumes.push(mangaVolume);
-        });
+      mangaVolumeItemSection.each((_, element) => {
+        const mangaVolume = new MangaVolume();
+
+        const mangaVolumeTitle = $(element)
+          .find("div.manga-poster span.tick-item")
+          .text()
+          .trim();
+        const mangaVolumeNumber = mangaVolumeTitle.split(" ").at(-1);
+        const mangaVolumeThumbnail = $(element)
+          .find("div.manga-poster img.manga-poster-img")
+          .attr("src");
+
+        mangaVolume.range = [mangaVolumeRange.at(-1), mangaVolumeRange.at(0)];
+        mangaVolume.id = mangaId.toString();
+        mangaVolume.title = mangaVolumeTitle;
+        mangaVolume.number = Number(mangaVolumeNumber);
+        mangaVolume.thumbnail = mangaVolumeThumbnail;
+        mangaVolume.url = `/manga/mangareader/volume/${mangaId.toString()}?number=${mangaVolumeNumber}&lang=${langVolumeCode}`;
+
+        manga.volumes.push(mangaVolume);
+      });
 
       if (
         mangaGenres.some(genre => genre === "Hentai" || genre === "Ecchi") ===
@@ -288,9 +301,7 @@ export class MangaReader {
         id: mangaResultsID,
         title: mangaResultsTitle,
         thumbnail: new Image(mangaResultsThumbnail),
-        url: `/manga/mangareader/title/${mangaResultsTitleUrl
-          .join("-")
-          .replace("/", "")}`
+        url: `/manga/mangareader/title/${mangaResultsID}`
       });
     });
 
@@ -359,7 +370,7 @@ export class MangaReader {
         mangaChapter.id = mangaId;
         mangaChapter.images = mangaPagesArray;
         mangaChapter.number = chapterNumber;
-        mangaChapter.url = `/manga/mangareader/chapter/${chapterNumber}`;
+        mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${chapterNumber}&lang=${language}`;
 
         return mangaChapter;
       } else {
@@ -371,7 +382,7 @@ export class MangaReader {
         mangaVolume.range = [mangaVolumeRange.at(-1), mangaVolumeRange.at(0)];
         mangaVolume.images = mangaPagesArray;
         mangaVolume.number = chapterNumber;
-        mangaVolume.url = `/manga/mangareader/volume/${chapterNumber}`;
+        mangaVolume.url = `/manga/mangareader/volume/${mangaId.toString()}?number=${chapterNumber}&lang=${language}`;
 
         return mangaVolume;
       }
