@@ -146,14 +146,14 @@ export class MangaReader {
       // Get manga chapters
       manga.chapters = [];
       const mangaChapterItemSection = $(
-        "div.chapters-list-ul ul.ulclear li.chapter-item"
+        "div.chapters-list-ul ul.ulclear"
       );
       let langCode: string = ``;
 
-      if (mangaChapterItemSection?.parent().attr("id"))
-        langCode = mangaChapterItemSection.parent().attr("id").split("-")[0];
+      if (mangaChapterItemSection?.first().attr("id"))
+        langCode = mangaChapterItemSection.first().attr("id").split("-")[0];
 
-      mangaChapterItemSection.each((_, element) => {
+      mangaChapterItemSection.first().find("li.chapter-item").each((_, element) => {
         const mangaChapter = new MangaChapter();
 
         const mangaTitle = $(element)
@@ -174,18 +174,18 @@ export class MangaReader {
 
       manga.volumes = [];
       const mangaVolumeItemSection = $(
-        "div.volume-list-ul div.manga_list div.manga_list-wrap div.item"
+        "div.volume-list-ul div.manga_list div.manga_list-wrap"
       );
 
       let langVolumeCode: string = ``;
 
-      if (mangaVolumeItemSection?.parent().attr("id"))
+      if (mangaVolumeItemSection?.first().attr("id"))
         langVolumeCode = mangaChapterItemSection
-          .parent()
+          .first()
           .attr("id")
           .split("-")[0];
 
-      mangaVolumeItemSection.each((_, element) => {
+      mangaVolumeItemSection.first().find("div.item").each((_, element) => {
         const mangaVolume = new MangaVolume();
 
         const mangaVolumeTitle = $(element)
@@ -321,7 +321,7 @@ export class MangaReader {
         })
       );
 
-      const browser = await puppeteer.launch({ args: ["--disable-cache"] });
+      const browser = await puppeteer.launch({ args: ["--disable-cache", "--no-sandbox", "--disable-setuid-sandbox"] });
       const page = await browser.newPage();
 
       await page.goto(
