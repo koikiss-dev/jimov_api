@@ -223,5 +223,5 @@ export class MangaVolume implements IMangaVolume {
   /** @inheritdoc */
   thumbnail?: string;
   /** @inheritdoc */
-  url?: `/manga/${string}/volume/${string}`; // title or number
+  url?:`/manga/${string}/volume/${string}`; // title or number
 }

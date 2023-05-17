@@ -14,6 +14,8 @@ export interface IEpisodeServer {
    * The URL of the chapter. This URL leads to the video player of the
    * server where the episode is hosted.  */
   url: string;
+  /** Direct video file url for download */
+  file_url?: string;
 }
 
 /**
@@ -52,6 +54,8 @@ export class EpisodeServer implements IEpisodeServer {
   name: string;
   /** @inheritdoc */
   url: string;
+  /** @inheritdoc */
+  file_url?: string;
 
   constructor(name?: string, url?: string) {
     this.name = name;
