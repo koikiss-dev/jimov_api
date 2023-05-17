@@ -321,7 +321,7 @@ export class MangaReader {
         })
       );
 
-      const browser = await puppeteer.launch({ args: ["--disable-cache"] });
+      const browser = await puppeteer.launch({ args: ["--disable-cache", "--no-sandbox", "--disable-setuid-sandbox"] });
       const page = await browser.newPage();
 
       await page.goto(
