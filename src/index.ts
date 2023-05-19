@@ -7,9 +7,10 @@ import latinhd from "./routes/v1/anime/animelatinohd/AnimeLatinoHDRoutes";
 import gogoanime from "./routes/v1/anime/gogoanime/GogoAnimeRoute";
 import zoro from "./routes/v1/anime/zoro/ZoroRoutes";
 import monoschinos from "./routes/v1/anime/monoschinos/MonosChinosRoute";
-import tioanime from './routes/v1/anime/tioanime/TioAnimeRoute'
+import tioanime from "./routes/v1/anime/tioanime/TioAnimeRoute";
+import otakusTv from "./routes/v1/anime/otakustv/OtakusTvRoute";
 import comick from "./routes/v1/manga/comick/ComickRoutes";
-import nhentai from "./routes/v1/manga/nhentai/NhentaiRoutes"
+import nhentai from "./routes/v1/manga/nhentai/NhentaiRoutes";
 import helmet from "helmet";
 
 const app = express();
@@ -31,57 +32,58 @@ app.use(latinhd);
 app.use(gogoanime);
 app.use(monoschinos);
 app.use(zoro);
-app.use(tioanime)
+app.use(tioanime);
+app.use(otakusTv);
 /*anime*/
 
 /*Manga*/
 
 app.use(comick);
-app.use(nhentai)
+app.use(nhentai);
 /* manga */
 
 /*error */
 
 interface ErrorResponse {
-  error: {
-    message: string;
-    status: number;
-  };
+	error: {
+		message: string;
+		status: number;
+	};
 }
 
 app.use((err, res, _next) => {
-  //console.log(err.statusCode);
-  let response: ErrorResponse;
-  switch (err.statusCode) {
-    case 500:
-      response = {
-        error: {
-          message: "An internal server error occurred",
-          status: 500,
-        },
-      };
-      break;
-    case 400:
-      response = {
-        error: {
-          message: "There was an error with the request parameters",
-          status: 400,
-        },
-      };
-      break;
-    default:
-      response = {
-        error: {
-          message: "The requested resource was not found",
-          status: 404,
-        },
-      };
-      break;
-  }
-  res.status(response.error.status).send(response);
+	//console.log(err.statusCode);
+	let response: ErrorResponse;
+	switch (err.statusCode) {
+		case 500:
+			response = {
+				error: {
+					message: "An internal server error occurred",
+					status: 500,
+				},
+			};
+			break;
+		case 400:
+			response = {
+				error: {
+					message: "There was an error with the request parameters",
+					status: 400,
+				},
+			};
+			break;
+		default:
+			response = {
+				error: {
+					message: "The requested resource was not found",
+					status: 404,
+				},
+			};
+			break;
+	}
+	res.status(response.error.status).send(response);
 });
 
 
 app.listen(port, () => {
-  console.log(`Servidor iniciado en el puerto ${port} listo para trabajar :)`);
+	console.log(`Servidor iniciado en el puerto ${port} listo para trabajar :)`);
 });
