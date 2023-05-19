@@ -114,8 +114,6 @@ export class OtakusTv {
 			.find("#embedVideoC > img")
 			.attr("src");
 
-		console.log($("#ytplayer").html());
-
 		EpisodeInfo.url = `/anime/otakustv/episode/${name}/${episode}`;
 		EpisodeInfo.number = +$("div.container-fluid:first h1.text-white")
 			.text()
@@ -135,5 +133,5 @@ export class OtakusTv {
 
 		return EpisodeInfo;
 	}
-	async filter() {}
+	// async filter() {}
 }
