@@ -4,3 +4,4 @@ node_modules
 /.vscode
 /src/scraper/sites/anime/tioanime/testing.js
 coverage
+.vercel

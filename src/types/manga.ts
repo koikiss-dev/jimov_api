@@ -5,7 +5,7 @@ import { IResultSearch } from "./search";
 /**
  * The chapter is part of the manga and is also part of a volume. It is made
  * with a set of images and a cover that is the first page of the chapter.
- * 
+ *
  * @author Zukaritasu
  */
 export interface IMangaChapter {
@@ -13,7 +13,7 @@ export interface IMangaChapter {
   id: number | string;
   /** Chapter title. May contain the manga chapter number. */
   title: string;
-  /** 
+  /**
    * A brief description of what the new chapter brings. This property
    * is optional because not all websites have it available. */
   description?: string;
@@ -21,13 +21,13 @@ export interface IMangaChapter {
   url: `/manga/${string}/chapter/${string}`;
   /** Chapter number */
   number: number;
-  /** 
-   * Images of the manga chapter. 
+  /**
+   * Images of the manga chapter.
    * The first image may contain the cover of the chapter. */
   images: string[];
   /** The cover page of the chapter. Refers to the first page of the chapter. */
   cover?: string;
-  /** 
+  /**
    * The date on which the chapter was published. This is optional because
    * in some cases it is not specified. */
   date?: ICalendar;
@@ -40,31 +40,33 @@ export interface IMangaChapter {
  * the first element is the beginning (the chapter number) and the
  * second element the end of the volume (the number of the last chapter
  * of the volume).
- * 
+ *
  * @author Zukaritasu
  */
 export interface IMangaVolume {
   /** Manga volume ID */
   id: number | string;
-  /** 
+  /**
    * Here we define the beginning and end of the volume, meaning that
    * the number of the first chapter of the volume is the beginning and
    * the last chapter is the end. */
   range: [number, number];
-  /** 
+  /**
    * The title of the volume. The title may contain a short explanation
    * of what the volume contains. */
   title?: string;
-  /** 
-   * Description or introduction that explains a little of what is to 
+  /**
+   * Description or introduction that explains a little of what is to
    * come in the next chapters that make up the volume. */
   description?: string;
   /** Manga volume number */
   number?: number; //number
+  /** Images of the manga volume. */
+  images: string[];
   /** The date on which the first chapter of the volume was published. */
   date?: ICalendar;
-  /** 
-   * The image or cover of the volume. 
+  /**
+   * The image or cover of the volume.
    * This property contains the URL of the image */
   thumbnail?: string;
   /** URL of the volume in the API location */
@@ -72,9 +74,9 @@ export interface IMangaVolume {
 }
 
 /**
- * This interface defines the basic properties that a manga website can 
+ * This interface defines the basic properties that a manga website can
  * contain, including manga information, chapters and volumes.
- * 
+ *
  * @author Zukaritasu
  */
 export interface IManga {
@@ -86,7 +88,7 @@ export interface IManga {
   title: string;
   /** The title of the manga in other languages (alternative names) */
   altTitles?: string[];
-  /** 
+  /**
    * Manga cover or miniature. Some manga pages show the cover and the
    * banner, hence the use of the IImage interface. */
   thumbnail?: IImage;
@@ -100,7 +102,7 @@ export interface IManga {
   genres?: string[];
   /** A list of the characters that are part of the history of manga */
   characters?: string[];
-  /** 
+  /**
    * Contains a total list of chapters that make up the manga.
    * The 'volumes' property indicates the rank in the list of chapters
    * that are part of the volume by their index. */
@@ -132,9 +134,9 @@ export interface IMangaResult {
 }//filter
 
 /**
- * This class defines the basic properties that a manga website can 
+ * This class defines the basic properties that a manga website can
  * contain, including manga information, chapters and volumes.
- * 
+ *
  * @author Zukaritasu
  */
 export class Manga implements IManga {
@@ -171,7 +173,7 @@ export class Manga implements IManga {
 /**
  * The chapter is part of the manga and is also part of a volume. It is made
  * with a set of images and a cover that is the first page of the chapter.
- * 
+ *
  * @author Zukaritasu
  */
 export class MangaChapter implements IMangaChapter {
@@ -200,7 +202,7 @@ export class MangaChapter implements IMangaChapter {
  * the first element is the beginning (the chapter number) and the
  * second element the end of the volume (the number of the last chapter
  * of the volume).
- * 
+ *
  * @author Zukaritasu
  */
 export class MangaVolume implements IMangaVolume {
@@ -215,9 +217,11 @@ export class MangaVolume implements IMangaVolume {
   /** @inheritdoc */
   number?: number; //number
   /** @inheritdoc */
+  images: string[];
+  /** @inheritdoc */
   date?: ICalendar;
   /** @inheritdoc */
   thumbnail?: string;
   /** @inheritdoc */
-  url?: `/manga/${string}/volume/${string}`; // title or number
+  url?:`/manga/${string}/volume/${string}`; // title or number
 }

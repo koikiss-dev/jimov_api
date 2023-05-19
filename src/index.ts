@@ -10,9 +10,11 @@ import monoschinos from "./routes/v1/anime/monoschinos/MonosChinosRoute";
 import tioanime from "./routes/v1/anime/tioanime/TioAnimeRoute";
 import otakusTv from "./routes/v1/anime/otakustv/OtakusTvRoute";
 import comick from "./routes/v1/manga/comick/ComickRoutes";
-import nhentai from "./routes/v1/manga/nhentai/NhentaiRoutes";
+import inmanga from "./routes/v1/manga/inmanga/InmangaRoutes";
+import nhentai from "./routes/v1/manga/nhentai/NhentaiRoutes"
+import mangareader from "./routes/v1/manga/mangareader/MangaReaderRoutes";
 import helmet from "helmet";
-
+import cors from 'cors'
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -23,6 +25,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(morgan("dev"));
 app.use(helmet());
+app.use(cors())
 
 //routes
 
@@ -37,10 +40,11 @@ app.use(otakusTv);
 /*anime*/
 
 /*Manga*/
-
 app.use(comick);
-app.use(nhentai);
-/* manga */
+app.use(inmanga);
+app.use(nhentai)
+app.use(mangareader);
+/*Manga*/
 
 /*error */
 
@@ -87,3 +91,5 @@ app.use((err, res, _next) => {
 app.listen(port, () => {
 	console.log(`Servidor iniciado en el puerto ${port} listo para trabajar :)`);
 });
+
+module.exports = app;

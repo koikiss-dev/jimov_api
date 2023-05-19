@@ -1,6 +1,0 @@
----
-description: Anime routes
----
-
-# Routes
-

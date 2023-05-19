@@ -9,7 +9,7 @@ r.get("/", (_req, res) => {
     status: "success",
     code: 200,
     additional_info: {
-      server: "https://jimov.herokuapp.com/",
+      server: "https://jimov-api.vercel.app/",
       discord: "https://discord.gg/tyZ39GCX7R",
     },
   });
