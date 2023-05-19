@@ -1,5 +1,5 @@
 import { Anime, Chronology } from "../../../../types/anime";
-import { Episode } from "../../../../types/episode";
+import { Episode, EpisodeServer } from "../../../../types/episode";
 import axios from "axios";
 import { load } from "cheerio";
 
@@ -33,6 +33,7 @@ export class OtakusTv {
 
 		AnimeInfo.stats = {};
 
+		// Info about the anime stats
 		const StatsElement = $("div.inn-text > div div.none-otakus-a");
 
 		// Walk the stars
@@ -99,6 +100,40 @@ export class OtakusTv {
 
 		return AnimeInfo;
 	}
-	async getEpisodeServers() {}
+	async getEpisodeServers(name: string, episode: string) {
+		const $ = load(
+			(await axios.get(`${this.url}/anime/${name}/${episode}`)).data,
+		);
+		const EpisodeInfo = new Episode();
+
+		EpisodeInfo.name = $("div.container-fluid:first p.text-white")
+			.text()
+			.trim();
+		EpisodeInfo.image = $("#ytplayer")
+			.contents()
+			.find("#embedVideoC > img")
+			.attr("src");
+
+		console.log($("#ytplayer").html());
+
+		EpisodeInfo.url = `/anime/otakustv/episode/${name}/${episode}`;
+		EpisodeInfo.number = +$("div.container-fluid:first h1.text-white")
+			.text()
+			.split("\n")
+			.pop()
+			.trim();
+
+		// EpisodeInfo.servers
+		const currentServer = new EpisodeServer();
+
+		currentServer.name = $("body > div.container-fluid:first div:first p")
+			.text()
+			.trim();
+		currentServer.url = $("#ytplayer").attr("src");
+
+		EpisodeInfo.servers.push(currentServer);
+
+		return EpisodeInfo;
+	}
 	async filter() {}
 }
