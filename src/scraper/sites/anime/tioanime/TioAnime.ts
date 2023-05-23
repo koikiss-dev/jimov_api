@@ -36,6 +36,21 @@ async function getEpisodeServers(url) {
 				videos[i][1].replace('\\', '')
 			));
 		}
+
+		const table_downloads = $($('table.table-downloads tbody')).children();
+		for (let i = 0; i < table_downloads.length; i++) {
+			const server = $($(table_downloads[i]).find('td')[0]).text().trim();
+			const episode_server = servers.find((episode) => { 
+				return episode.name.toLowerCase() === server.toLocaleLowerCase(); 
+			});
+			if (!(episode_server == undefined || episode_server == null)) {
+				episode_server.file_url = $(table_downloads[i]).find("a").attr('href');
+			} else {
+				servers.push({ 
+					name: server, url: null, file_url: $(table_downloads[i]).find("a").attr('href') 
+				});
+			}
+		}
 	} catch (error) {
         console.log(error)
     }
@@ -196,9 +211,7 @@ async function getLastOnas() {
     return await getSectionContents(3);
 }
 
-/*getAnime('https://tioanime.com/anime/oniichan-wa-oshimai').then(result => { 
-	console.log(result)
-})*/
+
 
 export interface IYearRange {
 	begin: number;
@@ -251,7 +264,9 @@ export class TioAnime
 	}
 };
 
-
+getEpisodeServers('https://tioanime.com/ver/oniichan-wa-oshimai-3').then(result => { 
+	console.log(result)
+})
 
 //new TioAnime().filter(["1"], ["accion"], { begin: 1950, end: 2023 }, 2, "recent").then(result => { console.log(result) } )
 /* */
