@@ -264,9 +264,9 @@ export class TioAnime
 	}
 };
 
-getEpisodeServers('https://tioanime.com/ver/oniichan-wa-oshimai-3').then(result => { 
+/*getEpisodeServers('https://tioanime.com/ver/oniichan-wa-oshimai-3').then(result => { 
 	console.log(result)
-})
+})*/
 
 //new TioAnime().filter(["1"], ["accion"], { begin: 1950, end: 2023 }, 2, "recent").then(result => { console.log(result) } )
 /* */
