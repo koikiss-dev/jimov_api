@@ -66,9 +66,10 @@ export class Zoro {
     language?: string,
     sort?: string,
     genres?: string,
-    page_anime?: string
+    page_anime?: string,
   ) {
     try {
+      
       const { data } = await axios.get(`${this.url}/filter`, {
         params: {
           type: type,
@@ -81,6 +82,7 @@ export class Zoro {
           page: page_anime || 1,
         },
       });
+      
       const $ = load(data);
       const most_cards = $("div.film_list div.film_list-wrap div.flw-item");
       //const page_index = $("div.pre-pagination nav ul li.active");
@@ -133,8 +135,20 @@ export class Zoro {
           const serverId = $(e).attr("data-id").trim();
           return this.getServers(serverId)
             .then((response) => {
-              servers.name = $(e).find("a").text().trim();
-              servers.url = response.link;
+              const title = $(e).find("a").text().trim();
+              const videoData = response.link;
+              servers.name = title;
+              servers.url = videoData;
+              switch (title) {
+                case "Streamtape":
+                  servers.file_url = videoData.replace("/e/", "/v/");
+                  break;
+                case "StreamSB":
+                  servers.file_url = videoData.replace("/e/", "/d/");
+                  break;
+                default:
+                  break;
+              }
               epi.servers.push(servers);
             })
             .catch((error) => {
