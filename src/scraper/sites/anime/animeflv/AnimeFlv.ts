@@ -136,10 +136,33 @@ export class AnimeFlv {
       episodeReturn.servers = [];
       getLinks.each((_i, e) => {
         const servers = new EpisodeServer();
-        servers.name = $(e).attr("title");
-        servers.url = $(e).attr("data-video");
+        const title = $(e).attr("title");
+const videoData = $(e).attr("data-video");
+        servers.name = title;
+        servers.url = videoData;
+        //download
+        switch (title) {
+          case "Mega":
+            servers.file_url = videoData.replace("embed#!", "file/").replace("!", "#");
+            break;
+          case "Streamtape":
+            servers.file_url = videoData.replace("/e/", "/v/");
+            break;
+          case "YourUpload":
+            servers.file_url = videoData.replace("/embed/", "/watch/");
+            break;
+          case "Vidlox":
+          case "Doodstream":
+          case "Streamsb":
+          case "Filemoon":
+            servers.file_url = videoData.replace("/e/", "/d/");
+            break;
+          default:
+            break;
+        }
         episodeReturn.servers.push(servers);
       });
+      //download
       return episodeReturn;
     } catch (error) {
       console.log("An error occurred while getting the episode servers", error);
