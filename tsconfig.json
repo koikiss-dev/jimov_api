@@ -20,17 +20,17 @@
     "noImplicitThis": false,
     "strictNullChecks": false,
     "outDir": "./build",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "@animetypes/*": [
-        "./src/types/*"
+        "/src/types/*"
       ],
       "@providers/*":[
-        "./src/scraper/sites/anime/*",
-        "./src/scraper/sites/manga/*"
+        "/src/scraper/sites/anime/*",
+        "/src/scraper/sites/manga/*"
       ],
       "@routesAnime/*": [
-        "./src/routes/v1/anime/*"
+        "/src/routes/v1/anime/*"
       ]
     }
   },
