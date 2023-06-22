@@ -2,6 +2,11 @@ import * as cheerio from "cheerio";
 import axios from "axios";
 import { Manga, MangaChapter, IMangaResult } from "../../../../types/manga";
 import { IResultSearch } from "@animetypes/search";
+
+//Default Set Axios Cookie
+axios.defaults.withCredentials = true
+axios.defaults.headers.common["User-Agent"] = "Mozilla/5.0 (Linux; Android 6.0.1; SAMSUNG SM-G532G) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/12.0 Chrome/79.0.3945.136 Mobile Safari/537.36";
+
 export class Comick {
     readonly url = "https://comick.app";
     readonly api = "https://api.comick.app"
