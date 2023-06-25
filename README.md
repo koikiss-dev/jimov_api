@@ -49,6 +49,7 @@ If you are interested in contributing to the project, follow these instructions:
 * [@Maw](https://github.com/Mawfyy)
 * [@Zukaritasu](https://github.com/Zukaritasu)
 * [@Tokyo](https://github.com/TokyoTF)
+* [@barrientosvctor](https://github.com/barrientosvctor)
 
 ## **LICENSE**
 
