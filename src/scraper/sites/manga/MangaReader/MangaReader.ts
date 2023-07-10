@@ -3,20 +3,24 @@ import {
   IMangaResult,
   Manga,
   MangaChapter,
-  MangaVolume
+  MangaVolume,
 } from "../../../../types/manga";
 import axios from "axios";
 import { load } from "cheerio";
 import {
   MangaReaderFilterLanguage,
   MangaReaderChapterType,
-  MangaReaderFilterData
+  MangaReaderFilterData,
 } from "./MangaReaderTypes";
 import { IResultSearch, ResultSearch } from "../../../../types/search";
-import { DEFAULT_INTERCEPT_RESOLUTION_PRIORITY } from "puppeteer";
+import {
+  DEFAULT_INTERCEPT_RESOLUTION_PRIORITY,
+  PuppeteerLaunchOptions,
+} from "puppeteer";
 import puppeteer from "puppeteer-extra";
 import AdblockerPlugin from "puppeteer-extra-plugin-adblocker";
 import { sleep } from "./assets/sleep";
+import chrome from "chrome-aws-lambda";
 
 export class MangaReader {
   readonly url = "https://mangareader.to";
@@ -145,29 +149,33 @@ export class MangaReader {
 
       // Get manga chapters
       manga.chapters = [];
-      const mangaChapterItemSection = $(
-        "div.chapters-list-ul ul.ulclear"
-      );
+      const mangaChapterItemSection = $("div.chapters-list-ul ul.ulclear");
       let langCode: string = ``;
 
       if (mangaChapterItemSection?.first().attr("id"))
         langCode = mangaChapterItemSection.first().attr("id").split("-")[0];
 
-      mangaChapterItemSection.first().find("li.chapter-item").each((_, element) => {
-        const mangaChapter = new MangaChapter();
+      mangaChapterItemSection
+        .first()
+        .find("li.chapter-item")
+        .each((_, element) => {
+          const mangaChapter = new MangaChapter();
 
-        const mangaTitle = $(element)
-          .find("a.item-link span.name")
-          .text()
-          .trim();
-        const mangaChapterNumber = mangaTitle.split(" ").at(1).replace(":", "");
+          const mangaTitle = $(element)
+            .find("a.item-link span.name")
+            .text()
+            .trim();
+          const mangaChapterNumber = mangaTitle
+            .split(" ")
+            .at(1)
+            .replace(":", "");
 
-        mangaChapter.title = mangaTitle;
-        mangaChapter.id = mangaId.toString();
-        mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${mangaChapterNumber}&lang=${langCode}`;
+          mangaChapter.title = mangaTitle;
+          mangaChapter.id = mangaId.toString();
+          mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${mangaChapterNumber}&lang=${langCode}`;
 
-        manga.chapters.push(mangaChapter);
-      });
+          manga.chapters.push(mangaChapter);
+        });
 
       // Get manga volumes
       const mangaVolumeRange = await this.GetMangaVolumeRange(mangaId);
@@ -185,30 +193,33 @@ export class MangaReader {
           .attr("id")
           .split("-")[0];
 
-      mangaVolumeItemSection.first().find("div.item").each((_, element) => {
-        const mangaVolume = new MangaVolume();
+      mangaVolumeItemSection
+        .first()
+        .find("div.item")
+        .each((_, element) => {
+          const mangaVolume = new MangaVolume();
 
-        const mangaVolumeTitle = $(element)
-          .find("div.manga-poster span.tick-item")
-          .text()
-          .trim();
-        const mangaVolumeNumber = mangaVolumeTitle.split(" ").at(-1);
-        const mangaVolumeThumbnail = $(element)
-          .find("div.manga-poster img.manga-poster-img")
-          .attr("src");
+          const mangaVolumeTitle = $(element)
+            .find("div.manga-poster span.tick-item")
+            .text()
+            .trim();
+          const mangaVolumeNumber = mangaVolumeTitle.split(" ").at(-1);
+          const mangaVolumeThumbnail = $(element)
+            .find("div.manga-poster img.manga-poster-img")
+            .attr("src");
 
-        mangaVolume.range = [mangaVolumeRange.at(-1), mangaVolumeRange.at(0)];
-        mangaVolume.id = mangaId.toString();
-        mangaVolume.title = mangaVolumeTitle;
-        mangaVolume.number = Number(mangaVolumeNumber);
-        mangaVolume.thumbnail = mangaVolumeThumbnail;
-        mangaVolume.url = `/manga/mangareader/volume/${mangaId.toString()}?number=${mangaVolumeNumber}&lang=${langVolumeCode}`;
+          mangaVolume.range = [mangaVolumeRange.at(-1), mangaVolumeRange.at(0)];
+          mangaVolume.id = mangaId.toString();
+          mangaVolume.title = mangaVolumeTitle;
+          mangaVolume.number = Number(mangaVolumeNumber);
+          mangaVolume.thumbnail = mangaVolumeThumbnail;
+          mangaVolume.url = `/manga/mangareader/volume/${mangaId.toString()}?number=${mangaVolumeNumber}&lang=${langVolumeCode}`;
 
-        manga.volumes.push(mangaVolume);
-      });
+          manga.volumes.push(mangaVolume);
+        });
 
       if (
-        mangaGenres.some(genre => genre === "Hentai" || genre === "Ecchi") ===
+        mangaGenres.some((genre) => genre === "Hentai" || genre === "Ecchi") ===
         true
       )
         manga.isNSFW = true;
@@ -239,7 +250,7 @@ export class MangaReader {
       endMonth,
       endDay,
       sort,
-      numPage
+      numPage,
     } = options;
     if (
       startYear <= 0 ||
@@ -266,8 +277,8 @@ export class MangaReader {
         em: endMonth ?? "",
         ed: endDay ?? "",
         sort: sort ?? "",
-        page: numPage ?? 1
-      }
+        page: numPage ?? 1,
+      },
     });
 
     const $ = load(data);
@@ -301,7 +312,7 @@ export class MangaReader {
         id: mangaResultsID,
         title: mangaResultsTitle,
         thumbnail: new Image(mangaResultsThumbnail),
-        url: `/manga/mangareader/title/${mangaResultsID}`
+        url: `/manga/mangareader/title/${mangaResultsID}`,
       });
     });
 
@@ -315,19 +326,36 @@ export class MangaReader {
     type: MangaReaderChapterType
   ) {
     try {
+      let options: PuppeteerLaunchOptions = {};
+
+      if (process.env.AWS_LAMBDA_FUNCTION_VERSION)
+        options = {
+          args: [...chrome.args, "--hide-scrollbars", "--disable-web-security"],
+          defaultViewport: chrome.defaultViewport,
+          executablePath: await chrome.executablePath,
+          headless: true,
+          ignoreHTTPSErrors: true,
+        };
+      else
+        options = {
+          args: ["--disable-cache", "--no-sandbox", "--disable-setuid-sandbox"],
+        };
+
       puppeteer.use(
         AdblockerPlugin({
-          interceptResolutionPriority: DEFAULT_INTERCEPT_RESOLUTION_PRIORITY
+          interceptResolutionPriority: DEFAULT_INTERCEPT_RESOLUTION_PRIORITY,
         })
       );
 
-      const browser = await puppeteer.launch({ args: ["--disable-cache", "--no-sandbox", "--disable-setuid-sandbox"] });
+      // console.log(options);
+
+      const browser = await puppeteer.launch(options);
       const page = await browser.newPage();
 
       await page.goto(
         `${this.url}/read/a-${mangaId}/${language}/${type}-${chapterNumber}`,
         {
-          waitUntil: "domcontentloaded"
+          waitUntil: "domcontentloaded",
         }
       );
 
