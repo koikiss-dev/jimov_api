@@ -100,6 +100,23 @@ export class MangaReader {
     return result;
   }
 
+  private async GetMangaPages(chapterId: string, type: MangaReaderChapterType) {
+    let idType = "";
+
+    if (type === "chapter") idType = "chap";
+    else if (type === "volume") idType = "vol";
+
+    const { data: pagesAjaxData } = await axios.get(`${this.url}/ajax/image/list/${idType}/${chapterId}?mode=horizontal&quality=high`);
+    const $pagesAjaxData = load(pagesAjaxData.html);
+    const pagesSection = $pagesAjaxData("div#main-wrapper div.container-reader-hoz div#divslide div.divslide-wrapper div.ds-item").find("div.ds-image")
+
+    let pages = pagesSection.map((_, element) => {
+      return $pagesAjaxData(element).attr("data-url");
+    }).get();
+
+    return pages;
+  }
+
   async GetMangaInfo(mangaId: number): Promise<Manga> {
     try {
       const { data } = await axios.get(`${this.url}/a-${mangaId}`);
@@ -318,15 +335,6 @@ export class MangaReader {
 
       if (!chapterId) throw new Error("Chapter pages doesn't found.");
 
-      const { data: ajaxData } = await axios.get(`${this.url}/ajax/image/list/chap/${chapterId}?mode=horizontal&quality=high`);
-      const $ajaxData = load(ajaxData.html);
-
-      const pagesSection = $ajaxData("div#main-wrapper div.container-reader-hoz div#divslide div.divslide-wrapper div.ds-item").find("div.ds-image")
-
-      const pages = pagesSection.map((_, element) => {
-        return $ajaxData(element).attr("data-url");
-      }).get();
-
       const mangaChapterName = await this.GetSpecificMangaChapterName(
         mangaId,
         chapterNumber,
@@ -336,10 +344,11 @@ export class MangaReader {
 
       if (type === "chapter") {
         const mangaChapter = new MangaChapter();
+        const chapterPages = await this.GetMangaPages(chapterId, "chapter");
 
         mangaChapter.title = mangaChapterName;
         mangaChapter.id = mangaId;
-        mangaChapter.images = pages;
+        mangaChapter.images = chapterPages;
         mangaChapter.number = chapterNumber;
         mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${chapterNumber}&lang=${language}`;
 
@@ -347,11 +356,12 @@ export class MangaReader {
       } else {
         const mangaVolume = new MangaVolume();
         const mangaVolumeRange = await this.GetMangaVolumeRange(mangaId);
+        const volumePages = await this.GetMangaPages(chapterId, "volume");
 
         mangaVolume.title = mangaChapterName;
         mangaVolume.id = mangaId;
         mangaVolume.range = [mangaVolumeRange.at(-1), mangaVolumeRange.at(0)];
-        mangaVolume.images = pages;
+        mangaVolume.images = volumePages;
         mangaVolume.number = chapterNumber;
         mangaVolume.url = `/manga/mangareader/volume/${mangaId.toString()}?number=${chapterNumber}&lang=${language}`;
 
