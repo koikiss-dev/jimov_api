@@ -13,10 +13,6 @@ import {
   MangaReaderFilterData
 } from "./MangaReaderTypes";
 import { IResultSearch, ResultSearch } from "../../../../types/search";
-import { DEFAULT_INTERCEPT_RESOLUTION_PRIORITY } from "puppeteer";
-import puppeteer from "puppeteer-extra";
-import AdblockerPlugin from "puppeteer-extra-plugin-adblocker";
-import { sleep } from "./assets/sleep";
 
 export class MangaReader {
   readonly url = "https://mangareader.to";
@@ -315,31 +311,21 @@ export class MangaReader {
     type: MangaReaderChapterType
   ) {
     try {
-      puppeteer.use(
-        AdblockerPlugin({
-          interceptResolutionPriority: DEFAULT_INTERCEPT_RESOLUTION_PRIORITY
-        })
-      );
+      const { data } = await axios.get(`${this.url}/read/a-${mangaId}/${language}/${type}-${chapterNumber}`);
+      const $ = load(data);
 
-      const browser = await puppeteer.launch({ args: ["--disable-cache", "--no-sandbox", "--disable-setuid-sandbox"] });
-      const page = await browser.newPage();
+      const chapterId = $('div#wrapper').attr('data-reading-id');
 
-      await page.goto(
-        `${this.url}/read/a-${mangaId}/${language}/${type}-${chapterNumber}`,
-        {
-          waitUntil: "domcontentloaded"
-        }
-      );
+      if (!chapterId) throw new Error("Chapter pages doesn't found.");
 
-      await page.setViewport({ width: 1080, height: 1024 });
-      await page.waitForSelector(".rtl-row", { visible: true });
-      const selectors = await page.$$(".rtl-row");
-      const lastSelector = selectors.pop();
+      const { data: ajaxData } = await axios.get(`${this.url}/ajax/image/list/chap/${chapterId}?mode=horizontal&quality=high`);
+      const $ajaxData = load(ajaxData.html);
 
-      await lastSelector.click();
-      await sleep(500);
-      const html = await page.content();
-      await browser.close();
+      const pagesSection = $ajaxData("div#main-wrapper div.container-reader-hoz div#divslide div.divslide-wrapper div.ds-item").find("div.ds-image")
+
+      const pages = pagesSection.map((_, element) => {
+        return $ajaxData(element).attr("data-url");
+      }).get();
 
       const mangaChapterName = await this.GetSpecificMangaChapterName(
         mangaId,
@@ -348,27 +334,12 @@ export class MangaReader {
         type
       );
 
-      const $ = load(html);
-      const mangaPagesArray: string[] = [];
-      const mangaPagesSection = $(
-        "#divslide > div.divslide-wrapper > div.ds-item:not(:last-child)"
-      );
-
-      if (!mangaPagesSection.length)
-        throw new Error("Manga pages doesn't found.");
-
-      // get manga pages
-      mangaPagesSection.each((_, element) => {
-        const img = $(element).find("div.ds-image").attr("data-url");
-        mangaPagesArray.push(img);
-      });
-
       if (type === "chapter") {
         const mangaChapter = new MangaChapter();
 
         mangaChapter.title = mangaChapterName;
         mangaChapter.id = mangaId;
-        mangaChapter.images = mangaPagesArray;
+        mangaChapter.images = pages;
         mangaChapter.number = chapterNumber;
         mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${chapterNumber}&lang=${language}`;
 
@@ -380,7 +351,7 @@ export class MangaReader {
         mangaVolume.title = mangaChapterName;
         mangaVolume.id = mangaId;
         mangaVolume.range = [mangaVolumeRange.at(-1), mangaVolumeRange.at(0)];
-        mangaVolume.images = mangaPagesArray;
+        mangaVolume.images = pages;
         mangaVolume.number = chapterNumber;
         mangaVolume.url = `/manga/mangareader/volume/${mangaId.toString()}?number=${chapterNumber}&lang=${language}`;
 
