@@ -44,8 +44,6 @@
     "helmet": "^6.0.1",
     "morgan": "^1.10.0",
     "puppeteer": "^19.4.1",
-    "puppeteer-extra": "^3.3.6",
-    "puppeteer-extra-plugin-adblocker": "^2.13.6",
     "ts-node": "^10.9.1",
     "underscore": "^1.13.6"
   },
@@ -56,6 +54,7 @@
     "@types/jest": "^29.5.0",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.15.8",
+    "axios-debug-log": "1.0.0",
     "commitlint": "^17.5.1",
     "dotenv": "^16.0.3",
     "husky": "^8.0.3",
