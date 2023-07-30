@@ -54,7 +54,6 @@
     "@types/jest": "^29.5.0",
     "@types/morgan": "^1.9.4",
     "@types/node": "^18.15.8",
-    "axios-debug-log": "1.0.0",
     "commitlint": "^17.5.1",
     "dotenv": "^16.0.3",
     "husky": "^8.0.3",
