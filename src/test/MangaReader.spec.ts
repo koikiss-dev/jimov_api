@@ -255,7 +255,7 @@ describe("MangaReader", () => {
         type
       );
 
-      expect(mangaChapters?.images).toBeGreaterThanOrEqual(1);
+      expect(mangaChapters?.images.length).toBeGreaterThanOrEqual(1);
       expect(mangaChapters?.title).toStrictEqual(chapterTitle);
       expect(mangaChapters?.id).toStrictEqual(id);
       expect(mangaChapters?.number).toStrictEqual(chapterNumber);
