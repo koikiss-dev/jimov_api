@@ -18,7 +18,7 @@ router.get("/manga/mangareader/title/:id", async (req, res) => {
 
     const data = await mangaReader.GetMangaInfo(id);
 
-    return res.send(data);
+    return res.status(200).send(data);
   } catch (e) {
     console.error(e);
     res.status(500).send(e);
@@ -57,7 +57,7 @@ router.get("/manga/mangareader/filter", async (req, res) => {
       numPage
     });
 
-    return res.send(data);
+    return res.status(200).send(data);
   } catch (e) {
     console.error(e);
     res.status(500).send(e);
@@ -78,7 +78,7 @@ router.get("/manga/mangareader/chapter/:id", async (req, res) => {
       "chapter"
     );
 
-    return res.send(data);
+    return res.status(200).send(data);
   } catch (e) {
     console.error(e);
     res.status(500).send(e);
@@ -99,7 +99,7 @@ router.get("/manga/mangareader/volume/:id", async (req, res) => {
       "volume"
     );
 
-    return res.send(data);
+    return res.status(200).send(data);
   } catch (e) {
     console.error(e);
     res.status(500).send(e);
