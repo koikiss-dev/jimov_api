@@ -21,19 +21,15 @@ export class MangaReader {
     const { data } = await axios.get(`${this.url}/a-${mangaId}`);
     const $ = load(data);
 
-    const rangeResult: Array<number> = [];
-
-    $("div.volume-list-ul div.manga_list div.manga_list-wrap")
+    const rangeResult: number[] = $("div.volume-list-ul div.manga_list div.manga_list-wrap")
       .find("div.item")
-      .each((_, element) => {
+      .map((_, element) => {
         const mangaVolumeTitle = $(element)
           .find("div.manga-poster span.tick-item")
           .text()
           .trim();
-        const mangaVolumeNumber = mangaVolumeTitle.split(" ").at(-1);
-
-        rangeResult.push(Number(mangaVolumeNumber));
-      });
+        return Number(mangaVolumeTitle.split(" ").at(-1));
+      }).get();
 
     return rangeResult;
   }
