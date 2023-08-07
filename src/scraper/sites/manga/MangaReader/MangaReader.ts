@@ -37,23 +37,13 @@ export class MangaReader {
   private async GetSpecificMangaChapterName(
     mangaId: number,
     chapterNumber: number,
-    language: MangaReaderFilterLanguage,
+    language: typeof MangaReaderFilterLanguage[number],
     type: MangaReaderChapterType
   ): Promise<string> {
     const { data } = await axios.get(`${this.url}/a-${mangaId}`);
     const $ = load(data);
 
-    let langCode = ``;
-    if (language === MangaReaderFilterLanguage.English)
-      langCode = MangaReaderFilterLanguage.English;
-    else if (language === MangaReaderFilterLanguage.French)
-      langCode = MangaReaderFilterLanguage.French;
-    else if (language === MangaReaderFilterLanguage.Korean)
-      langCode = MangaReaderFilterLanguage.Korean;
-    else if (language === MangaReaderFilterLanguage.Chinese)
-      langCode = MangaReaderFilterLanguage.Chinese;
-    else if (language === MangaReaderFilterLanguage.Japanese)
-      langCode = MangaReaderFilterLanguage.Japanese;
+    let langCode: typeof MangaReaderFilterLanguage[number] = MangaReaderFilterLanguage[MangaReaderFilterLanguage.indexOf(language)] || "";
 
     let result = ``;
 
@@ -320,7 +310,7 @@ export class MangaReader {
   async GetMangaChapters(
     mangaId: number,
     chapterNumber: number,
-    language: MangaReaderFilterLanguage,
+    language: typeof MangaReaderFilterLanguage[number],
     type: MangaReaderChapterType
   ) {
     try {
