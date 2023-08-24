@@ -2,7 +2,7 @@
 
 ![image description](<.gitbook/assets/JIMOV\_logo (1).png>)
 
-[![discordBadge](https://img.shields.io/badge/Chat-Click%20here-7289d9?style=for-the-badge\&logo=discord)](https://discord.com/invite/tyZ39GCX7R)[![documentationBadge](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://choosealicense.com/licenses/mit/)[![documentationBadge](https://img.shields.io/badge/Documentation-Click%20here-blue?style=for-the-badge)](https://jimov.gitbook.io/jimov-api/)
+[![discordBadge](https://img.shields.io/badge/Chat-Click%20here-7289d9?style=for-the-badge\&logo=discord)](https://discord.com/invite/tyZ39GCX7R)[![documentationBadge](https://img.shields.io/badge/License-MIT-green.svg?style=for-the-badge)](https://choosealicense.com/licenses/mit/)[![documentationBadge](https://img.shields.io/badge/Documentation-Click%20here-blue?style=for-the-badge)](https://jimov-api-docs.vercel.app/)
 
 ## **Overview**
 
