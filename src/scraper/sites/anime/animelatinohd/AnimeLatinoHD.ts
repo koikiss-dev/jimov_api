@@ -46,16 +46,18 @@ export class AnimeLatinoHD {
         } catch (error) {
         }
     }
-    async GetEpisodeServers(episode: string) {
+    async GetEpisodeServers(episode: string, lang: string): Promise<Episode> {
         try {
 
             let number = episode.substring(episode.lastIndexOf("-") + 1)
             let anime = episode.substring(0, episode.lastIndexOf("-"))
+            let langType = [{ lang: "es", type: "Latino" }, { lang: "jp", type: "Subtitulado" }]
 
             const { data } = await axios.get(`${this.url}/ver/${anime}/${number}`);
             const $ = cheerio.load(data);
 
             let animeEpisodeParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
+
 
             const AnimeEpisodeInfo: Episode = {
                 name: animeEpisodeParseObj.anime.name,
@@ -64,16 +66,51 @@ export class AnimeLatinoHD {
                 image: "",
                 servers: []
             }
-            $("#languaje option").each((_i, el) => {
-                let v = Number($(el).val());
-                animeEpisodeParseObj.players[v].map((e: { server: { title: any; }; id: string; }) => {
-                    let Server: EpisodeServer = {
-                        name: e.server.title,
-                        url: "https://api.animelatinohd.com/stream/" + e.id,
+
+
+            let sel_lang = langType.filter((e) => e.lang == lang)
+            let f_index = 0
+        
+            if (sel_lang.length) {
+                $("#languaje option").each((_i, e) => {
+                    if ($(e).text() == sel_lang[0].type) {
+                        f_index = Number($(e).val())
                     }
-                    AnimeEpisodeInfo.servers.push(Server);
                 })
-            })
+            }
+
+
+            await Promise.all(animeEpisodeParseObj.players[f_index].map(async (e: { server: { title: any; }; id: string; }) => {
+                let min = await axios.get("https://api.animelatinohd.com/stream/" + e.id, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.62", "Referer": "https://www.animelatinohd.com/" } })
+                let dat = cheerio.load(min.data)
+
+                let Server: EpisodeServer = {
+                    name: e.server.title,
+                    url: "",
+                }
+
+                //state 1
+                if (e.server.title == "Beta") {
+                    let sel = dat("script:contains('var foo_ui = function (event) {')")
+                    let sort = String(sel.html())
+                    let domain = eval(sort.slice(sort.search("const url"), sort.search("const langDef")).replace("const url =", "").trim())
+
+                    let sortMORE = sort.slice(sort.search('ajax'), sort.search("method: 'post',"))
+                    let obj_sort = sortMORE.replace("ajax({", "").trim().replace("url:", "").replace(",", "").replace('"', "").replace('"', "").trim()
+                    let id_file = obj_sort.slice(obj_sort.lastIndexOf("/"), obj_sort.length)
+                    Server.url = domain + "/v" + id_file
+
+                } else if (e.server.title == "Gamma") {
+                    Server.url = dat('meta[name="og:url"]').attr("content")
+                } else {
+                    let sel = dat("script[data-cfasync='false']")
+                    let sort = String(sel.html())
+                    let sortMORE = sort.slice(sort.lastIndexOf("master") + 7, sort.lastIndexOf("hls2") - 11)
+                    let id_file = sortMORE.replace("_x", "")
+                    Server.url = "https://filemoon.sx" + "/e/" + id_file
+                }
+                AnimeEpisodeInfo.servers.push(Server)
+            }))
 
             return AnimeEpisodeInfo;
         } catch (error) {
@@ -114,6 +151,7 @@ export class AnimeLatinoHD {
             })
             return animeSearch;
         } catch (error) {
+            console.log(error)
         }
     }
 

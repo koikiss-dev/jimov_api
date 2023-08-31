@@ -22,18 +22,11 @@ router.get("/anime/animelatinohd/name/:name", async (req, res) => {
 
 // Episode Info +(Video Servers)
 router.get("/anime/animelatinohd/episode/:episode", async (req, res) => {
-
+    let { lang } = req.query
     let { episode } = req.params
-    let data = await Anime.GetEpisodeServers(episode)
+    let data = await Anime.GetEpisodeServers(episode,lang as string)
     res.send(data)
 
 });
 
-router.get("/anime/animelatinohd/episode/:episode", async (req, res) => {
-
-    let { episode } = req.params
-    let data = await Anime.GetEpisodeServers(episode)
-    res.send(data)
-
-});
 export default router
