@@ -15,6 +15,7 @@ import nhentai from "./routes/v1/manga/nhentai/NhentaiRoutes"
 import mangareader from "./routes/v1/manga/mangareader/MangaReaderRoutes";
 import helmet from "helmet";
 import cors from 'cors'
+import WcoStream from "./routes/v1/anime/wcostream/wcostreamRoutes";
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -36,6 +37,7 @@ app.use(gogoanime);
 app.use(monoschinos);
 app.use(zoro);
 app.use(tioanime)
+app.use(WcoStream);
 /*anime*/
 
 /*Manga*/
