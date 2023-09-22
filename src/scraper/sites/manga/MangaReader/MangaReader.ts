@@ -21,19 +21,15 @@ export class MangaReader {
     const { data } = await axios.get(`${this.url}/a-${mangaId}`);
     const $ = load(data);
 
-    const rangeResult: Array<number> = [];
-
-    $("div.volume-list-ul div.manga_list div.manga_list-wrap")
+    const rangeResult: number[] = $("div.volume-list-ul div.manga_list div.manga_list-wrap")
       .find("div.item")
-      .each((_, element) => {
+      .map((_, element) => {
         const mangaVolumeTitle = $(element)
           .find("div.manga-poster span.tick-item")
           .text()
           .trim();
-        const mangaVolumeNumber = mangaVolumeTitle.split(" ").at(-1);
-
-        rangeResult.push(Number(mangaVolumeNumber));
-      });
+        return Number(mangaVolumeTitle.split(" ").at(-1));
+      }).get();
 
     return rangeResult;
   }
@@ -41,59 +37,39 @@ export class MangaReader {
   private async GetSpecificMangaChapterName(
     mangaId: number,
     chapterNumber: number,
-    language: MangaReaderFilterLanguage,
+    language: typeof MangaReaderFilterLanguage[number],
     type: MangaReaderChapterType
   ): Promise<string> {
     const { data } = await axios.get(`${this.url}/a-${mangaId}`);
     const $ = load(data);
 
-    let langCode = ``;
-    if (language === MangaReaderFilterLanguage.English)
-      langCode = MangaReaderFilterLanguage.English;
-    else if (language === MangaReaderFilterLanguage.French)
-      langCode = MangaReaderFilterLanguage.French;
-    else if (language === MangaReaderFilterLanguage.Korean)
-      langCode = MangaReaderFilterLanguage.Korean;
-    else if (language === MangaReaderFilterLanguage.Chinese)
-      langCode = MangaReaderFilterLanguage.Chinese;
-    else if (language === MangaReaderFilterLanguage.Japanese)
-      langCode = MangaReaderFilterLanguage.Japanese;
+    let langCode: typeof MangaReaderFilterLanguage[number] = MangaReaderFilterLanguage[MangaReaderFilterLanguage.indexOf(language)] || "";
 
     let result = ``;
+    let chapterItemHtmlTag = ``;
+    let chapterTitleHtmlTag = ``;
+    let chapterTitleMatch = ``;
 
     if (type === "chapter") {
-      const chapters = $(`#${langCode}-chapters li.chapter-item`);
-
-      if (!chapters.length) throw new Error("Chapters doesn't found.");
-
-      for (let index = 0; index <= chapters.length; index++) {
-        const chapterTitle = chapters
-          .eq(index)
-          .find("a.item-link span.name")
-          .text()
-          .trim();
-
-        if (chapterTitle.includes(`Chapter ${chapterNumber}:`)) {
-          result = chapterTitle;
-          break;
-        }
-      }
+      chapterItemHtmlTag = `#${langCode}-chapters li.chapter-item`;
+      chapterTitleHtmlTag = `a.item-link span.name`;
+      chapterTitleMatch = `Chapter ${chapterNumber}:`;
     } else if (type === "volume") {
-      const volumes = $(`#${langCode}-volumes div.item`);
+      chapterItemHtmlTag = `#${langCode}-volumes div.item`;
+      chapterTitleHtmlTag = `div.manga-poster span.tick-vol`;
+      chapterTitleMatch = `VOL ${chapterNumber}`;
+    }
 
-      if (!volumes.length) throw new Error("Volumes doesn't found.");
+    const chapters = $(chapterItemHtmlTag);
 
-      for (let index = 0; index <= volumes.length; index++) {
-        const volumeTitle = volumes
-          .eq(index)
-          .find("div.manga-poster span")
-          .text()
-          .trim();
+    if (!chapters.length) throw new Error("Chapters doesn't found.");
 
-        if (volumeTitle.includes(`VOL ${chapterNumber}`)) {
-          result = volumeTitle;
-          break;
-        }
+    const chaptersTitle: string[] = chapters.find(chapterTitleHtmlTag).map((_, element) => $(element).text().trim()).get();
+
+    for (let title of chaptersTitle) {
+      if (title.includes(chapterTitleMatch)) {
+        result = title;
+        break;
       }
     }
 
@@ -324,7 +300,7 @@ export class MangaReader {
   async GetMangaChapters(
     mangaId: number,
     chapterNumber: number,
-    language: MangaReaderFilterLanguage,
+    language: typeof MangaReaderFilterLanguage[number],
     type: MangaReaderChapterType
   ) {
     try {
