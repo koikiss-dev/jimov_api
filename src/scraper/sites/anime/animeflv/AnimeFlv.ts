@@ -16,7 +16,7 @@ import {
 } from "../../../../types/search";
 
 export class AnimeFlv {
-  readonly url = "https://www2.animeflv.bz";
+  readonly url = "https://animeflv.ws";
 
   async GetAnimeInfo(anime: string): Promise<Anime> {
     try {
@@ -134,44 +134,6 @@ export class AnimeFlv {
       episodeReturn.url = `/anime/flv/episode/${episode}`;
       episodeReturn.number = numberEpisode as unknown as string;
       episodeReturn.servers = [];
-      /*    const serversPromises = getLinks.map(async e => {
-           const servers = new EpisodeServer();
-           const title = $(e).attr("title");
-           const videoData = $(e).attr("data-video");
-           servers.name = title;
-           servers.url = videoData;
-           
-           switch (title) {
-             case "Our Server":
-               // Agregamos la función aquí
-               const m3u = await this.getM3U(videoData); 
-               servers.file_url = m3u;
-               break;
-             case "Mega":
-               servers.file_url = videoData.replace("embed#!", "file/").replace("!", "#");
-               break;
-             case "Streamtape":
-               servers.file_url = videoData.replace("/e/", "/v/");
-               break;
-             case "YourUpload":
-               servers.file_url = videoData.replace("/embed/", "/watch/");
-               break;
-             case "Vidlox": 
-             case "Doodstream":
-             case "Streamsb":
-             case "Filemoon":
-               servers.file_url = videoData.replace("/e/", "/d/");
-               break;
-             default:
-               break;
-           }
-   
-           return servers
-         })
-   
-         episodeReturn.servers = await Promise.all(serversPromises);
-   
-         return episodeReturn; */
 
       const promises = getLinks.map((_i, e) => {
         const servers = new EpisodeServer();
@@ -179,14 +141,17 @@ export class AnimeFlv {
         const videoData = $(e).attr("data-video");
         servers.name = title;
         servers.url = videoData;
-        return this.getM3U(`${videoData.replace("streaming.php", "ajax.php")}&refer=none`).then(g => {
-
+        return this.getM3U(
+          `${videoData.replace("streaming.php", "ajax.php")}&refer=none`
+        ).then((g) => {
           switch (title) {
             case "Our Server":
               servers.file_url = g.source[0].file;
               break;
             case "Mega":
-              servers.file_url = videoData.replace("embed#!", "file/").replace("!", "#");
+              servers.file_url = videoData
+                .replace("embed#!", "file/")
+                .replace("!", "#");
               break;
             case "Streamtape":
               servers.file_url = videoData.replace("/e/", "/v/");
@@ -205,9 +170,8 @@ export class AnimeFlv {
           }
 
           episodeReturn.servers.push(servers);
-        })
-
-      })
+        });
+      });
       await Promise.all(promises);
       return episodeReturn;
     } catch (error) {
@@ -217,14 +181,10 @@ export class AnimeFlv {
   }
 
   private async getM3U(vidurl: string) {
-
     try {
-      const res = await axios.get(
-        vidurl
-      );
+      const res = await axios.get(vidurl);
 
-      return res.data
-    } catch (error) { }
-
+      return res.data;
+    } catch (error) {}
   }
 }
