@@ -146,6 +146,7 @@ export class MangaReader {
         mangaChapter.title = mangaTitle;
         mangaChapter.id = mangaId.toString();
         mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${mangaChapterNumber}&lang=${langCode}`;
+        mangaChapter.images = null;
 
         manga.chapters.push(mangaChapter);
       });
