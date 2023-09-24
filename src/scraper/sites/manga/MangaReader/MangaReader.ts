@@ -86,9 +86,7 @@ export class MangaReader {
     const $pagesAjaxData = load(pagesAjaxData.html);
     const pagesSection = $pagesAjaxData("div#main-wrapper div.container-reader-hoz div#divslide div.divslide-wrapper div.ds-item").find("div.ds-image")
 
-    let pages = pagesSection.map((_, element) => {
-      return $pagesAjaxData(element).attr("data-url");
-    }).get();
+    let pages = pagesSection.map((_, element) => $pagesAjaxData(element).attr("data-url")).get();
 
     return pages;
   }
@@ -99,7 +97,7 @@ export class MangaReader {
       const $ = load(data);
 
       const title = $("h2.manga-name").text().trim();
-      const altTitle = $("div.manga-name-or").text().trim();
+      const altTitle = $("div.manga-name-or").text().trim() ? Array.of($("div.manga-name-or").text().trim()) : null;
       const thumbnailUrl = $("div.manga-poster img.manga-poster-img").attr(
         "src"
       );
@@ -123,7 +121,7 @@ export class MangaReader {
 
       manga.id = mangaId.toString();
       manga.title = title;
-      manga.altTitles = [altTitle] || null;
+      manga.altTitles = altTitle;
       manga.thumbnail = new Image(thumbnailUrl);
       manga.description = description || null;
 
