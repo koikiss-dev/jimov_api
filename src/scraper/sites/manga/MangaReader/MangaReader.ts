@@ -108,14 +108,8 @@ export class MangaReader {
         .text()
         .trim();
 
-      const mangaGenres: Array<string> = [];
       // Manga genres
-      $("div.genres")
-        .find("a")
-        .each((_, element) => {
-          const genreElementName = $(element).text().trim();
-          mangaGenres.push(genreElementName);
-        });
+      const mangaGenres = $("div.genres").find("a").map((_, element) => $(element).text().trim()).get();
 
       const manga = new Manga();
 
