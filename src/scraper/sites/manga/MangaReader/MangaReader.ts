@@ -109,7 +109,7 @@ export class MangaReader {
         .trim();
 
       // Manga genres
-      const mangaGenres = $("div.genres").find("a").map((_, element) => $(element).text().trim()).get();
+      const mangaGenres: Array<string> = $("div.genres").find("a").map((_, element) => $(element).text().trim()).get();
 
       const manga = new Manga();
 
