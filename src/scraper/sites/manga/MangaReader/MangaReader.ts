@@ -94,7 +94,12 @@ export class MangaReader {
   async GetMangaInfo(mangaId: number): Promise<Manga> {
     try {
       const { data } = await axios.get(`${this.url}/a-${mangaId}`);
+      const { data: charactersAjaxList } = await axios.get(`${this.url}/ajax/character/list/${mangaId}`);
+
       const $ = load(data);
+      const $characterListAjaxResult = load(charactersAjaxList.html);
+
+      const charactersSection = $characterListAjaxResult("div.character-list div.cl-item div.cli-info");
 
       const title = $("h2.manga-name").text().trim();
       const altTitle = $("div.manga-name-or").text().trim() ? Array.of($("div.manga-name-or").text().trim()) : null;
@@ -109,7 +114,7 @@ export class MangaReader {
         .trim();
 
       // Manga genres
-      const mangaGenres = $("div.genres").find("a").map((_, element) => $(element).text().trim()).get();
+      const mangaGenres: Array<string> = $("div.genres").find("a").map((_, element) => $(element).text().trim()).get();
 
       const manga = new Manga();
 
@@ -123,6 +128,11 @@ export class MangaReader {
       else manga.status = "ongoing";
 
       manga.genres = mangaGenres;
+
+      if (charactersSection.html()) {
+        const characters = charactersSection.find("h4.cl-name a").map((_, element) => $characterListAjaxResult(element).text().trim()).get();
+        manga.characters = characters;
+      } else manga.characters = null;
 
       // Get manga chapters
       manga.chapters = [];
