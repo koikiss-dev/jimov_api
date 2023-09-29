@@ -107,7 +107,7 @@ export class AnimeFlv {
           $(e)
             .find("a")
             .attr("href")
-            .replace("/anime/", "https://img.animeflv.bz/cover/") + ".jpg";
+            .replace("/anime/", "https://img.animeflv.ws/cover/") + ".jpg";
         info.url = `/anime/flv/name/${$(e)
           .find("a")
           .attr("href")
