@@ -42,14 +42,7 @@ export enum MangaReaderFilterScore {
   Masterpiece
 }
 
-export enum MangaReaderFilterLanguage {
-  All = "",
-  English = "en",
-  Japanese = "ja",
-  Korean = "ko",
-  Chinese = "zh",
-  French = "fr"
-}
+export const MangaReaderFilterLanguage = ["", "en", "ja", "ko", "zh", "fr"] as const;
 
 export enum MangaReaderFilterSort {
   All = "",
@@ -67,7 +60,7 @@ export interface MangaReaderFilterData {
   status?: MangaReaderFilterStatus;
   ratingType?: MangaReaderFilterRatingType;
   score?: MangaReaderFilterScore;
-  language?: MangaReaderFilterLanguage;
+  language?: typeof MangaReaderFilterLanguage[number];
   startYear?: number;
   startMonth?: number;
   startDay?: number;

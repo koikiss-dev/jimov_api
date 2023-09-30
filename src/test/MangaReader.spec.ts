@@ -116,7 +116,7 @@ describe("MangaReader", () => {
       status?: MangaReaderFilterStatus;
       ratingType?: MangaReaderFilterRatingType;
       score?: MangaReaderFilterScore;
-      language?: MangaReaderFilterLanguage;
+      language?: typeof MangaReaderFilterLanguage[number];
       startYear?: number;
       startMonth?: number;
       startDay?: number;
@@ -139,7 +139,7 @@ describe("MangaReader", () => {
           status: MangaReaderFilterStatus.All,
           ratingType: MangaReaderFilterRatingType.Teens,
           score: MangaReaderFilterScore.Horrible,
-          language: MangaReaderFilterLanguage.Japanese
+          language: "ja"
         },
         {
           hasResults: true,
@@ -147,7 +147,7 @@ describe("MangaReader", () => {
           status: MangaReaderFilterStatus.Finished,
           ratingType: MangaReaderFilterRatingType.Teens,
           score: MangaReaderFilterScore.All,
-          language: MangaReaderFilterLanguage.Japanese,
+          language: "ja",
           startYear: 2021,
           startMonth: 3,
           startDay: 5,
@@ -168,7 +168,7 @@ describe("MangaReader", () => {
           status: MangaReaderFilterStatus.Finished,
           ratingType: MangaReaderFilterRatingType.Children,
           score: MangaReaderFilterScore.All,
-          language: MangaReaderFilterLanguage.English,
+          language: "en",
           numPage: 3
         },
         {
@@ -177,7 +177,7 @@ describe("MangaReader", () => {
           status: MangaReaderFilterStatus.All,
           ratingType: MangaReaderFilterRatingType.Teens,
           score: MangaReaderFilterScore.VeryGood,
-          language: MangaReaderFilterLanguage.English,
+          language: "en",
           numPage: 1
         }
       ];
@@ -227,21 +227,21 @@ describe("MangaReader", () => {
       chapterTitle: string;
       id: number;
       chapterNumber: number;
-      language: MangaReaderFilterLanguage;
+      language: typeof MangaReaderFilterLanguage[number];
       type: MangaReaderChapterType;
     }> = [
         {
           chapterTitle: "Chapter 3: 第 3 話",
           id: 65953,
           chapterNumber: 3,
-          language: MangaReaderFilterLanguage.Japanese,
+          language: "ja",
           type: "chapter"
         },
         {
           chapterTitle: "VOL 2",
           id: 65781,
           chapterNumber: 2,
-          language: MangaReaderFilterLanguage.English,
+          language: "en",
           type: "volume"
         }
       ];
@@ -260,5 +260,5 @@ describe("MangaReader", () => {
       expect(mangaChapters?.id).toStrictEqual(id);
       expect(mangaChapters?.number).toStrictEqual(chapterNumber);
     });
-  }, 12000);
+  }, 5000);
 });
