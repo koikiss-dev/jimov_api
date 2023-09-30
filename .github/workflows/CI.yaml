@@ -33,4 +33,7 @@ jobs:
       - name: Run formating
         run: npm run format
 
+      - name: Run linter
+        run: npm run linter
+
 
