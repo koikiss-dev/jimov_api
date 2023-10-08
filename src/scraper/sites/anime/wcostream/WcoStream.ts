@@ -1,9 +1,23 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 import { Anime } from "../../../../types/anime";
-import { Episode } from "../../../../types/episode";
+import { Episode,EpisodeServer } from "../../../../types/episode";
 //import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "../../../../types/search";
-//https://m.wcostream.org/(phone v)
+
+/** List of Domains
+ * https://m.wcostream.org/    (phone)
+ * 
+ * https://wcopanel.cizgifilmlerizle.com
+ * 
+ * https://cdn.animationexplore.com
+ * https://animationexplore.com
+ * 
+ * https://watchanimesub.net
+ * https://lb.watchanimesub.net
+*/
+
+
+
 export class WcoStream {
     readonly url = "https://www.wcostream.org";
 
@@ -16,7 +30,7 @@ export class WcoStream {
             let image = $("#category_description .ui-grid-solo .ui-block-a img").attr("src")
             let name = $(".main .ui-grid-solo.center .ui-block-a > .ui-bar.ui-bar-x").text().replace("Share On", "")
             let genre = $(".ui-grid-solo.left .ui-block-a").text().replace("Genre;", "").replace("Language; ", "")
-           
+
             const AnimeInfo: Anime = {
                 name: name,
                 url: `/anime/animelatinohd/name/${anime}`,
@@ -39,7 +53,7 @@ export class WcoStream {
                         name: data,
                         number: episode,
                         image: "https://www.themoviedb.org/t/p/original",
-                        url: `/anime/wcostream/episode/${$(e).find("a").attr("href").slice(1, $(e).find("a").attr("href").search("episode")) + episode}?id=${image.slice(image.lastIndexOf("/")+1,image.search(".jpg"))}`//"//cdn.animationexplore.com/catimg/3.jpg
+                        url: `/anime/wcostream/episode/${$(e).find("a").attr("href").slice(1, $(e).find("a").attr("href").search("episode")) + episode}?id=${image.slice(image.lastIndexOf("/") + 1, image.search(".jpg"))}`//"//cdn.animationexplore.com/catimg/3.jpg
                     }
                     AnimeInfo.episodes.push(AnimeEpisode);
                 }
@@ -50,49 +64,60 @@ export class WcoStream {
         } catch (error) {
         }
     }
-    async GetEpisodeServers(episode: string,id:any) {
+    // Global Apis https://www.wcostream.org/wp-json/wp/v2/pages
+
+    async GetEpisodeServers(episode: string, _id: any) {
         try {
 
             let number = episode.substring(episode.lastIndexOf("-") + 1)
             //let anime = episode.substring(0, episode.lastIndexOf("-"))
             //hacklegend-of-the-twilight-episode-12-english-dubbed-2
-            let urlafter = await axios.get(`https://www.wcostream.org/hacklegend-of-the-twilight-episode-${number}-english-dubbed-2`);
-            let cl = await axios.get(`https://www.wcostream.org/playlist-cat/3/hacklegend-of-the-twilight-episode-12-english-dubbed-2`)
-            const fr = cheerio.load(cl.data)
-
-            console.log(fr.html())
+            let urlafter = await axios.get(`${this.url}/playlist-cat/3/hacklegend-of-the-twilight-episode-12-english-dubbed-2`, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.55" } });
+            //let cl = await axios.get(`https://m.wcostream.org/hacklegend-of-the-twilight-episode-12-english-dubbed-2`)
+            //const fr = cheerio.load(cl.data)
+            //console.log(fr("html").html(), id)
+            //console.log(`https://www.wcostream.org/hacklegend-of-the-twilight-episode-${number}-english-dubbed-2`)
+            //console.log(fr("html").html(),id)
+            // console.log(fr.html())
             //https://www.wcostream.org/playlist-cat-rss/3?rssh=4199af2f31c7c2346eba1fa8523a7a46&rsst=1689553671
             //https://www.wcostream.org/dr-slump-episode-1-english-subbed
-         
-            const $ = cheerio.load(urlafter.data);
+
+            const $$ = cheerio.load(urlafter.data);
+            var mainUrl = $$("script").get()[3].children[0].data
+            var origin = eval(mainUrl.trim().slice(mainUrl.search("playlist:") + 6, mainUrl.search('image: ') - 4).trim().replace(",", ""))
+            let sad = await axios.get(this.url + origin,{headers:{ "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.55" }})
+            let orb = cheerio.load(sad.data.replaceAll(":image"," type='image'").replaceAll(":source"," type='video'").trim())
+            
+          
+            //const $ = cheerio.load(urlafter.data);
 
             //console.log(cheerio.)
             //console.log($("html").html())
-            var scr = $(".ui-block-a script").get()[0].children[0].data
+            /*var scr = fr(".ui-block-a script").get()[0].children[0].data
             //https://lb.watchanimesub.net/getvid?evid=tuWPBjr1Sd-HjOm9c_-99yd40E-lu1tKg5CD8GvpB6T5av64CgYvd5mEbmHRDUqhAOoO8ROiy-_aHAE4CJWxSWGjt3uovFUmsRUp75i7K3wsvWOSVEaXK9NbI89TulBFVGG9-Ppwz7YjfFgBERLkCUam7bUAeT-Xaa99Z4m2WrGZ_Rcsc8winDJCcYe-7xbCcMb0vzbPDNjpccUGiu_HZiCLHq9Ie8zjB119fRTwOMMuJ8xHkeCNpFIgHsQoKgx5KZLDJuJk-GlvAdOJhULP6Df2bWyHTAxrRMbj-NEVmVQHzYWNK3F3sYudC44nyNGdiD8pndlLneH2_vBtnuBeBdlHqbVy7MExtALRHyR-wCqoXIWFFpD8aeGkOvNH8aUXyrjkgzCNQKj3FTS9hyAO9A
             var enumList = "";
-           var randomVar = eval(scr.slice(scr.search(' = "";') + 16, scr.search('"];') + 2).trim())
-            var randomNumber = Number(scr.slice(scr.search("replace")+20,scr.lastIndexOf("); } );")).trim())
-            randomVar.map((e: any, _i: any) => {  
-                enumList += String.fromCharCode(parseInt(atob(e).replace(/\D/g,'')) - randomNumber);
+            var randomVar = eval(scr.slice(scr.search(' = "";') + 16, scr.search('"];') + 2).trim())
+            var randomNumber = Number(scr.slice(scr.search("replace") + 20, scr.lastIndexOf("); } );")).trim())
+            randomVar.map((e: any, _i: any) => {
+                enumList += String.fromCharCode(parseInt(atob(e).replace(/\D/g, '')) - randomNumber);
             })
-
-            console.log(eval(decodeURIComponent(escape(enumList))))
-            var embed = new URL(enumList.slice(enumList.search('src="')+5,enumList.search('" frameborder="0"')))
-            var t = embed.searchParams.get("t")
-            var h = embed.searchParams.get("h")
+            console.log(enumList,id)*/
+            //console.log(eval(decodeURIComponent(escape(enumList))))
+            //var embed = new URL(enumList.slice(enumList.search('src="')+5,enumList.search('" frameborder="0"')))
+            //var t = embed.searchParams.get("t")
+            //var h = embed.searchParams.get("h")
             //var pid= embed.searchParams.get("pid") // id episode
             //let {data} = await axios.get();
-            console.log(`https://www.wcostream.org/playlist-cat-rss/${id}?rssh=${h}&rsst=${t}`)
-           //await fetch(`https://www.wcostream.org/playlist-cat-rss/${id}?rssh=${h}&rsst=${t}`).then((e) => e.json()).then((e) => console.log(e))
+            // console.log(`https://www.wcostream.org/playlist-cat-rss/${id}?rssh=${h}&rsst=${t}`)
+            //await fetch(`https://www.wcostream.org/playlist-cat-rss/${id}?rssh=${h}&rsst=${t}`).then((e) => e.json()).then((e) => console.log(e))
             //const $q = cheerio.load(data)
             //console.log(t,h,id)
             //console.log($q("html").html())
             // after 
-           
+
             const AnimeEpisodeInfo: Episode = {
                 name: "",
-                url: `/anime/animelatinohd/episode/${episode}`,
+                url: `/anime/wcostream/episode/${episode}`,
                 number: number,
                 image: "",
                 servers: []
@@ -107,7 +132,16 @@ export class WcoStream {
                      AnimeEpisodeInfo.servers.push(Server);
                  })
              })*/
-            
+
+             orb("item").each((_i,e) => {
+
+                let Server: EpisodeServer = {
+                    name: "",
+                    url: orb(e).find("jwplayer[type='video']").attr("file"),
+                }
+           
+                AnimeEpisodeInfo.servers.push(Server);
+            })
             return AnimeEpisodeInfo;
         } catch (error) {
             console.log(error)
