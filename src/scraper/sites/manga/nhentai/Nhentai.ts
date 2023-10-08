@@ -22,19 +22,12 @@ export class Nhentai {
 
 class NhentaiFilter {
 
-   url = "https://nhentai.net/search/?q=";
+   url = "https://nhentai.to/search?q=";
 
   async filter(mangaName: string) {
 
-    let { data } = await axios.get(`${this.url}${mangaName}`, {
-      headers: {
-        "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
-        "Connection": "keep-alive",
-        "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Cookie": "cf_clearance=OHpFETxuREFby8P5PzR6Y.U7eV_Jn8k3vv5yzgxtE0M-1695396631-0-1-90c4990c.fb5d1ea4.c7c5c6ec-250.0.0; csrftoken=udqNql3j2e67HZ7RXbL92kQICvon3P4Hq5V3RmHUqXoJSBBOzSGer4T5Em8x74M5"
-      }
-    });
+    let { data } = await axios.get(`${this.url}${mangaName}`);
+
     let $ = load(data);
 
     let numPages = $("section.pagination a").length;
@@ -63,15 +56,7 @@ class NhentaiMangaInfo {
   try {
 
 
-   let { data } = await axios.get(`https://nhentai.net/g/${mangaId}`, {
-    headers: {
-      "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
-      "Connection": "keep-alive",
-      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
-      "Accept-Encoding": "gzip, deflate, br",
-      "Cookie": "cf_clearance=OHpFETxuREFby8P5PzR6Y.U7eV_Jn8k3vv5yzgxtE0M-1695396631-0-1-90c4990c.fb5d1ea4.c7c5c6ec-250.0.0; csrftoken=udqNql3j2e67HZ7RXbL92kQICvon3P4Hq5V3RmHUqXoJSBBOzSGer4T5Em8x74M5"
-    }
-  });
+   let { data } = await axios.get(`https://nhentai.to/g/${mangaId}`);
 
     let manga = new Manga();
 
@@ -116,15 +101,7 @@ class NhentaiGetMangaChapters {
 
   try {
 
-   let { data } = await axios.get(`https://nhentai.net/g/${mangaId}`, {
-    headers: {
-      "User-Agent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36",
-      "Connection": "keep-alive",
-      "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8",
-      "Accept-Encoding": "gzip, deflate, br",
-      "Cookie": "cf_clearance=OHpFETxuREFby8P5PzR6Y.U7eV_Jn8k3vv5yzgxtE0M-1695396631-0-1-90c4990c.fb5d1ea4.c7c5c6ec-250.0.0; csrftoken=udqNql3j2e67HZ7RXbL92kQICvon3P4Hq5V3RmHUqXoJSBBOzSGer4T5Em8x74M5"
-    }
-   });
+   let { data } = await axios.get(`https://nhentai.to/g/${mangaId}`);
 
       let $ = load(data);
 
@@ -158,8 +135,3 @@ class NhentaiGetMangaChapters {
 
 }
 
-(async () => {
-  let nhentai = new NhentaiGetMangaChapters();
-  let result_filter = await nhentai.getMangaChapters("418403");
-  console.log(result_filter)
-})()
