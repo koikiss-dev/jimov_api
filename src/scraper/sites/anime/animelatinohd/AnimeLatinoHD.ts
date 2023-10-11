@@ -1,8 +1,8 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Anime } from "../../../../types/anime";
-import { Episode, EpisodeServer } from "../../../../types/episode";
-import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "../../../../types/search";
+import { Anime } from "@animetypes/anime";
+import { Episode, EpisodeServer } from "@animetypes/episode";
+import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "@animetypes/search";
 
 export class AnimeLatinoHD {
     readonly url = "https://www.animelatinohd.com";

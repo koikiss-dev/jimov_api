@@ -1,11 +1,11 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Anime } from "../../../../types/anime";
-import { Episode, EpisodeServer } from "../../../../types/episode";
-import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "../../../../types/search";
+import { Anime } from "@animetypes/anime";
+import { Episode, EpisodeServer } from "@animetypes/episode";
+import { IResultSearch, IAnimeSearch, ResultSearch, AnimeSearch } from "@animetypes/search";
 
 /** List of Domains
- * https://m.wcostream.org    (phone)
+ * https://m.wcostream.org (phone)
  * 
  * https://wcopanel.cizgifilmlerizle.com
  * https://neptun.cizgifilmlerizle.com
@@ -22,6 +22,9 @@ import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "../../..
  * https://www.wcopremium.tv
 */
 
+//Default Set Axios Cookie
+axios.defaults.withCredentials = true
+axios.defaults.headers.common["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.55";
 
 export class WcoStream {
     readonly url = "https://www.wcostream.org";
@@ -77,15 +80,14 @@ export class WcoStream {
 
             let NumEpisode = episode.substring(episode.lastIndexOf("-") + 1)
             let anime = episode.substring(0, episode.lastIndexOf("-"))
-            console.log(anime, NumEpisode)
-            const { data } = await axios.get(`https://www.wcostream.org/playlist-cat/${anime}`, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.55" } })
-            const $ = cheerio.load(data);
 
+            const { data } = await axios.get(`https://www.wcostream.org/playlist-cat/${anime}`)
+            const $ = cheerio.load(data);
 
             let mainUrl = $("script").get()[3].children[0].data
             let mainOrigin = eval(mainUrl.trim().slice(mainUrl.search("playlist:") + 6, mainUrl.search('image: ') - 4).trim().replace(",", ""))
 
-            const mainData = await axios.get(this.url + mainOrigin, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.55" } })
+            const mainData = await axios.get(this.url + mainOrigin)
             const $$ = cheerio.load(mainData.data.replaceAll(":image", " type='image'").replaceAll(":source", " type='video'").trim())
 
             const AnimeEpisodeInfo: Episode = {
@@ -131,7 +133,7 @@ export class WcoStream {
             formdata.append("catara", search);
             formdata.append("konuara", "series");
 
-            const { data } = await axios.post(`${this.url}/search`, formdata, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.55" } });
+            const { data } = await axios.post(`${this.url}/search`, formdata);
             const $ = cheerio.load(data)
 
             const animeSearch: ResultSearch<IAnimeSearch> = {

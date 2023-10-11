@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Manga, MangaChapter, IMangaResult } from "../../../../types/manga";
+import { Manga, MangaChapter, IMangaResult } from "@animetypes/manga";
 import { IResultSearch } from "@animetypes/search";
 
 //Default Set Axios Cookie
@@ -46,16 +46,10 @@ export class Comick {
     async GetMangaInfo(manga: string, lang: string): Promise<Manga> {
         try {
             const { data } = await axios.get(`${this.api}/comic/${manga}`);
-
             const currentLang = lang ? `?lang=${lang}` : ""
-
             const mangaInfoParseObj = data
 
-
-
-            //https://comick.app/_next/data/Ut35IGvJuQU3g2jzrGDk-/comic/naruto-rocket-doujinshi.json?slug=naruto-rocket-doujinshi
             const dataApi = await axios.get(`${this.api}/comic/${mangaInfoParseObj.comic.hid}/chapters${currentLang}`);
-
 
             const MangaInfo: Manga = {
                 id: mangaInfoParseObj.comic.id,
@@ -85,12 +79,12 @@ export class Comick {
                     images: null,
                     cover: null,
                     date: {
-                        year: mindate.getFullYear(),
-                        month: null,
-                        day: null
+                        year: mindate.getFullYear() ? mindate.getFullYear() : null,
+                        month: mindate.getMonth() ? mindate.getMonth() : null,
+                        day: mindate.getDay() ? mindate.getDay() : null
                     }
                 }
-                return MangaInfo.chapters.push(MangaInfoChapter)
+                return MangaInfo.chapters.push(!langChapter.includes("?lang=id") ? MangaInfoChapter : null)
             })
 
             return MangaInfo
@@ -101,11 +95,11 @@ export class Comick {
     async GetChapterInfo(manga: string, lang: string) {
         try {
 
-            const currentLang = lang ? "-" + lang : "-en";
-            const hid = manga.substring(0, manga.indexOf("-"));
-            const idTitle = manga.substring(manga.indexOf("-") + 1);
-            var idNumber = idTitle.substring(idTitle.lastIndexOf("-") + 1);
-            const title = idTitle.substring(0, idTitle.lastIndexOf("-"));
+            let currentLang = lang ? "-" + lang : "-en";
+            let hid = manga.substring(0, manga.indexOf("-"));
+            let idTitle = manga.substring(manga.indexOf("-") + 1);
+            let idNumber = idTitle.substring(idTitle.lastIndexOf("-") + 1);
+            let title = idTitle.substring(0, idTitle.lastIndexOf("-"));
 
             let urlchange = ""
 
@@ -117,7 +111,7 @@ export class Comick {
 
             const { data } = await axios.get(`${this.url}/comic/${title}/${urlchange}`);
             const $ = cheerio.load(data);
-            console.log(JSON.parse($("#__NEXT_DATA__").html()).isFallback)
+
             if (JSON.parse($("#__NEXT_DATA__").html()).isFallback = false) {
                 const mangaChapterInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps
                 const mindate = new Date(mangaChapterInfoParseObj.chapter.created_at);
@@ -138,18 +132,18 @@ export class Comick {
                     cover: "https://meo.comick.pictures/" + mangaChapterInfoParseObj.chapter.md_comics.md_covers[0].b2key,
                     date: {
                         year: mindate.getFullYear() ? mindate.getFullYear() : null,
-                        month: null,
-                        day: null
+                        month: mindate.getMonth() ? mindate.getMonth() : null,
+                        day: mindate.getDay() ? mindate.getDay() : null
                     }
                 }
                 return MangaChapterInfoChapter;
 
             } else {
                 let buildid = JSON.parse($("#__NEXT_DATA__").html()).buildId
-                let currentUrl = idNumber == "err" ? `${title}/${hid}.json?slug=${title}&chapter=${hid}`:`${title}/${hid}-chapter-${idNumber}${currentLang}.json?slug=${title}&chapter=${hid}-chapter-${idNumber}${currentLang}`
+                let currentUrl = idNumber == "err" ? `${title}/${hid}.json?slug=${title}&chapter=${hid}` : `${title}/${hid}-chapter-${idNumber}${currentLang}.json?slug=${title}&chapter=${hid}-chapter-${idNumber}${currentLang}`
                 let dataBuild = await axios.get(`${this.url}/_next/data/${buildid}/comic/${currentUrl}`);
-                console.log(dataBuild)
-                const mindate = new Date(dataBuild.data.pageProps.chapter.created_at);
+
+                let mindate = new Date(dataBuild.data.pageProps.chapter.created_at);
 
                 const MangaChapterInfoChapter: MangaChapter = {
                     id: dataBuild.data.pageProps.chapter.id,
@@ -167,13 +161,13 @@ export class Comick {
                     cover: "https://meo.comick.pictures/" + dataBuild.data.pageProps.chapter.md_comics.md_covers[0].b2key,
                     date: {
                         year: mindate.getFullYear() ? mindate.getFullYear() : null,
-                        month: null,
-                        day: null
+                        month: mindate.getMonth() ? mindate.getMonth() : null,
+                        day: mindate.getDay() ? mindate.getDay() : null
                     }
                 }
 
                 return MangaChapterInfoChapter;
-                
+
             }
         } catch (error) {
         }
