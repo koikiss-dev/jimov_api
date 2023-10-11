@@ -58,7 +58,6 @@ export class AnimeLatinoHD {
 
             let animeEpisodeParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
 
-
             const AnimeEpisodeInfo: Episode = {
                 name: animeEpisodeParseObj.anime.name,
                 url: `/anime/animelatinohd/episode/${episode}`,
@@ -66,7 +65,6 @@ export class AnimeLatinoHD {
                 image: "",
                 servers: []
             }
-
 
             let sel_lang = langType.filter((e) => e.lang == lang)
             let f_index = 0
@@ -82,7 +80,6 @@ export class AnimeLatinoHD {
                         f_index = Number($(e).val())
                 }) 
             }
-
 
             await Promise.all(animeEpisodeParseObj.players[f_index].map(async (e: { server: { title: any; }; id: string; }) => {
                 //let min = await axios.get("https://api.animelatinohd.com/stream/" + e.id, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.62", "Referer": "https://www.animelatinohd.com/" } })

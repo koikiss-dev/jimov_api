@@ -10,7 +10,6 @@
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "linter": "npx eslint src/scraper/* src/routes/*",
     "build": "tsc",
-    "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "zoro": "ts-node src/scraper/sites/anime/zoro/Zoro.ts",
     "lint": "eslint --ignore-path .eslintignore --ext .js,.ts .",
     "heroku-postbuild": "npm run build",
