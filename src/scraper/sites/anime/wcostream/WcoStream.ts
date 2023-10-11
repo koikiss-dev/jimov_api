@@ -31,7 +31,7 @@ export class WcoStream {
 
     async GetAnimeInfo(anime: string): Promise<Anime> {
         try {
-            const { data } = await axios.get(`${this.url}/anime/${anime}`);
+            const { data } = await axios.get(`${this.url}/anime/${anime}`,{headers:{"User-Agent":"Mozilla/5.0 (Linux; Android 10; LM-K920) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Mobile Safari/537.36"}});
             const $ = cheerio.load(data);
 
             let image = $("#category_description .ui-grid-solo .ui-block-a img").attr("src")
@@ -54,7 +54,7 @@ export class WcoStream {
                 let episode = data.slice(data.search(" Episode ")).replace(data.includes("English Dubbed") ? "English Dubbed" : "English Subbed", "").replace("Episode", "").trim().replace(/[^0-9-.]/g, "")
                 let season = data.includes("Season") ? data.slice(data.search(" Season "), data.search(" Episode ")).replace("Season", "").trim() : ""
 
-                if (data) {
+                if (data && !data.includes("Movie") && !data.includes("OVA")) {
                     let AnimeEpisode: Episode = {
                         name: data,
                         number: episode,
