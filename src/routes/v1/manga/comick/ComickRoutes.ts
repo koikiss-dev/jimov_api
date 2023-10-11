@@ -23,12 +23,11 @@ router.get("/manga/comick/title/:manga", async (req, res) => {
 });
 
 router.get("/manga/comick/chapter/:chapter", async (req, res) => {
-
     let { chapter } = req.params
     let { lang } = req.query;
 
     let data = await Manga.GetChapterInfo(chapter, lang as string)
-
+    
     res.send(data)
 });
 export default router

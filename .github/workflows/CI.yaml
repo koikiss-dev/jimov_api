@@ -26,5 +26,21 @@ jobs:
 
       - name: Set up the project
         run: npm run build
+      
+      - name: Run tests
+        run: npm run test
 
+      - name: Run formating
+        run: npm run format
 
+      - name: Run linter
+        run: npm run linter
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Run format
+        run: npm run format
+
+      - name: Run linter
+        run: npm run lint
