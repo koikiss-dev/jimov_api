@@ -8,7 +8,7 @@ describe('It returns a list of animes related that name filter', () => {
     const mangasHentai: IMangaResult[] = await new Nhentai().filter("Evangelion");
 
     expect(mangasHentai[0].id).toBe("403447");
-    expect(mangasHentai[0].title).toBe("[Cassi[]no (Magarikouji Lily)] Playboys (2) – Neon Genesis Evangelion dj [Eng]");
+    expect(mangasHentai[0].title).toBe("[Cassino (Magarikouji Lily)] Playboys (2) – Neon Genesis Evangelion dj [Eng]");
 
   })
 
@@ -31,7 +31,7 @@ describe("Manga chapters", ()=> {
   it('it should return a manga chapters from manga id', async () => {
 
     const getMangaChapters: IMangaChapter[] = await new Nhentai().getMangaChapters("403447");
-    expect(getMangaChapters[0].images[0]).toEqual("https://cdn.dogehls.xyz/galleries/2223278/1t.jpg")
+    expect(getMangaChapters[0].images[0]).toEqual("https://t7.nhentai.net/galleries/2223278/1t.jpg")
 
   })
 })

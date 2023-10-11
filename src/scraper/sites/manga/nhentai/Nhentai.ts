@@ -116,7 +116,7 @@ class NhentaiGetMangaChapters {
 
     $("div#thumbnail-container .thumb-container a img ").each((_, chapterImage) => {
       mangaImagesPages.push(
-        $(chapterImage).attr("data-src")
+        $(chapterImage).attr("data-src").replace("cdn.dogehls.xyz", "t7.nhentai.net")
       )
     })
 
