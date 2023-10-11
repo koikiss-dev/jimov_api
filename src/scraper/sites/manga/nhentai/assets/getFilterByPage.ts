@@ -2,7 +2,7 @@ import { IMangaResult } from "@animetypes/manga";
 import axios from "axios";
 import { load } from "cheerio";
 
-export async function getFilterByPages(mangaName: string, numPage: number) {
+export async function getFilterByPages(mangaName: string, numPage: number): Promise<IMangaResult[]> {
 
 
   let searchResults: IMangaResult[] = [];

@@ -26,6 +26,7 @@ class NhentaiFilter {
 
   async filter(mangaName: string) {
 
+  try {
     let { data } = await axios.get(`${this.url}${mangaName}`);
 
     let $ = load(data);
@@ -41,6 +42,10 @@ class NhentaiFilter {
     let getResults = await getFilterByPages(mangaName, numPages);
 
     return getResults;
+
+    } catch(error) {
+      throw error
+    }
   }
 
 
@@ -88,7 +93,7 @@ class NhentaiMangaInfo {
     return manga
 
     }catch(error) {
-      return error
+      throw error
     }
 
   }
@@ -97,7 +102,7 @@ class NhentaiMangaInfo {
 
 class NhentaiGetMangaChapters {
 
-  async getMangaChapters(mangaId: string) {
+  async getMangaChapters(mangaId: string): Promise<IMangaChapter[]> {
 
   try {
 
@@ -128,7 +133,7 @@ class NhentaiGetMangaChapters {
       return mangaChapters;
 
     } catch (error) {
-      return error
+      throw error
     }
 
   }
