@@ -1,8 +1,8 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Anime } from "../../../../types/anime";
-import { Episode, EpisodeServer } from "../../../../types/episode";
-import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "../../../../types/search";
+import { Anime } from "@animetypes/anime";
+import { Episode, EpisodeServer } from "@animetypes/episode";
+import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "@animetypes/search";
 
 export class AnimeLatinoHD {
     readonly url = "https://www.animelatinohd.com";
@@ -70,27 +70,33 @@ export class AnimeLatinoHD {
 
             let sel_lang = langType.filter((e) => e.lang == lang)
             let f_index = 0
-        
+
             if (sel_lang.length) {
                 $("#languaje option").each((_i, e) => {
                     if ($(e).text() == sel_lang[0].type) {
                         f_index = Number($(e).val())
                     }
-                })
+                }) 
+            }else {
+                $("#languaje option").each((_i, e) => {
+                        f_index = Number($(e).val())
+                }) 
             }
 
 
             await Promise.all(animeEpisodeParseObj.players[f_index].map(async (e: { server: { title: any; }; id: string; }) => {
-                let min = await axios.get("https://api.animelatinohd.com/stream/" + e.id, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.62", "Referer": "https://www.animelatinohd.com/" } })
-                let dat = cheerio.load(min.data)
+                //let min = await axios.get("https://api.animelatinohd.com/stream/" + e.id, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.62", "Referer": "https://www.animelatinohd.com/" } })
+              // let dat = cheerio.load(min.data)
 
                 let Server: EpisodeServer = {
                     name: e.server.title,
                     url: "",
                 }
+                Server.url = "https://api.animelatinohd.com/stream/" + e.id
+                Server.name = e.server.title
 
                 //state 1
-                if (e.server.title == "Beta") {
+                 /*if (e.server.title == "Beta") {
                     let sel = dat("script:contains('var foo_ui = function (event) {')")
                     let sort = String(sel.html())
                     let domain = eval(sort.slice(sort.search("const url"), sort.search("const langDef")).replace("const url =", "").trim())
@@ -108,7 +114,7 @@ export class AnimeLatinoHD {
                     let sortMORE = sort.slice(sort.lastIndexOf("master") + 7, sort.lastIndexOf("hls2") - 11)
                     let id_file = sortMORE.replace("_x", "")
                     Server.url = "https://filemoon.sx" + "/e/" + id_file
-                }
+                }*/
                 AnimeEpisodeInfo.servers.push(Server)
             }))
 
@@ -151,7 +157,6 @@ export class AnimeLatinoHD {
             })
             return animeSearch;
         } catch (error) {
-            console.log(error)
         }
     }
 
