@@ -31,7 +31,7 @@ export class WcoStream {
 
     async GetAnimeInfo(anime: string): Promise<Anime> {
         try {
-            const { data } = await axios.get(`${this.url}/anime/${anime}`,{headers:{"User-Agent":"Mozilla/5.0 (Linux; Android 10; LM-K920) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Mobile Safari/537.36"}});
+            const { data } = await axios.get(`${this.url}/anime/${anime}`, { headers: { "User-Agent": "Mozilla/5.0 (Linux; Android 10; LM-K920) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Mobile Safari/537.36" } });
             const $ = cheerio.load(data);
 
             const image = $("#category_description .ui-grid-solo .ui-block-a img").attr("src")
@@ -76,7 +76,7 @@ export class WcoStream {
     // Global Apis https://www.wcostream.org/wp-json
     // https://www.wcostream.org/wp-json/wp/v2/pages
 
-    async GetEpisodeServers(episode: string, season: number|string) {
+    async GetEpisodeServers(episode: string, season: number | string) {
         try {
 
             const NumEpisode = episode.substring(episode.lastIndexOf("-") + 1)
