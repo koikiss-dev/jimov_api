@@ -10,7 +10,7 @@ axios.defaults.headers.common["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win
 export class Inmanga {
     readonly url = "https://inmanga.com";
 
-    async GetMangaByFilter(search?: string, type?: Number, genre?: string[]) {
+    async GetMangaByFilter(search?: string, type?: number, genre?: string[]) {
         try {
             const formdata = new FormData();
             formdata.append("filter[queryString]", search);
@@ -20,7 +20,7 @@ export class Inmanga {
             const genreList = ['33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83', '84', '85', '86', '87', '88', '-1']
 
             if (genre) {
-                genre.map((e, _i) => {
+                genre.map((e) => {
                     if (genreList.includes(e)) {
                         formdata.append("filter[generes][]", genreList[genreList.indexOf(e)]);
                     }
@@ -106,7 +106,7 @@ export class Inmanga {
 
             const dataChPost = await axios.get(`${this.url}/chapter/getall?mangaIdentification=${cid}`);
             const dataCh = JSON.parse(dataChPost.data.data);
-            dataCh.result.map((e: { Id: any; MangaName: any; Number: any; Identification: any; }, _i: any) => {
+            dataCh.result.map((e: { Id: number; MangaName: string; Number: number; Identification: string; }) => {
                 const MangaInfoChapter: MangaChapter = {
                     id: e.Id,
                     title: e.MangaName,
@@ -168,6 +168,7 @@ export class Inmanga {
 
             return MangaChapterInfoChapter;
         } catch (error) {
+            console.log(error)
         }
     }
 

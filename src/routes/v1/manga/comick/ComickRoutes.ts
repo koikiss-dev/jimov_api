@@ -5,28 +5,28 @@ const router = Router();
 
 
 router.get("/manga/comick/filter", async (req, res) => {
-    let { search,type,year,genre } = req.query;
+    const { search,type,year,genre } = req.query;
 
-    let data = await Manga.GetMangaByFilter(search as string, type as unknown as number,year as string, genre as string)
+    const data = await Manga.GetMangaByFilter(search as string, type as unknown as number,year as string, genre as string)
 
     res.send(data)
 });
 
 
 router.get("/manga/comick/title/:manga", async (req, res) => {
-    let { manga } = req.params;
-    let { lang } = req.query;
+    const { manga } = req.params;
+    const { lang } = req.query;
    
-    let data = await Manga.GetMangaInfo(manga, lang as string)
+    const data = await Manga.GetMangaInfo(manga, lang as string)
     
     res.send(data)
 });
 
 router.get("/manga/comick/chapter/:chapter", async (req, res) => {
-    let { chapter } = req.params
-    let { lang } = req.query;
+    const { chapter } = req.params
+    const { lang } = req.query;
 
-    let data = await Manga.GetChapterInfo(chapter, lang as string)
+    const data = await Manga.GetChapterInfo(chapter, lang as string)
     
     res.send(data)
 });

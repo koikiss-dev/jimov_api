@@ -25,7 +25,7 @@ export class Comick {
             const ResultList: IResultSearch<IMangaResult> = {
                 results: []
             }
-            data.map((e: { id: any; title: any; md_covers: { b2key: string; }[]; slug: any; }, _i: any) => {
+            data.map((e: { id: number; title: string; md_covers: { b2key: string; }[]; slug: string; }) => {
                 const ListMangaResult: IMangaResult = {
                     id: e.id,
                     title: e.title,
@@ -39,7 +39,7 @@ export class Comick {
 
             return ResultList
         } catch (error) {
-
+            console.log(error)
         }
     }
 
@@ -54,20 +54,20 @@ export class Comick {
             const MangaInfo: Manga = {
                 id: mangaInfoParseObj.comic.id,
                 title: mangaInfoParseObj.comic.title,
-                altTitles: mangaInfoParseObj.comic.md_titles.map((e: { title: any; }, _i: any) => e.title),
+                altTitles: mangaInfoParseObj.comic.md_titles.map((e: { title: string; }) => e.title),
                 url: `/manga/comick/title/${mangaInfoParseObj.comic.slug}`,
                 description: mangaInfoParseObj.comic.desc,
                 isNSFW: mangaInfoParseObj.comic.hentai,
                 status: mangaInfoParseObj.comic.status == "1" ? "ongoing" : "completed",
-                authors: mangaInfoParseObj.authors.map((e: { name: any; }, _i: any) => e.name),
-                genres: mangaInfoParseObj.genres.map((e: { name: any; }, _i: any) => e.name),
+                authors: mangaInfoParseObj.authors.map((e: { name: string; }) => e.name),
+                genres: mangaInfoParseObj.genres.map((e: { name: string; }) => e.name),
                 chapters: [],
                 thumbnail: {
                     url: "https://meo.comick.pictures/" + mangaInfoParseObj.comic.md_covers[0].b2key
                 }
             }
 
-            dataApi.data.chapters.map((e: { id: any; title: any; hid: any; chap: any; created_at: any; lang: any; }, _i: any) => {
+            dataApi.data.chapters.map((e: { id: number; title: string; hid: string; chap: number; created_at: string; lang: string; }) => {
                 const mindate = new Date(e.created_at);
                 const langChapter = currentLang ? currentLang : "?lang=" + e.lang
 
@@ -89,17 +89,18 @@ export class Comick {
 
             return MangaInfo
         } catch (error) {
+            console.log(error)
         }
     }
 
     async GetChapterInfo(manga: string, lang: string) {
         try {
 
-            let currentLang = lang ? "-" + lang : "-en";
-            let hid = manga.substring(0, manga.indexOf("-"));
-            let idTitle = manga.substring(manga.indexOf("-") + 1);
-            let idNumber = idTitle.substring(idTitle.lastIndexOf("-") + 1);
-            let title = idTitle.substring(0, idTitle.lastIndexOf("-"));
+            const currentLang = lang ? "-" + lang : "-en";
+            const hid = manga.substring(0, manga.indexOf("-"));
+            const idTitle = manga.substring(manga.indexOf("-") + 1);
+            const idNumber = idTitle.substring(idTitle.lastIndexOf("-") + 1);
+            const title = idTitle.substring(0, idTitle.lastIndexOf("-"));
 
             let urlchange = ""
 
@@ -112,7 +113,7 @@ export class Comick {
             const { data } = await axios.get(`${this.url}/comic/${title}/${urlchange}`);
             const $ = cheerio.load(data);
 
-            if (JSON.parse($("#__NEXT_DATA__").html()).isFallback = false) {
+            if (JSON.parse($("#__NEXT_DATA__").html()).isFallback == false) {
                 const mangaChapterInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps
                 const mindate = new Date(mangaChapterInfoParseObj.chapter.created_at);
 
@@ -121,7 +122,7 @@ export class Comick {
                     title: mangaChapterInfoParseObj.chapter.title,
                     url: `/manga/comick/chapter/`,
                     number: mangaChapterInfoParseObj.chapter.chap,
-                    images: mangaChapterInfoParseObj.chapter.md_images.map((e, _i) => {
+                    images: mangaChapterInfoParseObj.chapter.md_images.map((e: { w: number; h: number; name: string; b2key: string; }) => {
                         return {
                             width: e.w,
                             height: e.h,
@@ -139,18 +140,18 @@ export class Comick {
                 return MangaChapterInfoChapter;
 
             } else {
-                let buildid = JSON.parse($("#__NEXT_DATA__").html()).buildId
-                let currentUrl = idNumber == "err" ? `${title}/${hid}.json?slug=${title}&chapter=${hid}` : `${title}/${hid}-chapter-${idNumber}${currentLang}.json?slug=${title}&chapter=${hid}-chapter-${idNumber}${currentLang}`
-                let dataBuild = await axios.get(`${this.url}/_next/data/${buildid}/comic/${currentUrl}`);
+                const buildid = JSON.parse($("#__NEXT_DATA__").html()).buildId
+                const currentUrl = idNumber == "err" ? `${title}/${hid}.json?slug=${title}&chapter=${hid}` : `${title}/${hid}-chapter-${idNumber}${currentLang}.json?slug=${title}&chapter=${hid}-chapter-${idNumber}${currentLang}`
+                const dataBuild = await axios.get(`${this.url}/_next/data/${buildid}/comic/${currentUrl}`);
 
-                let mindate = new Date(dataBuild.data.pageProps.chapter.created_at);
+                const mindate = new Date(dataBuild.data.pageProps.chapter.created_at);
 
                 const MangaChapterInfoChapter: MangaChapter = {
                     id: dataBuild.data.pageProps.chapter.id,
                     title: dataBuild.data.pageProps.chapter.title,
                     url: `/manga/comick/chapter/`,
                     number: dataBuild.data.pageProps.chapter.chap,
-                    images: dataBuild.data.pageProps.chapter.md_images.map((s: { w: any; h: any; name: any; b2key: string; }, _i: any) => {
+                    images: dataBuild.data.pageProps.chapter.md_images.map((s: { w: number; h: number; name: string; b2key: string; }) => {
                         return {
                             width: s.w,
                             height: s.h,
@@ -170,6 +171,7 @@ export class Comick {
 
             }
         } catch (error) {
+            console.log(error)
         }
     }
 

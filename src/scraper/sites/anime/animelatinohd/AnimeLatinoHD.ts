@@ -13,7 +13,7 @@ export class AnimeLatinoHD {
             const { data } = await axios.get(`${this.url}/anime/${anime}`);
             const $ = cheerio.load(data);
 
-            let animeInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
+            const animeInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
 
             const AnimeInfo: Anime = {
                 name: animeInfoParseObj.name,
@@ -31,7 +31,7 @@ export class AnimeLatinoHD {
             }
 
             animeInfoParseObj.episodes.map(e => {
-                let AnimeEpisode: Episode = {
+                const AnimeEpisode: Episode = {
                     name: animeInfoParseObj.name,
                     number: e.number + "",
                     image: "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.banner + "?&w=280&q=95",
@@ -44,19 +44,20 @@ export class AnimeLatinoHD {
             return AnimeInfo;
 
         } catch (error) {
+            console.log(error)
         }
     }
     async GetEpisodeServers(episode: string, lang: string): Promise<Episode> {
         try {
 
-            let number = episode.substring(episode.lastIndexOf("-") + 1)
-            let anime = episode.substring(0, episode.lastIndexOf("-"))
-            let langType = [{ lang: "es", type: "Latino" }, { lang: "jp", type: "Subtitulado" }]
+            const number = episode.substring(episode.lastIndexOf("-") + 1)
+            const anime = episode.substring(0, episode.lastIndexOf("-"))
+            const langType = [{ lang: "es", type: "Latino" }, { lang: "jp", type: "Subtitulado" }]
 
             const { data } = await axios.get(`${this.url}/ver/${anime}/${number}`);
             const $ = cheerio.load(data);
 
-            let animeEpisodeParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
+            const animeEpisodeParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
 
             const AnimeEpisodeInfo: Episode = {
                 name: animeEpisodeParseObj.anime.name,
@@ -66,7 +67,7 @@ export class AnimeLatinoHD {
                 servers: []
             }
 
-            let sel_lang = langType.filter((e) => e.lang == lang)
+            const sel_lang = langType.filter((e) => e.lang == lang)
             let f_index = 0
 
             if (sel_lang.length) {
@@ -74,18 +75,18 @@ export class AnimeLatinoHD {
                     if ($(e).text() == sel_lang[0].type) {
                         f_index = Number($(e).val())
                     }
-                }) 
-            }else {
+                })
+            } else {
                 $("#languaje option").each((_i, e) => {
-                        f_index = Number($(e).val())
-                }) 
+                    f_index = Number($(e).val())
+                })
             }
 
-            await Promise.all(animeEpisodeParseObj.players[f_index].map(async (e: { server: { title: any; }; id: string; }) => {
+            await Promise.all(animeEpisodeParseObj.players[f_index].map(async (e: { server: { title: string; }; id: string; }) => {
                 //let min = await axios.get("https://api.animelatinohd.com/stream/" + e.id, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.62", "Referer": "https://www.animelatinohd.com/" } })
-              // let dat = cheerio.load(min.data)
+                // let dat = cheerio.load(min.data)
 
-                let Server: EpisodeServer = {
+                const Server: EpisodeServer = {
                     name: e.server.title,
                     url: "",
                 }
@@ -93,30 +94,31 @@ export class AnimeLatinoHD {
                 Server.name = e.server.title
 
                 //state 1
-                 /*if (e.server.title == "Beta") {
-                    let sel = dat("script:contains('var foo_ui = function (event) {')")
-                    let sort = String(sel.html())
-                    let domain = eval(sort.slice(sort.search("const url"), sort.search("const langDef")).replace("const url =", "").trim())
+                /*if (e.server.title == "Beta") {
+                   let sel = dat("script:contains('var foo_ui = function (event) {')")
+                   let sort = String(sel.html())
+                   let domain = eval(sort.slice(sort.search("const url"), sort.search("const langDef")).replace("const url =", "").trim())
 
-                    let sortMORE = sort.slice(sort.search('ajax'), sort.search("method: 'post',"))
-                    let obj_sort = sortMORE.replace("ajax({", "").trim().replace("url:", "").replace(",", "").replace('"', "").replace('"', "").trim()
-                    let id_file = obj_sort.slice(obj_sort.lastIndexOf("/"), obj_sort.length)
-                    Server.url = domain + "/v" + id_file
+                   let sortMORE = sort.slice(sort.search('ajax'), sort.search("method: 'post',"))
+                   let obj_sort = sortMORE.replace("ajax({", "").trim().replace("url:", "").replace(",", "").replace('"', "").replace('"', "").trim()
+                   let id_file = obj_sort.slice(obj_sort.lastIndexOf("/"), obj_sort.length)
+                   Server.url = domain + "/v" + id_file
 
-                } else if (e.server.title == "Gamma") {
-                    Server.url = dat('meta[name="og:url"]').attr("content")
-                } else {
-                    let sel = dat("script[data-cfasync='false']")
-                    let sort = String(sel.html())
-                    let sortMORE = sort.slice(sort.lastIndexOf("master") + 7, sort.lastIndexOf("hls2") - 11)
-                    let id_file = sortMORE.replace("_x", "")
-                    Server.url = "https://filemoon.sx" + "/e/" + id_file
-                }*/
+               } else if (e.server.title == "Gamma") {
+                   Server.url = dat('meta[name="og:url"]').attr("content")
+               } else {
+                   let sel = dat("script[data-cfasync='false']")
+                   let sort = String(sel.html())
+                   let sortMORE = sort.slice(sort.lastIndexOf("master") + 7, sort.lastIndexOf("hls2") - 11)
+                   let id_file = sortMORE.replace("_x", "")
+                   Server.url = "https://filemoon.sx" + "/e/" + id_file
+               }*/
                 AnimeEpisodeInfo.servers.push(Server)
             }))
 
             return AnimeEpisodeInfo;
         } catch (error) {
+            console.log(error)
         }
     }
 
@@ -132,7 +134,7 @@ export class AnimeLatinoHD {
                 }
             });
 
-            let animeSearchParseObj = data
+            const animeSearchParseObj = data
 
             const animeSearch: ResultSearch<IAnimeSearch> = {
                 nav: {
@@ -154,6 +156,7 @@ export class AnimeLatinoHD {
             })
             return animeSearch;
         } catch (error) {
+            console.log(error)
         }
     }
 
