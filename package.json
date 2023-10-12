@@ -9,6 +9,7 @@
     "start:vercel": "node build/index.js",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "linter": "npx eslint src/scraper/* src/routes/*",
+    "linter:win": "npx eslint src/scraper/** src/routes/**",
     "build": "tsc",
     "zoro": "ts-node src/scraper/sites/anime/zoro/Zoro.ts",
     "heroku-postbuild": "npm run build",
