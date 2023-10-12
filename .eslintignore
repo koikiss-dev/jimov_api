@@ -1,4 +1,4 @@
 **/*.js
-./src/types/**
-./src/utils/**
-./src/routes/**
+src/types/**
+src/utils/**
+src/test/**
