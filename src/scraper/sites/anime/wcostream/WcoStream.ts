@@ -123,11 +123,12 @@ export class WcoStream {
                        
                         AnimeEpisodeInfo.servers.push(Server);
                     }
+                    return AnimeEpisodeInfo;
                 })
                
             })
 
-            return AnimeEpisodeInfo;
+           
         } catch (error) {
             console.log(error)
         }
