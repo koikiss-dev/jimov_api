@@ -124,7 +124,10 @@ export class WcoStream {
                     AnimeEpisodeInfo.servers.push(Server);
                 }
             })
-            return AnimeEpisodeInfo;
+            setTimeout(() => {
+                return AnimeEpisodeInfo;
+            }, 5000);
+           
         } catch (error) {
             console.log(error)
         }
