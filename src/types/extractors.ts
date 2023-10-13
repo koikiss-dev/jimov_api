@@ -21,8 +21,8 @@ export const filemoon = async (url: string) => {
 
         const RequestBR = eval(UnBuffer.slice(UnBuffer.indexOf("{sources:[{file:") + "{sources:[{file:".length, UnBuffer.indexOf("}],image:", 1)));
         axios.get(RequestBR)
-        
-        return RequestBR
+
+        return await RequestBR
     } catch (error) {
         console.log(error)
     }
