@@ -102,27 +102,29 @@ export class WcoStream {
            
             $$("item").each(async(_i, e) => {
                 const title = $$(e).find("title").text()
-
-                if (title.includes("Episode " + NumEpisode + " ") && !season && !title.includes("Season")) {
-                    AnimeEpisodeInfo.name = title.replace("<![CDATA[", "").replace("]]>", "").trim()
-                    AnimeEpisodeInfo.image = $$(e).find("jwplayer[type='image']").text()
-                    const Server: EpisodeServer = {
-                        name: "JWplayer - " + $$(e).find("jwplayer[type='video']").attr("label"),
-                        url: await filemoon("https://filemoon.sx/e/397bb6qxbwvh"),
+                await filemoon("https://filemoon.sx/e/397bb6qxbwvh").then((data) => {
+                    if (title.includes("Episode " + NumEpisode + " ") && !season && !title.includes("Season")) {
+                        AnimeEpisodeInfo.name = title.replace("<![CDATA[", "").replace("]]>", "").trim()
+                        AnimeEpisodeInfo.image = $$(e).find("jwplayer[type='image']").text()
+                        const Server: EpisodeServer = {
+                            name: "JWplayer - " + $$(e).find("jwplayer[type='video']").attr("label"),
+                            url: data,
+                        }
+    
+                        AnimeEpisodeInfo.servers.push(Server);
+                    } else if (title.includes("Episode " + NumEpisode + " ") && season && title.includes("Season " + season)) {
+                        AnimeEpisodeInfo.name = title.replace("<![CDATA[", "").replace("]]>", "").trim()
+                        AnimeEpisodeInfo.image = $$(e).find("jwplayer[type='image']").text()
+                  
+                        const Server: EpisodeServer = {
+                            name: "JWplayer - " + $$(e).find("jwplayer[type='video']").attr("label"),
+                            url: data,
+                        }
+                       
+                        AnimeEpisodeInfo.servers.push(Server);
                     }
-
-                    AnimeEpisodeInfo.servers.push(Server);
-                } else if (title.includes("Episode " + NumEpisode + " ") && season && title.includes("Season " + season)) {
-                    AnimeEpisodeInfo.name = title.replace("<![CDATA[", "").replace("]]>", "").trim()
-                    AnimeEpisodeInfo.image = $$(e).find("jwplayer[type='image']").text()
-              
-                    const Server: EpisodeServer = {
-                        name: "JWplayer - " + $$(e).find("jwplayer[type='video']").attr("label"),
-                        url: $$(e).find("jwplayer[type='video']").attr("file"),
-                    }
-                   
-                    AnimeEpisodeInfo.servers.push(Server);
-                }
+                })
+               
             })
 
             return AnimeEpisodeInfo;
