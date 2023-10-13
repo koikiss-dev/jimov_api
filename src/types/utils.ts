@@ -1,12 +1,4 @@
-/***********************************************************************
- * 
- * 
- * 
- * 
- * 
- * 
- */
-
+import { unpack } from "unpacker";
 
 //Spanish Providers - TypeScript version
 
@@ -28,7 +20,7 @@ export const api = {
      * @returns 
      */
     getEpisodeURL(info: IPageInfo, url: string): string {
-        return url.replace(`https://${ info.domain }/ver/`, `/anime/${ info.name }/episode/`);
+        return url.replace(`https://${info.domain}/ver/`, `/anime/${info.name}/episode/`);
     },
 
     /**
@@ -39,7 +31,7 @@ export const api = {
      * @returns 
      */
     getAnimeURL(info: IPageInfo, url: string): string {
-        return url.replace(`https://${ info.domain }/anime/`, `/anime/${ info.name }/name/`);
+        return url.replace(`https://${info.domain}/anime/`, `/anime/${info.name}/name/`);
     }
 }
 
@@ -54,4 +46,23 @@ export const utils = {
     isUsableValue(object: any): boolean {
         return object != null && object != undefined;
     }
+}
+
+
+/**
+ * 
+ * @param packedString in Base64
+ * 
+ */
+
+export const UnPacked = (packedString: string) => {
+    let valuePacked: string;
+
+    if (typeof atob === "undefined") {
+        valuePacked = Buffer.from(packedString, "base64").toString("binary");
+    } else {
+        valuePacked = atob(packedString);
+    }
+
+    return unpack(valuePacked);
 }
