@@ -19,10 +19,10 @@ export const filemoon = async (url: string) => {
         const Buffer = btoa($("script").get().at(-1).children[0].data)
         const UnBuffer = UnPacked(Buffer)
 
-        const RequestBR = eval(UnBuffer.slice(UnBuffer.indexOf("{sources:[{file:") + "{sources:[{file:".length, UnBuffer.indexOf("}],image:", 1)));
+        const RequestBR = await eval(UnBuffer.slice(UnBuffer.indexOf("{sources:[{file:") + "{sources:[{file:".length, UnBuffer.indexOf("}],image:", 1)));
         axios.get(RequestBR)
 
-        return await RequestBR
+        return RequestBR
     } catch (error) {
         console.log(error)
     }
