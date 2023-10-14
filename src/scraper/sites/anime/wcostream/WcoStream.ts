@@ -3,7 +3,6 @@ import axios from "axios";
 import { Anime } from "@animetypes/anime";
 import { Episode, EpisodeServer } from "@animetypes/episode";
 import { IResultSearch, IAnimeSearch, ResultSearch, AnimeSearch } from "@animetypes/search";
-import { filemoon } from "../../../../types/extractors";
 
 /** List of Domains
  * https://m.wcostream.org (phone)
@@ -100,10 +99,6 @@ export class WcoStream {
                 image: "",
                 servers: []
             }
-
-            await filemoon("https://filemoon.sx/e/397bb6qxbwvh",(err,info) => {
-                console.log(err,info)
-            })
 
 
             $$("item").each(async (_i, e) => {
