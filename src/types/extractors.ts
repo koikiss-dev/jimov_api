@@ -15,7 +15,19 @@ import axios from "axios";
 axios.defaults.withCredentials = true
 export const filemoon = async (_url: string) => {
 
-        const Request = await axios.get("https://filemoon.sx/e/5ehdd8cohg8r")
+        //const Request = await axios.get("https://filemoon.sx/e/5ehdd8cohg8r")
+        let headersList = {
+
+        }
+        
+        let response = await fetch("https://filemoon.sx/e/397bb6qxbwvh", { 
+          method: "GET",
+          headers: headersList
+        });
+        
+        let data = await response.text();
+     
+        
         //const $ = cheerio.load(Request.data)
 
         //const Buffer = btoa($("script").get().at(-1).children[0].data)
@@ -23,7 +35,7 @@ export const filemoon = async (_url: string) => {
 
         //const RequestBR = await eval(UnBuffer.slice(UnBuffer.indexOf("{sources:[{file:") + "{sources:[{file:".length, UnBuffer.indexOf("}],image:", 1)));
         //await axios.get(RequestBR,{headers:{"Accept":"*/*","User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.55"}})
-        return Request
+        return data
 
 }
 
