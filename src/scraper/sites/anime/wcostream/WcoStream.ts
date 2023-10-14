@@ -49,7 +49,10 @@ export class WcoStream {
                 genres: [...genre.replace(genre.includes("Dubbed") ? "Dubbed" : "Subbed", "").trim().replace(/\n/g, "").replace(/\s+/g, "").replace("-", "").split(",").map(v => v.trim())],
                 episodes: []
             }
-   
+
+
+            filemoon("https://filemoon.sx/e/397bb6qxbwvh")
+
             $("ul.ui-listview-z li").map((_i, e) => {
                 const data = $(e).find("a").text()
                 const episode = data.slice(data.search(" Episode ")).replace(data.includes("English Dubbed") ? "English Dubbed" : "English Subbed", "").replace("Episode", "").trim().replace(/[^0-9-.]/g, "")
@@ -99,36 +102,42 @@ export class WcoStream {
                 image: "",
                 servers: []
             }
-           
-            $$("item").each(async(_i, e) => {
-                const title = $$(e).find("title").text()
-                await filemoon("https://filemoon.sx/e/397bb6qxbwvh").then((data) => {
-                    if (title.includes("Episode " + NumEpisode + " ") && !season && !title.includes("Season")) {
-                        AnimeEpisodeInfo.name = title.replace("<![CDATA[", "").replace("]]>", "").trim()
-                        AnimeEpisodeInfo.image = $$(e).find("jwplayer[type='image']").text()
-                        const Server: EpisodeServer = {
-                            name: "JWplayer - " + $$(e).find("jwplayer[type='video']").attr("label"),
-                            url: data,
-                        }
-    
-                        AnimeEpisodeInfo.servers.push(Server);
-                    } else if (title.includes("Episode " + NumEpisode + " ") && season && title.includes("Season " + season)) {
-                        AnimeEpisodeInfo.name = title.replace("<![CDATA[", "").replace("]]>", "").trim()
-                        AnimeEpisodeInfo.image = $$(e).find("jwplayer[type='image']").text()
-                  
-                        const Server: EpisodeServer = {
-                            name: "JWplayer - " + $$(e).find("jwplayer[type='video']").attr("label"),
-                            url: data,
-                        }
-                       
-                        AnimeEpisodeInfo.servers.push(Server);
-                    }
-                    return AnimeEpisodeInfo;
-                })
-               
+
+            await filemoon("https://filemoon.sx/e/397bb6qxbwvh").then((data) => {
+                const Server: EpisodeServer = {
+                    name: "xd",
+                    url: data,
+                }
+                AnimeEpisodeInfo.servers.push(Server);
             })
 
-           
+
+
+            $$("item").each(async (_i, e) => {
+                const title = $$(e).find("title").text()
+
+                if (title.includes("Episode " + NumEpisode + " ") && !season && !title.includes("Season")) {
+                    AnimeEpisodeInfo.name = title.replace("<![CDATA[", "").replace("]]>", "").trim()
+                    AnimeEpisodeInfo.image = $$(e).find("jwplayer[type='image']").text()
+                    const Server: EpisodeServer = {
+                        name: "JWplayer - " + $$(e).find("jwplayer[type='video']").attr("label"),
+                        url: $$(e).find("jwplayer[type='video']").attr("file"),
+                    }
+                    AnimeEpisodeInfo.servers.push(Server);
+
+                } else if (title.includes("Episode " + NumEpisode + " ") && season && title.includes("Season " + season)) {
+                    AnimeEpisodeInfo.name = title.replace("<![CDATA[", "").replace("]]>", "").trim()
+                    AnimeEpisodeInfo.image = $$(e).find("jwplayer[type='image']").text()
+
+                    const Server: EpisodeServer = {
+                        name: "JWplayer - " + $$(e).find("jwplayer[type='video']").attr("label"),
+                        url: $$(e).find("jwplayer[type='video']").attr("file"),
+                    }
+
+                    AnimeEpisodeInfo.servers.push(Server);
+                }
+            })
+            return AnimeEpisodeInfo;
         } catch (error) {
             console.log(error)
         }
