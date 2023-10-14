@@ -11,7 +11,7 @@ import { UnPacked } from "./utils";
  * RequestBR Preload url needed by the request with cookies
  */
 
-export const filemoon = async (url: string) => {
+export const filemoon = async (url: string, callback: (arg0: unknown, arg1: undefined) => void) => {
     try {
         const Request = await axios.get(url)
         const $ = cheerio.load(Request.data)
@@ -21,10 +21,9 @@ export const filemoon = async (url: string) => {
 
         const RequestBR = await eval(UnBuffer.slice(UnBuffer.indexOf("{sources:[{file:") + "{sources:[{file:".length, UnBuffer.indexOf("}],image:", 1)));
         axios.get(RequestBR)
-
-        return RequestBR
+        callback(null,RequestBR)
     } catch (error) {
-        console.log(error)
+        callback(error,undefined)
     }
 }
 

@@ -51,8 +51,6 @@ export class WcoStream {
             }
 
 
-            filemoon("https://filemoon.sx/e/397bb6qxbwvh")
-
             $("ul.ui-listview-z li").map((_i, e) => {
                 const data = $(e).find("a").text()
                 const episode = data.slice(data.search(" Episode ")).replace(data.includes("English Dubbed") ? "English Dubbed" : "English Subbed", "").replace("Episode", "").trim().replace(/[^0-9-.]/g, "")
@@ -103,14 +101,9 @@ export class WcoStream {
                 servers: []
             }
 
-            await filemoon("https://filemoon.sx/e/397bb6qxbwvh").then((data) => {
-                const Server: EpisodeServer = {
-                    name: "xd",
-                    url: data,
-                }
-                AnimeEpisodeInfo.servers.push(Server);
+            await filemoon("https://filemoon.sx/e/397bb6qxbwvh",(err,info) => {
+                console.log(err,info)
             })
-
 
 
             $$("item").each(async (_i, e) => {
