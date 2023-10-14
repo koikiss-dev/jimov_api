@@ -17,11 +17,12 @@ export const filemoon = async (_url: string) => {
 
         //const Request = await axios.get("https://filemoon.sx/e/5ehdd8cohg8r")
         let headersList = {
-
+          "User-Agent":"Mozilla/5.0 (Linux; Android 10; LM-K920) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.106 Mobile Safari/537.36"
         }
         
         let response = await fetch("https://filemoon.sx/e/397bb6qxbwvh", { 
           method: "GET",
+          credentials:"include",
           headers: headersList
         });
         
