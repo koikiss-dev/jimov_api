@@ -57,7 +57,7 @@ export class Manganato {
   private isNsfw(data: cheerio.Root) {
     const genres = this.GetMangaGenres(data);
 
-    return genres.some(genre => genre === "Pornographic");
+    return genres.some(genre => genre === "Pornographic" || genre === "Mature" || genre === "Erotica");
   }
 
   async GetMangaInfo(mangaId: string) {
