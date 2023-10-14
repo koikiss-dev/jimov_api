@@ -8,7 +8,6 @@ import { IResultSearch, IAnimeSearch, ResultSearch, AnimeSearch } from "@animety
  * https://m.wcostream.org (phone)
  * 
  * https://wcopanel.cizgifilmlerizle.com
- * https://neptun.cizgifilmlerizle.com
  * 
  * https://ndisk[>1].cizgifilmlerizle.com
  * https://neptun[>1].cizgifilmlerizle.com

@@ -5,3 +5,9 @@ node_modules
 /src/scraper/sites/anime/tioanime/testing.js
 coverage
 .vercel
+/test-results/
+/playwright-report/
+/playwright/.cache/
+/test-results/
+/playwright-report/
+/playwright/.cache/
