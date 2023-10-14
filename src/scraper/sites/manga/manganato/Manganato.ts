@@ -59,6 +59,12 @@ export class Manganato {
 
     return genres.some(genre => genre === "Pornographic" || genre === "Mature" || genre === "Erotica");
   }
+  private GetMangaPages(data: cheerio.Root) {
+    if (data("div.container-chapter-reader").length == 0 && data("div.container-chapter-reader > img").length == 0)
+      return null;
+
+    return data("div.container-chapter-reader > img").map((_, element) => data(element).attr("src")).get();
+  }
 
   async GetMangaInfo(mangaId: string) {
     const { data } = await axios.get(`${this.chapURL}/manga-${mangaId}`);
@@ -106,5 +112,20 @@ export class Manganato {
 
   async Filter() {}
 
-  async GetMangaChapters() {}
+  async GetMangaChapters(mangaId: string, chapterNumber: number) {
+    const { data } = await axios.get(`${this.chapURL}/manga-${mangaId}/chapter-${chapterNumber}`);
+    const $ = load(data);
+
+    const images = this.GetMangaPages($);
+    const name = $("body > div.body-site > div:nth-child(1) > div.panel-breadcrumb > a").eq(-1).attr("title") || null;
+    const chapter = new MangaChapter;
+
+    chapter.id = Number(chapterNumber);
+    chapter.title = name;
+    chapter.url = `/manga/${this.name}/chapter/${mangaId}?num=${chapterNumber}`;
+    chapter.number = Number(chapterNumber);
+    chapter.images = images;
+
+    return chapter;
+  }
 }
