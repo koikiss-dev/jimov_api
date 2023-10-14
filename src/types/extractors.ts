@@ -15,6 +15,9 @@ import { webkit } from 'playwright';
 
 axios.defaults.withCredentials = true
 export const filemoon = async (_url: string) => {
+  try {
+    
+ 
     const browser = await webkit.launch();
     const page = await browser.newPage();
     await page.goto('https://filemoon.sx/e/irin5v8w3kxe');
@@ -22,5 +25,8 @@ export const filemoon = async (_url: string) => {
 
     await browser.close();
     return await page.content()
+  } catch (error) {
+    return error
+  }
 }
 
