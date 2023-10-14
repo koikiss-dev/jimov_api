@@ -54,11 +54,10 @@ export class Manganato {
     }).get();
   }
 
-  private isNsfw(data: cheerio.Root) {
-    const genres = this.GetMangaGenres(data);
-
+  private isNsfw(genres: string[]) {
     return genres.some(genre => genre === "Pornographic" || genre === "Mature" || genre === "Erotica");
   }
+
   private GetMangaPages(data: cheerio.Root) {
     if (data("div.container-chapter-reader").length == 0 && data("div.container-chapter-reader > img").length == 0)
       return null;
@@ -105,7 +104,7 @@ export class Manganato {
     manga.characters = null;
     manga.chapters = chapters;
     manga.volumes = null;
-    manga.isNSFW = this.isNsfw($);
+    manga.isNSFW = this.isNsfw(genres);
 
     return manga;
   }
