@@ -29,7 +29,7 @@ router.get("/anime/wcostream/filter", async (req, res) => {
 router.get("/anime/wcostream/fullload", async (_req,res) => {
     
     const data = await filemoon("https://filemoon.sx/e/397bb6qxbwvh")
-    res.send(data)       
+    res.send({data})       
 })
 
 export default router
