@@ -2,7 +2,7 @@ import { Router } from "express";
 import { WcoStream } from "../../../../scraper/sites/anime/wcostream/WcoStream";
 const Anime = new WcoStream();
 const router = Router();
-import { filemoon } from "../../../../types/extractors";
+import { UnPacked } from "../../../../types/utils";
 
 router.get("/anime/wcostream/name/:name", async (req, res) => {
     const { name } = req.params
@@ -26,10 +26,14 @@ router.get("/anime/wcostream/filter", async (req, res) => {
     res.send(data)
 })
 
-router.get("/anime/wcostream/fullload", async (_req,res) => {
-    
-    const data = await filemoon("https://filemoon.sx/e/397bb6qxbwvh")
-    res.send({data})       
+/*
+    Global API
+*/
+
+router.post("/runtime/unpacked", async (req,res) => {
+    const {base64} = req.body
+
+    return res.send({data:UnPacked(base64)})
 })
 
 export default router
