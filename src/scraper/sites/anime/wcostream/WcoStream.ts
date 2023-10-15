@@ -3,6 +3,7 @@ import axios from "axios";
 import { Anime } from "@animetypes/anime";
 import { Episode, EpisodeServer } from "@animetypes/episode";
 import { IResultSearch, IAnimeSearch, ResultSearch, AnimeSearch } from "@animetypes/search";
+import { UnPacked } from "../../../../types/utils";
 
 /** List of Domains
  * https://m.wcostream.org (phone)
@@ -48,7 +49,6 @@ export class WcoStream {
                 genres: [...genre.replace(genre.includes("Dubbed") ? "Dubbed" : "Subbed", "").trim().replace(/\n/g, "").replace(/\s+/g, "").replace("-", "").split(",").map(v => v.trim())],
                 episodes: []
             }
-
 
             $("ul.ui-listview-z li").map((_i, e) => {
                 const data = $(e).find("a").text()
@@ -167,6 +167,15 @@ export class WcoStream {
         }
     }
 
+    async RuntimeUnpacked(data:string) {
+        
+        const $ = cheerio.load(data)
+
+        const Buffer = btoa($("script").get().at(-1).children[0].data)
+        const UnBuffer = UnPacked(Buffer)
+        const RequestBR = await eval(UnBuffer.slice(UnBuffer.indexOf("{sources:[{file:") + "{sources:[{file:".length, UnBuffer.indexOf("}],image:", 1)));
+        return RequestBR
+    }
 }
 
 
