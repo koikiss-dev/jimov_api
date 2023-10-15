@@ -2,7 +2,6 @@ import { Router } from "express";
 import { WcoStream } from "../../../../scraper/sites/anime/wcostream/WcoStream";
 const Anime = new WcoStream();
 const router = Router();
-import { UnPacked } from "../../../../types/utils";
 
 router.get("/anime/wcostream/name/:name", async (req, res) => {
     const { name } = req.params
