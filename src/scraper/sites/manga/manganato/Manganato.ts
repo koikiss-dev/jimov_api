@@ -1,12 +1,16 @@
-import { Manga, MangaChapter } from "../../../../types/manga";
+import { IMangaResult, Manga, MangaChapter } from "../../../../types/manga";
 import axios from "axios";
 import { load } from "cheerio";
 import { Image } from "../../../../types/image";
+import { ManganatoManagerUtils } from "./ManganatoManagerUtils";
+import { IManganatoFilterParams } from "./ManganatoTypes";
+import { ResultSearch } from "../../../../types/search";
 
 export class Manganato {
   readonly url = "https://manganato.com";
   readonly chapURL = "https://chapmanganato.com";
   readonly name = "manganato";
+  private readonly manager = ManganatoManagerUtils.Instance;
 
   private GetMangaDescription(data: cheerio.Root) {
     if (
@@ -65,6 +69,25 @@ export class Manganato {
     return data("div.container-chapter-reader > img").map((_, element) => data(element).attr("src")).get();
   }
 
+  private GetMangaSearchResults(data: cheerio.Root): IMangaResult[] | null {
+    const section = data("div.panel-content-genres");
+    if (section.length === 0)
+      return null;
+
+    return section.find("div.content-genres-item").map((_, element) => {
+      const mangaResultId = data(element).find("a.genres-item-img").attr("href").split("-").at(-1);
+      const name = data(element).find("a.genres-item-img").attr("title").trim();
+
+      const mangaInfoResults: IMangaResult = {
+        id: mangaResultId,
+        title: name,
+        url: `/manga/${this.name}/title/${mangaResultId}`
+      }
+
+      return mangaInfoResults;
+    }).get();
+  }
+
   async GetMangaInfo(mangaId: string) {
     const { data } = await axios.get(`${this.chapURL}/manga-${mangaId}`);
     const $ = load(data);
@@ -109,7 +132,17 @@ export class Manganato {
     return manga;
   }
 
-  async Filter() {}
+  async Filter(params: IManganatoFilterParams) {
+    const url = this.manager.url.generate(params);
+
+    const { data } = await axios.get(url);
+    const $ = load(data);
+
+    const mangaResultSearch = new ResultSearch<IMangaResult>();
+    mangaResultSearch.results = this.GetMangaSearchResults($);
+
+    return mangaResultSearch;
+  }
 
   async GetMangaChapters(mangaId: string, chapterNumber: number) {
     const { data } = await axios.get(`${this.chapURL}/manga-${mangaId}/chapter-${chapterNumber}`);
