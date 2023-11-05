@@ -50,7 +50,7 @@ export class Comick {
             const mangaInfoParseObj = data
 
             const dataApi = await axios.get(`${this.api}/comic/${mangaInfoParseObj.comic.hid}/chapters${currentLang}`);
-
+      
             const MangaInfo: Manga = {
                 id: mangaInfoParseObj.comic.id,
                 title: mangaInfoParseObj.comic.title,
@@ -60,7 +60,7 @@ export class Comick {
                 isNSFW: mangaInfoParseObj.comic.hentai,
                 status: mangaInfoParseObj.comic.status == "1" ? "ongoing" : "completed",
                 authors: mangaInfoParseObj.authors.map((e: { name: string; }) => e.name),
-                genres: mangaInfoParseObj.genres.map((e: { name: string; }) => e.name),
+                genres: mangaInfoParseObj.comic.md_comic_md_genres.map((e: { md_genres: {name:string;} }) => e.md_genres.name),
                 chapters: [],
                 thumbnail: {
                     url: "https://meo.comick.pictures/" + mangaInfoParseObj.comic.md_covers[0].b2key

@@ -49,7 +49,9 @@ export class Inmanga {
                     thumbnail: {
                         url: `https://inmanga.com/thumbnails/manga/${name}/${cid}`
                     },
-                    url: `/manga/inmanga/title/${title.replace(/[^a-zA-Z:]/g, "-")}`
+
+                    // old version `/manga/inmanga/title/${title.replace(/[^a-zA-Z:]/g, "-")}`
+                    url: `/manga/inmanga/title/${name}?cid=${cid}`
                 }
                 ResultList.results.push(ListMangaResult)
             })
@@ -60,25 +62,11 @@ export class Inmanga {
         }
     }
 
-    async GetMangaInfo(manga: string): Promise<Manga> {
+    async GetMangaInfo(manga: string,cid: string): Promise<Manga> {
         try {
-            const formdata = new FormData();
-            const mangaSearch = manga.replace(/[^a-zA-Z:]/g, " ");
-            formdata.append("filter[queryString]", mangaSearch);
-            formdata.append("filter[generes][]", "-1");
-            formdata.append("filter[skip]", "0");
-            formdata.append("filter[take]", "10");
+            const dataPost = await axios.get(`${this.url}/ver/manga/${manga}/${cid}`);
 
-            const bodyContent = formdata;
-
-            const { data } = await axios.post(`${this.url}/manga/getMangasConsultResult`, bodyContent);
-            const $ = cheerio.load(data);
-
-            const idtd = $("a").first().attr("href").split("/")
-            const name = idtd[3]
-            const cid = idtd[4]
-
-            const dataPost = await axios.get(`${this.url}/ver/manga/${name}/${cid}`);
+            console.log(dataPost)
             const $_ = cheerio.load(dataPost.data);
 
 
@@ -86,7 +74,7 @@ export class Inmanga {
                 id: cid,
                 title: $_("div.col-md-3.col-sm-4 div.panel-heading.visible-xs").text(),
                 altTitles: [],
-                url: `/manga/inmanga/title/${name}`,
+                url: `/manga/inmanga/title/${manga}`,
                 description: $_("body > div > section > div > div > div:nth-child(6) > div > div.panel-body").text().trim(),
                 isNSFW: false,
                 status: $_(".col-md-3.col-sm-4 .list-group > a:nth-child(1) > span").text() == "En emisión" ? "ongoing" : "completed",
@@ -94,7 +82,7 @@ export class Inmanga {
                 genres: [],
                 chapters: [],
                 thumbnail: {
-                    url: `https://inmanga.com/thumbnails/manga/${name}/${cid}`
+                    url: `https://inmanga.com/thumbnails/manga/${manga}/${cid}`
                 }
             }
 
@@ -110,7 +98,7 @@ export class Inmanga {
                 const MangaInfoChapter: MangaChapter = {
                     id: e.Id,
                     title: e.MangaName,
-                    url: `/manga/inmanga/chapter/${name}-${e.Number}?cid=${e.Identification}`, // Change url (: = title ) manga.replace(/[^a-zA-Z:]/g," ")
+                    url: `/manga/inmanga/chapter/${manga}-${e.Number}?cid=${e.Identification}`, // Change url (: = title ) manga.replace(/[^a-zA-Z:]/g," ")
                     number: e.Number,
                     images: null,
                     cover: null,
