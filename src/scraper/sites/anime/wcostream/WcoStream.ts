@@ -169,11 +169,12 @@ export class WcoStream {
 
     async RuntimeUnpacked(data:string) {
         
-        const $ = cheerio.load(data)
-
+        const $ = cheerio.load(decodeURI(data))
+  
         const Buffer = btoa($("script").get().at(-1).children[0].data)
         const UnBuffer = UnPacked(Buffer)
         const RequestBR = await eval(UnBuffer.slice(UnBuffer.indexOf("{sources:[{file:") + "{sources:[{file:".length, UnBuffer.indexOf("}],image:", 1)));
+        console.log(RequestBR)
         return RequestBR
     }
 }
