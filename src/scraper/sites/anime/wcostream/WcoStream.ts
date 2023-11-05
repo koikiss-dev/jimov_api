@@ -6,6 +6,8 @@ import { IResultSearch, IAnimeSearch, ResultSearch, AnimeSearch } from "@animety
 import { UnPacked } from "../../../../types/utils";
 
 /** List of Domains
+ * https://wcostream.tv
+ * 
  * https://m.wcostream.org (phone)
  * 
  * https://wcopanel.cizgifilmlerizle.com
@@ -28,7 +30,7 @@ axios.defaults.withCredentials = true
 axios.defaults.headers.common["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.55";
 
 export class WcoStream {
-    readonly url = "https://www.wcostream.org";
+    readonly url = "https://www.wcostream.tv";
 
     async GetAnimeInfo(anime: string): Promise<Anime> {
         try {
@@ -59,7 +61,7 @@ export class WcoStream {
                     const AnimeEpisode: Episode = {
                         name: data,
                         number: episode,
-                        image: `https://cdn.animationexplore.com/thumbs/${$(e).find("a").attr("href").replace("https://www.wcostream.org/", "").replace("/", "").replace(/[^a-zA-Z0-9 ]/g, " ").replace(/\s+/g, "-")}.jpg`,
+                        image: `https://cdn.animationexplore.com/thumbs/${$(e).find("a").attr("href").replace("https://www.wcostream.tv/", "").replace("/", "").replace(/[^a-zA-Z0-9 ]/g, " ").replace(/\s+/g, "-")}.jpg`,
                         url: `/anime/wcostream/episode/${anime.replace(/[^a-zA-Z0-9 ]/g, ' ').replace(/\s+/g, "-") + "-" + episode}${season ? "?season=" + season : ""}`
                     }
 
@@ -83,7 +85,7 @@ export class WcoStream {
             const NumEpisode = episode.substring(episode.lastIndexOf("-") + 1)
             const anime = episode.substring(0, episode.lastIndexOf("-"))
 
-            const { data } = await axios.get(`https://www.wcostream.org/playlist-cat/${anime}`)
+            const { data } = await axios.get(`https://www.wcostream.tv/playlist-cat/${anime}`)
             const $ = cheerio.load(data);
 
             const mainUrl = $("script").get()[3].children[0].data
@@ -138,8 +140,8 @@ export class WcoStream {
             formdata.append("konuara", "series");
 
             const { data } = await axios.post(`${this.url}/search`, formdata);
+   
             const $ = cheerio.load(data)
-
             const animeSearch: ResultSearch<IAnimeSearch> = {
                 nav: {
                     count: $("#blog .cerceve").length,
@@ -149,7 +151,7 @@ export class WcoStream {
                 },
                 results: []
             }
-
+            
             $("#blog .cerceve").each((i, e) => {
                 if ((animeSearch.nav.current > 1 ? i - 1 : i) >= 28 * (animeSearch.nav.current - 1) && (animeSearch.nav.current > 1 ? i + 1 : i) <= 28 * animeSearch.nav.current) {
                     const animeSearchData: AnimeSearch = {
@@ -174,7 +176,7 @@ export class WcoStream {
         const Buffer = btoa($("script").get().at(-1).children[0].data)
         const UnBuffer = UnPacked(Buffer)
         const RequestBR = await eval(UnBuffer.slice(UnBuffer.indexOf("{sources:[{file:") + "{sources:[{file:".length, UnBuffer.indexOf("}],image:", 1)));
-        console.log(RequestBR)
+
         return RequestBR
     }
 }
