@@ -185,6 +185,8 @@ export class AnimeFlv {
       const res = await axios.get(vidurl);
 
       return res.data;
-    } catch (error) {}
+    } catch (error) {
+      console.log(error)
+    }
   }
 }
