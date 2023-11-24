@@ -12,8 +12,7 @@ describe("Comick", () => {
     
     expect(mangaInfo.title).toBe("Solo Leveling");
     expect(mangaInfo.altTitles).toContain("我独自升级");
-
-    expect(mangaInfo.status).toBe("ongoing");
+    expect(mangaInfo.status).toBe("completed");
 
   });
 

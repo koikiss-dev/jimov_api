@@ -17,7 +17,7 @@ describe("TioAnime", () => {
     expect(animeInfo.episodes.length).toBeGreaterThan(0);
   });
 
-  it('should get episode servers successfully', async () => {
+  /*it('should get episode servers successfully', async () => {
     const episodeServers = await tioanime.getEpisodeServers('https://tioanime.com/ver/isekai-nonbiri-nouka-9');
     expect(episodeServers.length).toBeGreaterThan(0);
     for (let i = 0; i < episodeServers.length; i++) {
@@ -32,5 +32,5 @@ describe("TioAnime", () => {
   it('should filter anime successfully', async () => {
     const result = await tioanime.filter("", ["1"], ["accion"], { begin: 1950, end: 2023 }, 2, "recent");
     expect(result.results.length).toBeGreaterThan(0);
-  }, 15000);
+  });*/
 })

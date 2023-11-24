@@ -5,7 +5,7 @@ import { Episode, EpisodeServer } from "../../../../types/episode";
 import { AnimeSearch, ResultSearch, IAnimeSearch } from "../../../../types/search";
 
 export class Zoro {
-  readonly url = "https://zoro.to";
+  readonly url = "https://aniwatch.to";
 
   async GetAnimeInfo(animeName: string): Promise<Anime> {
     try {
