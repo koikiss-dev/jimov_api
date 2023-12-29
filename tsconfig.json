@@ -26,7 +26,8 @@
       ],
       "@providers/*":[
         "./src/scraper/sites/anime/*",
-        "./src/scraper/sites/manga/*"
+        "./src/scraper/sites/manga/*",
+        "./src/scraper/sites/doramas/*"
       ],
       "@routesAnime/*": [
         "./src/routes/v1/anime/*"
