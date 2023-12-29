@@ -63,6 +63,6 @@ export const UnPacked = (packedString: string) => {
     } else {
         valuePacked = atob(packedString);
     }
-
+    console.log(unpack(valuePacked))
     return unpack(valuePacked);
 }
