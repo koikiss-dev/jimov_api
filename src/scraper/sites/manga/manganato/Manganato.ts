@@ -8,7 +8,7 @@ import { ResultSearch } from "../../../../types/search";
 
 export class Manganato {
   readonly url = "https://manganato.com";
-  readonly chapURL = "https://manganelo.tv" //chapmanganelo.com;
+  readonly chapURL = "https://manganelo.tv" //chapmanganelo.com //mangakakalot.tv;
   readonly name = "manganato";
   private readonly manager = ManganatoManagerUtils.Instance;
 
