@@ -8,7 +8,7 @@ import { ResultSearch } from "../../../../types/search";
 
 export class Manganato {
   readonly url = "https://manganato.com";
-  readonly chapURL = "https://chapmanganato.com";
+  readonly chapURL = "https://manganelo.tv" //chapmanganelo.com;
   readonly name = "manganato";
   private readonly manager = ManganatoManagerUtils.Instance;
 
@@ -66,7 +66,7 @@ export class Manganato {
     if (data("div.container-chapter-reader").length == 0 && data("div.container-chapter-reader > img").length == 0)
       return null;
 
-    return data("div.container-chapter-reader > img").map((_, element) => data(element).attr("src")).get();
+    return data("div.container-chapter-reader > img").map((_, element) => data(element).attr("data-src")).get();
   }
 
   private GetMangaSearchResults(data: cheerio.Root): IMangaResult[] | null {
@@ -89,23 +89,24 @@ export class Manganato {
   }
 
   async GetMangaInfo(mangaId: string) {
-    const { data } = await axios.get(`${this.chapURL}/manga-${mangaId}`);
+    const { data } = await axios.get(`${this.chapURL}/manga/manga-${mangaId}`);
     const $ = load(data);
-
+    
     const manga = new Manga;
 
     const title = $("div.panel-story-info > div.story-info-right > h1").text().trim();
     const description = this.GetMangaDescription($);
-    const thumbnail = $("div.panel-story-info > div.story-info-left > span.info-image > img").attr("src");
+    const thumbnail = this.chapURL + $("div.panel-story-info > div.story-info-left > span.info-image > img").attr("src");
     const altTitle = $("table > tbody > tr:nth-child(1) > td.table-value > h2").text().trim();
     const status = this.GetMangaStatus($);
     const authors = this.GetMangaAuthors($);
     const genres = this.GetMangaGenres($);
     const chapters = $("div.panel-story-chapter-list").find("ul > li.a-h").map((_, element) => {
-      const chapter = new MangaChapter;
-      const url = $(element).find("a.chapter-name").attr("href");
-      const chapterId = new URL(url).pathname.split("-").at(-1);
-
+    const chapter = new MangaChapter;
+    const url = $(element).find("a.chapter-name").attr("href");
+   
+    const chapterId = url.substring(url.lastIndexOf("-") + 1);
+    
       chapter.id = Number(chapterId);
       chapter.title = $(element).find("a.chapter-name").text().trim();
       chapter.url = `/manga/${this.name}/chapter/${mangaId}?num=${chapterId}`;
@@ -145,13 +146,13 @@ export class Manganato {
   }
 
   async GetMangaChapters(mangaId: string, chapterNumber: number) {
-    const { data } = await axios.get(`${this.chapURL}/manga-${mangaId}/chapter-${chapterNumber}`);
+    const { data } = await axios.get(`${this.chapURL}/chapter/manga-${mangaId}/chapter-${chapterNumber}`);
     const $ = load(data);
 
     const images = this.GetMangaPages($);
     const name = $("body > div.body-site > div:nth-child(1) > div.panel-breadcrumb > a").eq(-1).attr("title") || null;
     const chapter = new MangaChapter;
-
+    
     chapter.id = Number(chapterNumber);
     chapter.title = name;
     chapter.url = `/manga/${this.name}/chapter/${mangaId}?num=${chapterNumber}`;
