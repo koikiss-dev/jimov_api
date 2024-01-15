@@ -91,11 +91,11 @@ export const RuntimeUnpacked = async(data:string) => {
  */
 
 export const BrowserHandler = async(firstpage:string) => {
-
+    const chromePathOnLambda = await chromium.executablePath
     const browser = await playwright.chromium.launch({
         args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
-        headless: false,
-        executablePath: await chromium.executablePath,
+        headless: true,
+        executablePath: chromePathOnLambda || '/usr/bin/chromium-browser',
         ignoreDefaultArgs: ["--disable-extensions"],
       })
       const page = await browser.newPage()
