@@ -6,10 +6,9 @@ import { ManganatoManagerUtils } from "./ManganatoManagerUtils";
 import { IManganatoFilterParams } from "./ManganatoTypes";
 import { ResultSearch } from "../../../../types/search";
 
-export class Manganato {
-  readonly url = "https://manganato.com";
-  readonly chapURL = "https://manganelo.tv" //chapmanganelo.com //mangakakalot.tv;
-  readonly name = "manganato";
+export class Manganelo {
+  private readonly url = "https://manganelo.tv"; //chapmanganelo.com //mangakakalot.tv;
+  readonly name = "manganelo";
   private readonly manager = ManganatoManagerUtils.Instance;
 
   private GetMangaDescription(data: cheerio.Root) {
@@ -89,14 +88,14 @@ export class Manganato {
   }
 
   async GetMangaInfo(mangaId: string) {
-    const { data } = await axios.get(`${this.chapURL}/manga/manga-${mangaId}`);
+    const { data } = await axios.get(`${this.url}/manga/manga-${mangaId}`);
     const $ = load(data);
     
     const manga = new Manga;
 
     const title = $("div.panel-story-info > div.story-info-right > h1").text().trim();
     const description = this.GetMangaDescription($);
-    const thumbnail = this.chapURL + $("div.panel-story-info > div.story-info-left > span.info-image > img").attr("src");
+    const thumbnail = this.url + $("div.panel-story-info > div.story-info-left > span.info-image > img").attr("src");
     const altTitle = $("table > tbody > tr:nth-child(1) > td.table-value > h2").text().trim();
     const status = this.GetMangaStatus($);
     const authors = this.GetMangaAuthors($);
@@ -146,7 +145,7 @@ export class Manganato {
   }
 
   async GetMangaChapters(mangaId: string, chapterNumber: number) {
-    const { data } = await axios.get(`${this.chapURL}/chapter/manga-${mangaId}/chapter-${chapterNumber}`);
+    const { data } = await axios.get(`${this.url}/chapter/manga-${mangaId}/chapter-${chapterNumber}`);
     const $ = load(data);
 
     const images = this.GetMangaPages($);

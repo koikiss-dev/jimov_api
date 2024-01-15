@@ -1,5 +1,5 @@
 import { URLSearchParams } from "url";
-import { IManganatoFilterParams, genreList, orderByOptions, orderByOptionsList } from "../ManganatoTypes";
+import { IManganatoFilterParams, manganatoGenreList, manganatoOrderByOptions, manganatoOrderByOptionsList } from "../ManganatoTypes";
 import { ManganatoManager } from "./ManganatoManager";
 
 export class ManganatoAdvancedSearchURLManager extends ManganatoManager {
@@ -14,8 +14,8 @@ export class ManganatoAdvancedSearchURLManager extends ManganatoManager {
     let arrGenerated: number[] = [];
 
     for (let genre of genresArray) {
-      if (genreList[genre.toLowerCase()])
-        arrGenerated.push(genreList[genre.toLowerCase()]);
+      if (manganatoGenreList[genre.toLowerCase()])
+        arrGenerated.push(manganatoGenreList[genre.toLowerCase()]);
       else continue;
     }
 
@@ -28,14 +28,14 @@ export class ManganatoAdvancedSearchURLManager extends ManganatoManager {
 
   private processStatus(status: unknown) {
     return (typeof status === "string" && (status.toLowerCase() === "ongoing" || status.toLowerCase() === "completed"))
-    ? status
-    : "";
+      ? status
+      : "";
   }
 
   private processOrderBy(order: unknown) {
-    return (typeof order === "string" && orderByOptionsList.includes(order.toLowerCase() as orderByOptions))
-    ? order
-    : "";
+    return (typeof order === "string" && manganatoOrderByOptionsList.includes(order.toLowerCase() as manganatoOrderByOptions))
+      ? order
+      : "";
   }
 
   generate(params: IManganatoFilterParams) {

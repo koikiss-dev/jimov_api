@@ -13,7 +13,7 @@ import comick from "./routes/v1/manga/comick/ComickRoutes";
 import inmanga from "./routes/v1/manga/inmanga/InmangaRoutes";
 import nhentai from "./routes/v1/manga/nhentai/NhentaiRoutes"
 import mangareader from "./routes/v1/manga/mangareader/MangaReaderRoutes";
-import manganato from "./routes/v1/manga/manganato/ManganatoRoutes";
+import manganelo from "./routes/v1/manga/manganelo/ManganeloRoutes";
 import helmet from "helmet";
 import cors from 'cors'
 import WcoStream from "./routes/v1/anime/wcostream/wcostreamRoutes";
@@ -46,7 +46,7 @@ app.use(comick);
 app.use(inmanga);
 app.use(nhentai)
 app.use(mangareader);
-app.use(manganato);
+app.use(manganelo);
 /*Manga*/
 
 

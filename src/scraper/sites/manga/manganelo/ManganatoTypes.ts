@@ -1,5 +1,9 @@
 export interface IManganatoFilterParams {
-  /** Status */
+  /**
+   * Manga status
+   *
+   * Available status: "ongoing", "completed", empty string | null (for both)
+   */
   sts: string;
   /** Order by */
   orby: string;
@@ -8,10 +12,10 @@ export interface IManganatoFilterParams {
   page: number;
 };
 
-export const orderByOptionsList = ["topview", "newest", "az"] as const;
-export type orderByOptions = typeof orderByOptionsList[number];
+export const manganatoOrderByOptionsList = ["topview", "newest", "az"] as const;
+export type manganatoOrderByOptions = typeof manganatoOrderByOptionsList[number];
 
-export const genreList = {
+export const manganatoGenreList = {
   action: 2,
   adult: 3,
   adventure: 4,
