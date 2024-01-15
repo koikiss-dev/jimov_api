@@ -1,6 +1,6 @@
 import { unpack } from "unpacker";
 import * as cheerio from "cheerio";
-import chromium from 'chrome-aws-lambda';
+import chromium from '@sparticuz/chromium';
 import puppeteer from 'puppeteer-core';
 //Spanish Providers - TypeScript version
 
@@ -91,11 +91,11 @@ export const RuntimeUnpacked = async(data:string) => {
  */
 
 export const BrowserHandler = async(firstpage:string) => {
-    const chromePathOnLambda = await chromium.executablePath
+
     const browser = await puppeteer.launch({
         args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
         headless: true,
-        executablePath: chromePathOnLambda,
+        executablePath: (await chromium.executablePath),
         ignoreDefaultArgs: ["--disable-extensions"],
       })
       const page = await browser.newPage()
