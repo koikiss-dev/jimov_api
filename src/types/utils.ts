@@ -95,7 +95,7 @@ export const BrowserHandler = async(firstpage:string) => {
     const browser = await puppeteer.launch({
         args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
         headless: true,
-        executablePath: (await chromium.executablePath),
+        executablePath: await chromium.executablePath("https://github.com/Sparticuz/chromium/releases/download/v119.0.2/chromium-v119.0.2-pack.tar"),
         ignoreDefaultArgs: ["--disable-extensions"],
       })
       const page = await browser.newPage()
