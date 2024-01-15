@@ -95,7 +95,7 @@ export class AnimeLatinoHD {
                 Server.url = "https://api.animelatinohd.com/stream/" + e.id
                 Server.name = e.server.title
 
-                await pageload.page.setCookie(...cookies)
+                await pageload.context.addCookies(cookies)
                 await pageload.page.evaluate(()=>{
                     function getCookie(cname) {
                         const name = cname + "=";
@@ -123,7 +123,6 @@ export class AnimeLatinoHD {
 
                 const min = await axios.get(url)
                 const unp = await RuntimeUnpacked(Buffer.from(min.data).toString('base64'))
-                console.log(unp)
                 Server.url = unp
 
                 //state 1
