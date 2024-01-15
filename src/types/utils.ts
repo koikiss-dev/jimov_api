@@ -1,7 +1,7 @@
 import { unpack } from "unpacker";
 import * as cheerio from "cheerio";
 import chromium from 'chrome-aws-lambda';
-import playwright from 'playwright-core';
+import puppeteer from 'puppeteer-core';
 //Spanish Providers - TypeScript version
 
 interface IPageInfo {
@@ -92,17 +92,17 @@ export const RuntimeUnpacked = async(data:string) => {
 
 export const BrowserHandler = async(firstpage:string) => {
     const chromePathOnLambda = await chromium.executablePath
-    const browser = await playwright.chromium.launch({
+    const browser = await puppeteer.launch({
         args: [...chromium.args, "--hide-scrollbars", "--disable-web-security"],
         headless: true,
-        executablePath: chromePathOnLambda || '/usr/bin/chromium-browser',
+        executablePath: chromePathOnLambda,
         ignoreDefaultArgs: ["--disable-extensions"],
       })
       const page = await browser.newPage()
-      const context = await browser.newContext();
+
       
       await page.goto(firstpage)
      
       
-      return {page,browser,context}
+      return {page,browser}
 }
