@@ -1,4 +1,6 @@
 import { unpack } from "unpacker";
+import puppeteer from "puppeteer";
+import * as cheerio from "cheerio";
 
 //Spanish Providers - TypeScript version
 
@@ -63,6 +65,46 @@ export const UnPacked = (packedString: string) => {
     } else {
         valuePacked = atob(packedString);
     }
-    console.log(unpack(valuePacked))
     return unpack(valuePacked);
+}
+
+/**
+ * 
+ * @param data in Base64
+ * 
+ */
+export const RuntimeUnpacked = async(data:string) => {
+    const content = Buffer.from(data, 'base64').toString()
+    const $ = cheerio.load(content)
+    const Buffers = $("script").get().at(-1).children[0].data
+    const UnBuffer = UnPacked(Buffer.from(Buffers).toString('base64'))
+    const RequestBR = await eval(UnBuffer.slice(UnBuffer.indexOf("{sources:[{file:") + "{sources:[{file:".length, UnBuffer.indexOf("}],image:", 1)));
+
+    return RequestBR
+}
+
+
+/**
+ * 
+ * @param firstpage the name says it
+ * 
+ */
+
+export const BrowserHandler = async(firstpage:string) => {
+    const browser = await puppeteer.launch({
+        args: [
+            "--no-sandbox",
+            "--disable-setuid-sandbox",
+            "--disable-dev-shm-usage",
+            "--single-process",
+          ],
+       
+        headless: false,
+        ignoreHTTPSErrors: true,
+        ignoreDefaultArgs: ["--disable-extensions"],
+      })
+      const page = await browser.newPage()
+      await page.goto(firstpage)
+
+      return {page,browser}
 }

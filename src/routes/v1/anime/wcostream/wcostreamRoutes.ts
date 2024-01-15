@@ -25,14 +25,5 @@ router.get("/anime/wcostream/filter", async (req, res) => {
     res.send(data)
 })
 
-/*
-    Global API
-*/
-
-router.post("/runtime/unpacked", async (req,res) => {
-    const {base64} = req.body
-    const data = await Anime.RuntimeUnpacked(base64)
-    return res.send(data)
-})
 
 export default router
