@@ -1,19 +1,19 @@
+export const manganatoOrderByOptionsList = ["topview", "newest", "az"] as const;
+export type manganatoOrderByOptions = typeof manganatoOrderByOptionsList[number];
+
 export interface IManganatoFilterParams {
   /**
    * Manga status
    *
    * Available status: "ongoing", "completed", empty string | null (for both)
    */
-  sts: string;
+  sts: "ongoing" | "completed";
   /** Order by */
-  orby: string;
+  orby: manganatoOrderByOptions;
   genres: string;
   /** Results page */
   page: number;
 };
-
-export const manganatoOrderByOptionsList = ["topview", "newest", "az"] as const;
-export type manganatoOrderByOptions = typeof manganatoOrderByOptionsList[number];
 
 export const manganatoGenreList = {
   action: 2,
