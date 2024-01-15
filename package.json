@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "ts-node src/index.ts",
-    "server": "nodemon src/index.ts && node node_modules/puppeteer/install.js",
+    "server": "nodemon src/index.ts",
     "start:vercel": "node build/index.js",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "linter": "npx eslint src/scraper/* src/routes/*",
