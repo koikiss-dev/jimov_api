@@ -3,7 +3,7 @@ import axios from "axios";
 import { Anime } from "@animetypes/anime";
 import { Episode, EpisodeServer } from "@animetypes/episode";
 import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "@animetypes/search";
-import { BrowserHandler,RuntimeUnpacked } from "../../../../types/utils";
+//import { BrowserHandler,RuntimeUnpacked } from "../../../../types/utils";
 
 export class AnimeLatinoHD {
     readonly url = "https://www.animelatinohd.com";
@@ -85,18 +85,20 @@ export class AnimeLatinoHD {
 
             await Promise.all(animeEpisodeParseObj.players[f_index].map(async (e: { server: { title: string; }; id: string; }) => {
                //const min = await axios.get("https://filemoon.sx/e/smone1s7jjxv/CYM01HNMCGTSKT")
-               const pageload = await BrowserHandler("https://animelatinohd.com/")
+               //const pageload = await BrowserHandler("https://animelatinohd.com/")
                
                 const Server: EpisodeServer = {
                     name: e.server.title,
                     url: "",
                 }
-                const cookies = [{name: 'v_id', value: "https://api.animelatinohd.com/stream/"+e.id},];
+                //const cookies = [{name: 'v_id', value: "https://api.animelatinohd.com/stream/"+e.id},];
                 Server.url = "https://api.animelatinohd.com/stream/" + e.id
                 Server.name = e.server.title
-
-                await pageload.page.setCookie(...cookies)
-                await pageload.page.evaluate(()=>{
+                
+               
+                
+                //await pageload.page.setCookie(...cookies)
+                /*await pageload.page.evaluate(()=>{
                     function getCookie(cname) {
                         const name = cname + "=";
                         const decodedCookie = decodeURIComponent(document.cookie);
@@ -124,7 +126,7 @@ export class AnimeLatinoHD {
                 const min = await axios.get(url)
                 const unp = await RuntimeUnpacked(Buffer.from(min.data).toString('base64'))
 
-                Server.url = unp
+                Server.url = unp*/
 
                 //state 1
                 /*if (e.server.title == "Beta") {
