@@ -1,7 +1,8 @@
 import { unpack } from "unpacker";
 import * as cheerio from "cheerio";
-import chromium from '@sparticuz/chromium';
-import puppeteer from 'puppeteer-core';
+//import chromium from '@sparticuz/chromium';
+//import puppeteer from 'puppeteer-core';
+
 //Spanish Providers - TypeScript version
 
 interface IPageInfo {
@@ -89,7 +90,7 @@ export const RuntimeUnpacked = async(data:string) => {
  * @param firstpage the name says it
  * 
  */
-
+/* Working for new method
 export const BrowserHandler = async(firstpage:string) => {
 
     const browser = await puppeteer.launch({
@@ -105,4 +106,4 @@ export const BrowserHandler = async(firstpage:string) => {
      
       
       return {page,browser}
-}
+}*/

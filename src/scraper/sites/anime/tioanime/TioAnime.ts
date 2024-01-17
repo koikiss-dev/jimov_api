@@ -36,9 +36,7 @@ async function getEpisodeServers(url) {
 				videos[i][1].replace('\\', '')
 			));
 		}
-		const lurf = await axios.get("https://voe.sx/e/u3c6tygw80wx")
-		const dt = cheerio.load(lurf.data)
-		const maind = dt("html").html()
+		
 		const table_downloads = $($('table.table-downloads tbody')).children();
 		for (let i = 0; i < table_downloads.length; i++) {
 			const server = $($(table_downloads[i]).find('td')[0]).text().trim();
@@ -46,7 +44,7 @@ async function getEpisodeServers(url) {
 				return episode.name.toLowerCase() === server.toLocaleLowerCase();
 			});
 			if (!(episode_server == undefined || episode_server == null)) {
-				episode_server.file_url = eval(maind.slice(maind.indexOf("'hls':")+7,maind.indexOf("'video_height'")-14))
+				episode_server.file_url = $(table_downloads[i]).find("a").attr('href');
 			} else {
 				servers.push({
 					name: server, url: null, file_url: $(table_downloads[i]).find("a").attr('href')
