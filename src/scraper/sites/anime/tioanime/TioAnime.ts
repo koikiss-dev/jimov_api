@@ -167,6 +167,7 @@ async function getAnime(url) {
 }
 
 async function getLastAnimes(url: string) {
+	console.log(url)
     try {
         let animes: types.IAnime[] = [];
         const $ = cheerio.load((await axios.get(url ?? PageInfo.url)).data);
@@ -238,7 +239,7 @@ export class TioAnime
 				}
 			}
 		}
-		return elements;
+		return elements.length !== 0 ? elements + '&' : '';
 	}
 
  	// <types> 0: Anime (TV), 1 Movie, 2: OVA, 3: ONA
@@ -253,7 +254,7 @@ export class TioAnime
 		let usable;
 		if (!(usable = utils.isUsableValue(name) && name.trim().length != 0))
 			year_range ?? (year_range = { begin: 1950, end: new Date().getFullYear() });
-		(await getLastAnimes(`${PageInfo.url}/directorio?${(usable ? `q=${name}` : `${this.arrayToURLParams('type', types)}&${this.arrayToURLParams('genre', genres)}&year=${year_range.begin}%2C${year_range.end}&status=${status ?? 2}&sort=${sort ?? 'recent'}`)}`))
+		(await getLastAnimes(`${PageInfo.url}/directorio?${(usable ? `q=${name}` : `${this.arrayToURLParams('type', types)}${this.arrayToURLParams('genero', genres)}year=${year_range.begin}%2C${year_range.end}&status=${status ?? 2}&sort=${sort ?? 'recent'}`)}`))
 			.forEach(element => {
 				if (utils.isUsableValue(element)) {
 					animes.results.push({ name: element.name, image: element.image.url, 
@@ -268,6 +269,6 @@ export class TioAnime
 	console.log(result)
 })*/
 
-//new TioAnime().filter(["1"], ["accion"], { begin: 1950, end: 2023 }, 2, "recent").then(result => { console.log(result) } )
+//new TioAnime().filter(null, null, ["demencia"], null, null, null).then(result => { console.log(result) } )
 /* */
 
