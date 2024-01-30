@@ -48,8 +48,9 @@ r.get("/anime/tioanime/last/:option", async (req, res) => {
       res.send(await tioanime.getLastOvas());
     } else if ('onas' === option) {
       res.send(await tioanime.getLastOnas());
+    } else {
+      throw 'Invalid option in the URL';
     }
-    throw 'Invalid option in the URL';
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
