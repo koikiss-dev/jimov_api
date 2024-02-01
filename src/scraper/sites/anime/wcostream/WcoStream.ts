@@ -3,7 +3,7 @@ import axios from "axios";
 import { Anime } from "@animetypes/anime";
 import { Episode, EpisodeServer } from "@animetypes/episode";
 import { IResultSearch, IAnimeSearch, ResultSearch, AnimeSearch } from "@animetypes/search";
-import { UnPacked } from "../../../../types/utils";
+import { UnPacked } from"@animetypes/utils";
 
 /** List of Domains
  * https://wcostream.tv
