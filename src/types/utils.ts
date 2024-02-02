@@ -82,7 +82,7 @@ export const RuntimeUnpacked = async (data: string, unBuffer?: boolean) => {
         const UnBuffer = UnPacked(Buffer.from(Buffers).toString('base64'))
         const RequestBR = await eval(UnBuffer.slice(UnBuffer.indexOf("{sources:[{file:") + "{sources:[{file:".length, UnBuffer.indexOf("}],image:", 1)));
 
-        console.log(RequestBR)
+     
         return RequestBR
     } catch (error) {
 

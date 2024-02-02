@@ -3,7 +3,7 @@ import axios from "axios";
 import { Anime } from "@animetypes/anime";
 import { Episode, EpisodeServer } from "@animetypes/episode";
 import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "@animetypes/search";
-import { Calendar } from "@animetypes/date";
+//import { Calendar } from "@animetypes/date";
 
 /** List of Domains
  * https://vwv.animeblix.org
@@ -20,34 +20,58 @@ export class AnimeBlix {
 
     async GetAnimeInfo(anime: string): Promise<Anime> {
         try {
-            const { data } = await axios.get(`${this.url}/animes/${anime}`);
+            const { data } = await axios.get(`${this.url}/animes/${anime.includes("ver-") ? anime : "ver-"+anime}`);
             const $ = cheerio.load(data);
 
-            const AnimeTypes = $(".cn .info .r .u li span:contains('Tipo:')")
-            const AnimeStatus = $(".cn .info .r .u li span[class='em']").length > 1 ? $(".cn .info .r .u li span[class='em']").text() : $(".cn .info .r .u li span[class='fi']").length > 1 ? $(".cn .info .r .u li span[class='fi']").text() : $(".cn .info .r .u li span[class='es']").text()
-            const AnimeDate = $(".cn .info .r .u li span:contains('Fecha de emisión:')").next().text().replace(" -", "").split(" ")
+            const AnimeTypes = $(".cn .info .r .u li span:contains('Tipo:')").next()
+            const AnimeStatus = $(".cn .info .r .u li span[class='em']").length ? $(".cn .info .r .u li span[class='em']").text() : $(".cn .info .r .u li span[class='fi']").length ? $(".cn .info .r .u li span[class='fi']").text() : $(".cn .info .r .u li span[class='es']").text()
+            const AnimeDate = $(".cn .info .r .u li span:contains('Fecha de emisión:')").next().text().trim().replace(" -", "").split(" ")
 
+            const Dates = AnimeDate[0] ? new Date(String(AnimeDate[0])) : null
+            const DateFormat = new Intl.DateTimeFormat("en", { day: "numeric", month: "numeric", year: "numeric" }).format(Dates).split("/")
+
+
+            const AcceptAlts = $(".cn .info .r .u").next().find("li").text().replace("Nombre original: ", "").replace("Nombre en inglés: ", "---").replace("Nombre en japones: ", "---")
+
+            let AltsSlice: number = 0
+
+            if (AcceptAlts.includes("Támbien conocido como:")) {
+                AltsSlice = AcceptAlts.indexOf("Támbien conocido como:")
+            } else if (AcceptAlts.includes("Estudio(s):")) {
+                AltsSlice = AcceptAlts.indexOf("Estudio(s):")
+            } else if (AcceptAlts.includes("Producido por:")) {
+                AltsSlice = AcceptAlts.indexOf("Producido por:")
+            } else if (AcceptAlts.includes("Licenciada por:")) {
+                AltsSlice = AcceptAlts.indexOf("Licenciada por:")
+            }
+
+            const AltNames = AcceptAlts.slice(0, AltsSlice)
             const AnimeInfo: Anime = {
                 name: $(".cn .ti h1 strong").text(),
                 url: `/anime/animeblix/name/${anime}`,
                 synopsis: $(".cn .info .r .tx .content p").first().text(),
-                alt_name: [...$(".cn .info .r .u:nth-child(2) li").text().split(",")],
+                alt_name: [...AltNames.split("---")],
                 image: {
-                    url: $(".cn .info .l .i img").attr("src")
+                    url: $(".cn .info .l .i img").attr("data-src")
                 },
                 genres: [...$(".cn .info .r .gn li").text().split(",")],
-                type: AnimeTypes.length > 1 ? AnimeTypes.text() == "TV" ? "Anime" : AnimeTypes.text() == "Pelicula" ? "Movie" : AnimeTypes.text() == "Ova" ? "OVA" : "Null" : "Null", //tv,pelicula,especial,ova
+                type: AnimeTypes.length ? AnimeTypes.text() == "TV" ? "Anime" : AnimeTypes.text() == "Pelicula" ? "Movie" : AnimeTypes.text() == "Ova" ? "OVA" : "Null" : "Null", //tv,pelicula,especial,ova
                 status: AnimeStatus,
-                date: { begin: Calendar.getCalendar(AnimeDate[0]), end: Calendar.getCalendar(AnimeDate[1]) },
+                date: AnimeDate[0] ? { year: DateFormat[2], month: DateFormat[1], day: DateFormat[0] } : null,
                 episodes: []
             }
 
-            $(".cn:nth-child(2) .ep li").map(e => {
+            const ListEpisodeIndex = $(".sc .cn #l").html()
+            const RemoveSymbols: RegExp = /[^0-9,]+/g;
+            const ReplaceSymbols: RegExp = /(,)+/g;
+            const ListEpisode = ListEpisodeIndex.slice(ListEpisodeIndex.indexOf("var eps = "), ListEpisodeIndex.indexOf(";</") - 1).replace(RemoveSymbols, "").replace(ReplaceSymbols, ",").slice(0, ListEpisodeIndex.lastIndexOf(",", -1)).split(",")
+         
+            ListEpisode.map((e) => {
                 const AnimeEpisode: Episode = {
-                    name: "Episode 1",
-                    number: $(e).find("a span").text(),
+                    name: "Episode " +e,
+                    number: e,
                     image: "",
-                    url: `/anime/animeblix/episode/${$(e).find("a").attr("href").replace("./","")}`
+                    url: `/anime/animeblix/episode/${anime+"-"+e}`
                 }
 
                 AnimeInfo.episodes.push(AnimeEpisode);
@@ -59,109 +83,55 @@ export class AnimeBlix {
             console.log(error)
         }
     }
-    async GetEpisodeServers(episode: string, lang: string): Promise<Episode> {
+    async GetEpisodeServers(episode: string): Promise<Episode> {
         try {
 
             const number = episode.substring(episode.lastIndexOf("-") + 1)
             const anime = episode.substring(0, episode.lastIndexOf("-"))
-            const langType = [{ lang: "es", type: "Latino" }, { lang: "jp", type: "Subtitulado" }]
 
-            const { data } = await axios.get(`${this.url}/ver/${anime}/${number}`);
+            const { data } = await axios.get(`${this.url}/${anime.replace("ver-","")}-${number}`);
             const $ = cheerio.load(data);
+            fetch("https://vwv.animeblix.org/back", {
+  "headers": {
+    "accept": "*/*",
+    "accept-language": "es-419,es;q=0.9,es-ES;q=0.8,en;q=0.7,en-GB;q=0.6,en-US;q=0.5",
+    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
+    "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Microsoft Edge\";v=\"121\", \"Chromium\";v=\"121\"",
+    "sec-ch-ua-mobile": "?0",
+    "sec-ch-ua-platform": "\"Windows\"",
+    "sec-fetch-dest": "empty",
+    "sec-fetch-mode": "cors",
+    "sec-fetch-site": "same-origin",
+    "x-requested-with": "XMLHttpRequest",
+    "cookie": "dom3ic8zudi28v8lr6fgphwffqoz0j6c=85632e4b-e8b5-4427-be7b-8b3c7156a788%3A1%3A1; sb_main_47d33eb2af15845dedc4fb60a160b2b4=1; sb_count_47d33eb2af15845dedc4fb60a160b2b4=2; sb_onpage_47d33eb2af15845dedc4fb60a160b2b4=0; sb_page_47d33eb2af15845dedc4fb60a160b2b4=7; pp_main_325f99fa973f521d38ec7eea8396403e=1; pp_sub_325f99fa973f521d38ec7eea8396403e=1",
 
-            const animeEpisodeParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
-
+    "Referrer-Policy": "strict-origin-when-cross-origin"
+  },
+  "body": "acc=opt&i=333334322d3132",
+  "method": "POST"
+}).then((e) =>e).then(async(e) =>console.log(await e.text()));
+        
             const AnimeEpisodeInfo: Episode = {
-                name: animeEpisodeParseObj.anime.name,
-                url: `/anime/animelatinohd/episode/${episode}`,
+                name: number,
+                url: `/anime/animeblix/episode/${episode}`,
                 number: number,
                 image: "",
                 servers: []
             }
 
-            const sel_lang = langType.filter((e) => e.lang == lang)
-            let f_index = 0
 
-            if (sel_lang.length) {
-                $("#languaje option").each((_i, e) => {
-                    if ($(e).text() == sel_lang[0].type) {
-                        f_index = Number($(e).val())
-                    }
-                })
-            } else {
-                $("#languaje option").each((_i, e) => {
-                    f_index = Number($(e).val())
-                })
-            }
-
-            await Promise.all(animeEpisodeParseObj.players[f_index].map(async (e: { server: { title: string; }; id: string; }) => {
-                //const min = await axios.get("https://filemoon.sx/e/smone1s7jjxv/CYM01HNMCGTSKT")
-                //const pageload = await BrowserHandler("https://animelatinohd.com/")
+           $("").map((e) => {
 
                 const Server: EpisodeServer = {
-                    name: e.server.title,
+                    name: "e.server.title",
                     url: "",
                 }
-                //const cookies = [{name: 'v_id', value: "https://api.animelatinohd.com/stream/"+e.id},];
-                Server.url = "https://api.animelatinohd.com/stream/" + e.id
-                Server.name = e.server.title
 
-
-
-                //await pageload.page.setCookie(...cookies)
-                /*await pageload.page.evaluate(()=>{
-                    function getCookie(cname) {
-                        const name = cname + "=";
-                        const decodedCookie = decodeURIComponent(document.cookie);
-                        const ca = decodedCookie.split(';');
-                        for(let i = 0; i <ca.length; i++) {
-                          let c = ca[i];
-                          while (c.charAt(0) == ' ') {
-                            c = c.substring(1);
-                          }
-                          if (c.indexOf(name) == 0) {
-                            return c.substring(name.length, c.length);
-                          }
-                        }
-                        return "";
-                      }
-                      
-                      window.location.href =getCookie("v_id")
-   
-                })
-                await pageload.page.waitForNavigation()
-                const url = await pageload.page.url()
-                pageload.browser.close()
-
-
-                const min = await axios.get(url)
-                const unp = await RuntimeUnpacked(Buffer.from(min.data).toString('base64'))
-
-                Server.url = unp*/
-
-                //state 1
-                /*if (e.server.title == "Beta") {
-                   let sel = dat("script:contains('var foo_ui = function (event) {')")
-                   let sort = String(sel.html())
-                   let domain = eval(sort.slice(sort.search("const url"), sort.search("const langDef")).replace("const url =", "").trim())
-
-                   let sortMORE = sort.slice(sort.search('ajax'), sort.search("method: 'post',"))
-                   let obj_sort = sortMORE.replace("ajax({", "").trim().replace("url:", "").replace(",", "").replace('"', "").replace('"', "").trim()
-                   let id_file = obj_sort.slice(obj_sort.lastIndexOf("/"), obj_sort.length)
-                   Server.url = domain + "/v" + id_file
-
-               } else if (e.server.title == "Gamma") {
-                   Server.url = dat('meta[name="og:url"]').attr("content")
-               } else {
-                   let sel = dat("script[data-cfasync='false']")
-                   let sort = String(sel.html())
-                   let sortMORE = sort.slice(sort.lastIndexOf("master") + 7, sort.lastIndexOf("hls2") - 11)
-                   let id_file = sortMORE.replace("_x", "")
-                   Server.url = "https://filemoon.sx" + "/e/" + id_file
-               }*/
+                Server.url = "https://api.animelatinohd.com/stream/"
+                Server.name = String(e)
 
                 AnimeEpisodeInfo.servers.push(Server)
-            }))
+            })
 
             return AnimeEpisodeInfo;
         } catch (error) {

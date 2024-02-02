@@ -15,16 +15,15 @@ router.get("/anime/animeblix/filter", async (req, res) => {
 router.get("/anime/animeblix/name/:name", async (req, res) => {
 
     const { name } = req.params
-    const data = await Anime.GetAnimeInfo(name)
+    const data = await Anime.GetAnimeInfo(name.includes("ver-")? name.replace("ver-","") : name)
     res.send(data)
 
 });
 
 // Episode Info +(Video Servers)
 router.get("/anime/animeblix/episode/:episode", async (req, res) => {
-    const { lang } = req.query
     const { episode } = req.params
-    const data = await Anime.GetEpisodeServers(episode, lang as string)
+    const data = await Anime.GetEpisodeServers(episode)
     res.send(data)
 
 });

@@ -14,7 +14,9 @@ export class AnimeLatinoHD {
             const $ = cheerio.load(data);
 
             const animeInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
-
+            const Dates = new Date(String(animeInfoParseObj.aired))
+            const DateFormat = new Intl.DateTimeFormat("en",{day:"numeric",month:"numeric",year:"numeric"}).format(Dates).split("/")
+            
             const AnimeInfo: Anime = {
                 name: animeInfoParseObj.name,
                 url: `/anime/animelatinohd/name/${anime}`,
@@ -26,7 +28,7 @@ export class AnimeLatinoHD {
                 genres: [...animeInfoParseObj.genres.split(",")],
                 type: animeInfoParseObj.type,
                 status: animeInfoParseObj.status == 1 ? "En emisión" : "Finalizado",
-                date: animeInfoParseObj.aired,
+                date: {year:DateFormat[2],month:DateFormat[1],day:DateFormat[0]},
                 episodes: []
             }
 
