@@ -1,6 +1,10 @@
 {
   "extends": "@tsconfig/recommended/tsconfig.json",
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
+},
   "compilerOptions": {
+    
     "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
@@ -20,17 +24,26 @@
     "noImplicitThis": false,
     "strictNullChecks": false,
     "outDir": "./build",
+    "baseUrl": ".",
     "paths": {
       "@animetypes/*": [
         "./src/types/*"
       ],
       "@providers/*":[
         "./src/scraper/sites/anime/*",
-        "./src/scraper/sites/manga/*"
+        "./src/scraper/sites/manga/*",
+        "./src/scraper/sites/doramas/*"
       ],
-      "@routesAnime/*": [
-        "./src/routes/v1/anime/*"
-      ]
+      "@routes/anime/*": [
+        "./src/routes/v1/anime/*",
+
+      ],
+      "@routes/manga/*": [
+        "./src/routes/v1/manga/*"
+      ],
+      "@routes/doramas/*": [
+        "./src/routes/v1/doramas/*"
+      ],
     }
   },
   "include": [

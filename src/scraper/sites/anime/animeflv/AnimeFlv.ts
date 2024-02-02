@@ -128,49 +128,48 @@ export class AnimeFlv {
       const $ = load(data);
       const title = $(".CapiTop").children("h1").text().trim();
       const getLinks = $(".CpCnA .anime_muti_link li");
-      const numberEpisode = episode.match(/\d+/g);
+      const numberEpisode =  episode.substring(episode.lastIndexOf("-") + 1)
       const episodeReturn = new Episode();
       episodeReturn.name = title;
       episodeReturn.url = `/anime/flv/episode/${episode}`;
       episodeReturn.number = numberEpisode as unknown as string;
       episodeReturn.servers = [];
 
-      const promises = getLinks.map((_i, e) => {
+      const promises = getLinks.map(async(_i, e) => {
         const servers = new EpisodeServer();
         const title = $(e).attr("title");
         const videoData = $(e).attr("data-video");
         servers.name = title;
         servers.url = videoData;
-        return this.getM3U(
-          `${videoData.replace("streaming.php", "ajax.php")}&refer=none`
-        ).then((g) => {
-          switch (title) {
-            case "Our Server":
+        if(videoData.includes("streaming.php")){
+          await this.getM3U(`${videoData.replace("streaming.php", "ajax.php")}&refer=none`).then((g) => {
+            if(g.source.length){
               servers.file_url = g.source[0].file;
-              break;
-            case "Mega":
-              servers.file_url = videoData
-                .replace("embed#!", "file/")
-                .replace("!", "#");
-              break;
-            case "Streamtape":
-              servers.file_url = videoData.replace("/e/", "/v/");
-              break;
-            case "YourUpload":
-              servers.file_url = videoData.replace("/embed/", "/watch/");
-              break;
-            case "Vidlox":
-            case "Doodstream":
-            case "Streamsb":
-            case "Filemoon":
-              servers.file_url = videoData.replace("/e/", "/d/");
-              break;
-            default:
-              break;
-          }
-
-          episodeReturn.servers.push(servers);
-        });
+            }
+          });
+        }
+        switch (title) {
+          case "Mega":
+            servers.file_url = videoData
+              .replace("embed#!", "file/")
+              .replace("!", "#");
+            break;
+          case "Streamtape":
+            servers.file_url = videoData.replace("/e/", "/v/");
+            break;
+          case "YourUpload":
+            servers.file_url = videoData.replace("/embed/", "/watch/");
+            break;
+          case "Vidlox":
+          case "Doodstream":
+          case "Streamsb":
+          case "Filemoon":
+            servers.file_url = videoData.replace("/e/", "/d/");
+            break;
+          default:
+            break;
+        }
+        episodeReturn.servers.push(servers);
       });
       await Promise.all(promises);
       return episodeReturn;

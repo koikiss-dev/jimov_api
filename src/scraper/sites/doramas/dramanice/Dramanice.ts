@@ -4,7 +4,7 @@ import { Anime } from "@animetypes/anime";
 import { Episode, EpisodeServer } from "@animetypes/episode";
 import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "@animetypes/search";
 
-export class AnimeLatinoHD {
+export class Dramanice {
     readonly url = "https://www.animelatinohd.com";
     readonly api = "https://api.animelatinohd.com";
 
@@ -14,9 +14,7 @@ export class AnimeLatinoHD {
             const $ = cheerio.load(data);
 
             const animeInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
-            const Dates = new Date(String(animeInfoParseObj.aired))
-            const DateFormat = new Intl.DateTimeFormat("en",{day:"numeric",month:"numeric",year:"numeric"}).format(Dates).split("/")
-            
+
             const AnimeInfo: Anime = {
                 name: animeInfoParseObj.name,
                 url: `/anime/animelatinohd/name/${anime}`,
@@ -28,7 +26,7 @@ export class AnimeLatinoHD {
                 genres: [...animeInfoParseObj.genres.split(",")],
                 type: animeInfoParseObj.type,
                 status: animeInfoParseObj.status == 1 ? "En emisión" : "Finalizado",
-                date: {year:DateFormat[2],month:DateFormat[1],day:DateFormat[0]},
+                date: animeInfoParseObj.aired,
                 episodes: []
             }
 
@@ -85,49 +83,15 @@ export class AnimeLatinoHD {
             }
 
             await Promise.all(animeEpisodeParseObj.players[f_index].map(async (e: { server: { title: string; }; id: string; }) => {
-               //const min = await axios.get("https://filemoon.sx/e/smone1s7jjxv/CYM01HNMCGTSKT")
-               //const pageload = await BrowserHandler("https://animelatinohd.com/")
-               
+                //let min = await axios.get("https://api.animelatinohd.com/stream/" + e.id, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.62", "Referer": "https://www.animelatinohd.com/" } })
+                // let dat = cheerio.load(min.data)
+
                 const Server: EpisodeServer = {
                     name: e.server.title,
                     url: "",
                 }
-                //const cookies = [{name: 'v_id', value: "https://api.animelatinohd.com/stream/"+e.id},];
                 Server.url = "https://api.animelatinohd.com/stream/" + e.id
                 Server.name = e.server.title
-                
-               
-                
-                //await pageload.page.setCookie(...cookies)
-                /*await pageload.page.evaluate(()=>{
-                    function getCookie(cname) {
-                        const name = cname + "=";
-                        const decodedCookie = decodeURIComponent(document.cookie);
-                        const ca = decodedCookie.split(';');
-                        for(let i = 0; i <ca.length; i++) {
-                          let c = ca[i];
-                          while (c.charAt(0) == ' ') {
-                            c = c.substring(1);
-                          }
-                          if (c.indexOf(name) == 0) {
-                            return c.substring(name.length, c.length);
-                          }
-                        }
-                        return "";
-                      }
-                      
-                      window.location.href =getCookie("v_id")
-   
-                })
-                await pageload.page.waitForNavigation()
-                const url = await pageload.page.url()
-                pageload.browser.close()
-
-
-                const min = await axios.get(url)
-                const unp = await RuntimeUnpacked(Buffer.from(min.data).toString('base64'))
-
-                Server.url = unp*/
 
                 //state 1
                 /*if (e.server.title == "Beta") {
@@ -149,7 +113,6 @@ export class AnimeLatinoHD {
                    let id_file = sortMORE.replace("_x", "")
                    Server.url = "https://filemoon.sx" + "/e/" + id_file
                }*/
-
                 AnimeEpisodeInfo.servers.push(Server)
             }))
 
