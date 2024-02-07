@@ -16,6 +16,9 @@
     "start:dev": "nodemon src/index.ts",
     "test": "jest --coverage"
   },
+  "_moduleAliases": {
+    "@": "src"
+  },
   "keywords": [
     "scraper",
     "api",
