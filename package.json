@@ -11,8 +11,6 @@
     "linter": "npx eslint src/scraper/* src/routes/*",
     "linter:win": "npx eslint src/scraper/** src/routes/**",
     "build": "tsc",
-    "zoro": "ts-node src/scraper/sites/anime/zoro/Zoro.ts",
-    "heroku-postbuild": "npm run build",
     "start:dev": "nodemon src/index.ts",
     "test": "jest --coverage"
   },
