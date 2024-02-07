@@ -4,8 +4,7 @@
     "require": ["tsconfig-paths/register"]
 },
   "compilerOptions": {
-    
-    "target": "es6",
+    "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
@@ -23,26 +22,26 @@
     "noImplicitAny": false,
     "noImplicitThis": false,
     "strictNullChecks": false,
-    "outDir": "build",
+    "outDir": "./build",
     "baseUrl": ".",
     "paths": {
       "@animetypes/*": [
-        "./src/types/*"
+        "./src/types/*",
+        "./src/scraper/sites/anime/*",
+        "./src/scraper/sites/manga/*",
+        "./src/scraper/sites/doramas/*"
       ],
       "@providers/*":[
         "./src/scraper/sites/anime/*",
         "./src/scraper/sites/manga/*",
         "./src/scraper/sites/doramas/*"
       ],
-      "@routes/anime/*": [
-        "./src/routes/v1/anime/*",
-
-      ],
       "@routes/manga/*": [
         "./src/routes/v1/manga/*"
       ],
-      "@routes/doramas/*": [
-        "./src/routes/v1/doramas/*"
+      "@routes/anime/*": [
+        "./src/routes/v1/anime/*",
+
       ],
     }
   },
@@ -51,6 +50,7 @@
   ],
   "exclude": [
     "node_modules",
+    "build",
     "**/*.spec.ts"
   ]
 }
