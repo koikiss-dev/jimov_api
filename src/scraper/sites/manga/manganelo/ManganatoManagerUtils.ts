@@ -4,9 +4,11 @@ export class ManganatoManagerUtils {
   private static instance: ManganatoManagerUtils;
   readonly url: ManganatoAdvancedSearchURLManager = new ManganatoAdvancedSearchURLManager();
 
-  static get Instance() {
-    if (!this.instance) this.instance = new ManganatoManagerUtils();
+  private constructor() { }
 
-    return this.instance;
+  static get Instance() {
+    if (!ManganatoManagerUtils.instance) ManganatoManagerUtils.instance = new ManganatoManagerUtils();
+
+    return ManganatoManagerUtils.instance;
   }
 }

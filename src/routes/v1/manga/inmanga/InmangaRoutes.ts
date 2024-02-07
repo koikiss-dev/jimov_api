@@ -1,12 +1,12 @@
 import { Router } from "express";
-import { Inmanga } from "../../../../scraper/sites/manga/inmanga/Inmanga";
+import { Inmanga } from "@providers/inmanga/Inmanga";
 const Manga = new Inmanga();
 const router = Router();
 
 
 router.get("/manga/inmanga/filter", async (req, res) => {
     const { search, type, genre } = req.query;
-    const data = await Manga.GetMangaByFilter(search as string, type as unknown as number, genre as string[]);
+    const data = await Manga.GetMangaByFilter(search as string, type as unknown as number, genre as []);
 
     res.send(data)
 });
