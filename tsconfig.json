@@ -1,8 +1,5 @@
 {
   "extends": "@tsconfig/recommended/tsconfig.json",
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-},
   "compilerOptions": {
     "target": "es5",
     "module": "commonjs",
