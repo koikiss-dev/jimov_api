@@ -33,6 +33,7 @@
         "./src/scraper/sites/anime/*",
         "./src/scraper/sites/manga/*",
         "./src/scraper/sites/doramas/*"
+
       ],
       "@routes/anime/*": [
         "./src/routes/v1/anime/*",
@@ -43,6 +44,7 @@
       ],
       "@routes/doramas/*": [
         "./src/routes/v1/doramas/*"
+
       ],
     }
   },
