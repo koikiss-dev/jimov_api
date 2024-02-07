@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "server": "nodemon src/index.ts",
-    "start": "node build/index.js",
+    "start": "tsc && tsc-alias && node build/index.js",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "linter": "npx eslint src/scraper/* src/routes/*",
     "linter:win": "npx eslint src/scraper/** src/routes/**",
