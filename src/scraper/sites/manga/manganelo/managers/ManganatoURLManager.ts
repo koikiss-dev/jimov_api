@@ -1,5 +1,5 @@
 import { URLSearchParams } from "url";
-import { IManganatoFilterParams, manganatoGenreList, manganatoOrderByOptions, manganatoOrderByOptionsList, ManganatoFilterURLParams } from "../ManganatoTypes";
+import { IManganatoFilterParams, manganatoGenreList, manganatoOrderByOptions, manganatoOrderByOptionsList } from "../ManganatoTypes";
 import { ManganatoManager } from "./ManganatoManager";
 
 export class ManganatoAdvancedSearchURLManager extends ManganatoManager {
@@ -38,23 +38,17 @@ export class ManganatoAdvancedSearchURLManager extends ManganatoManager {
       : "";
   }
 
-  generate(params: Partial<IManganatoFilterParams>) {
-    const urlParamsObject = {
+  generate(params: IManganatoFilterParams) {
+    const splitted = this.splitGenresToArray(params.genres);
+    const processed = this.processGenres(splitted);
+
+    const urlParams = new URLSearchParams({
       s: "all",
-      g_i: "",
+      g_i: processed.length ? this.formatGenres(processed) : "",
       sts: this.processStatus(params.sts),
       orby: this.processOrderBy(params.orby),
       page: params.page ? params.page.toString() : ""
-    } satisfies Record<ManganatoFilterURLParams, string>;
-
-    if (params.genres) {
-      const splitted = this.splitGenresToArray(params.genres);
-      const processed = this.processGenres(splitted);
-
-      urlParamsObject.g_i = this.formatGenres(processed);
-    }
-
-    const urlParams = new URLSearchParams(urlParamsObject);
+    });
 
     return `${this.baseURL}?${urlParams.toString()}`;
   }

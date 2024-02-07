@@ -4,12 +4,15 @@
   "description": "API for scraping multimedia content such as anime, movies, series, and manga",
   "main": "src/index.ts",
   "scripts": {
-    "start": "node build/index.js",
+    "start": "ts-node src/index.ts",
     "server": "nodemon src/index.ts",
+    "start:vercel": "node build/index.js",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "linter": "npx eslint src/scraper/* src/routes/*",
     "linter:win": "npx eslint src/scraper/** src/routes/**",
     "build": "tsc",
+    "zoro": "ts-node src/scraper/sites/anime/zoro/Zoro.ts",
+    "heroku-postbuild": "npm run build",
     "start:dev": "nodemon src/index.ts",
     "test": "jest --coverage"
   },
@@ -44,6 +47,7 @@
     "express": "^4.18.2",
     "helmet": "^6.0.1",
     "morgan": "^1.10.0",
+    "puppeteer": "^19.4.1",
     "ts-node": "^10.9.1",
     "underscore": "^1.13.6",
     "unpacker": "^1.0.1"
@@ -51,7 +55,6 @@
   "devDependencies": {
     "@commitlint/config-conventional": "^17.4.4",
     "@tsconfig/recommended": "^1.0.2",
-    "@types/cors": "^2.8.17",
     "@types/express": "^4.17.17",
     "@types/jest": "^29.5.0",
     "@types/morgan": "^1.9.4",
@@ -68,7 +71,6 @@
     "prettier": "^3.0.3",
     "pretty": "^2.0.0",
     "ts-jest": "^29.1.0",
-    "tsconfig-paths": "^4.2.0",
     "tslib": "^2.5.0",
     "typescript": "^4.9.5"
   }

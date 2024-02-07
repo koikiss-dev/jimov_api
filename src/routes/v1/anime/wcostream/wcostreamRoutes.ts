@@ -1,6 +1,5 @@
 import { Router } from "express";
-import { WcoStream } from "@providers/wcostream/WcoStream";
-import { RuntimeUnpacked } from "@animetypes/utils";
+import { WcoStream } from "../../../../scraper/sites/anime/wcostream/WcoStream";
 const Anime = new WcoStream();
 const router = Router();
 
@@ -26,13 +25,14 @@ router.get("/anime/wcostream/filter", async (req, res) => {
     res.send(data)
 })
 
+/*
+    Global API
+*/
 
 router.post("/runtime/unpacked", async (req,res) => {
-    const {base64,unBuffer} = req.body
-    const data = await RuntimeUnpacked(base64,unBuffer)
+    const {base64} = req.body
+    const data = await Anime.RuntimeUnpacked(base64)
     return res.send(data)
 })
-
-
 
 export default router
