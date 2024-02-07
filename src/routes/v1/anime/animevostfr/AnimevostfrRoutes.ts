@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { AnimeBlix } from "@providers/AnimeBlix/AnimeBlix";
-const Anime = new AnimeBlix();
+import { Animevostfr } from "@providers/animevostfr/Animevostfr";
+const Anime = new Animevostfr();
 const router = Router();
 
 // Filter
-router.get("/anime/animeblix/filter", async (req, res) => {
+router.get("/anime/animevostfr/filter", async (req, res) => {
     const { search, type, page, year, genre } = req.query
 
     const data = await Anime.GetAnimeByFilter(search as string, type as unknown as number, page as unknown as number, year as string, genre as string)
@@ -12,16 +12,16 @@ router.get("/anime/animeblix/filter", async (req, res) => {
 });
 
 // Anime Info +(Episodes list)
-router.get("/anime/animeblix/name/:name", async (req, res) => {
+router.get("/anime/animevostfr/name/:name", async (req, res) => {
 
     const { name } = req.params
-    const data = await Anime.GetAnimeInfo(name.includes("ver-")? name.replace("ver-","") : name)
+    const data = await Anime.GetAnimeInfo(name)
     res.send(data)
 
 });
 
 // Episode Info +(Video Servers)
-router.get("/anime/animeblix/episode/:episode", async (req, res) => {
+router.get("/anim/animevostfr/episode/:episode", async (req, res) => {
     const { episode } = req.params
     const data = await Anime.GetEpisodeServers(episode)
     res.send(data)

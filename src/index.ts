@@ -15,6 +15,7 @@ import monoschinos from "@routes/anime/monoschinos/MonosChinosRoute";
 import tioanime from '@routes/anime/tioanime/TioAnimeRoute'
 import WcoStream from "@routes/anime/wcostream/wcostreamRoutes";
 import AnimeBlix from "@routes/anime/animeblix/AnimeBlixRoutes";
+import Animevostfr from "@routes/anime/animevostfr/AnimevostfrRoutes";
 
 /* Manga */
 import comick from "@routes/manga/comick/ComickRoutes";
@@ -47,6 +48,7 @@ app.use(zoro);
 app.use(tioanime)
 app.use(WcoStream);
 app.use(AnimeBlix);
+app.use(Animevostfr);
 
 /* anime */
 
