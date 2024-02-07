@@ -1,6 +1,6 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Manga, MangaChapter, IMangaResult } from "@animetypes/manga"
+import { Manga, MangaChapter, IMangaResult } from "../../../../types/manga"
 import { IResultSearch } from "@animetypes/search";
 
 //Default Set Axios Cookie
@@ -10,24 +10,21 @@ axios.defaults.headers.common["User-Agent"] = "Mozilla/5.0 (Windows NT 10.0; Win
 export class Inmanga {
     readonly url = "https://inmanga.com";
 
-    async GetMangaByFilter(search?: string, type?: number, genre?: []) {
+    async GetMangaByFilter(search?: string, type?: number, genre?: string[]) {
         try {
             const formdata = new FormData();
-            const genreArray = Array.isArray(genre)
             formdata.append("filter[queryString]", search);
             formdata.append("filter[broadcastStatus]", String(type))
             formdata.append("filter[skip]", "0");
-            formdata.append("filter[take]", "70");
+            formdata.append("filter[take]", "10");
             const genreList = ['33', '34', '35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47', '48', '49', '50', '51', '52', '53', '54', '55', '56', '57', '58', '59', '60', '61', '62', '63', '64', '65', '66', '67', '68', '69', '70', '71', '72', '73', '74', '75', '76', '77', '78', '79', '80', '81', '82', '83', '84', '85', '86', '87', '88', '-1']
 
-            if (genre && genreArray) {
+            if (genre) {
                 genre.map((e) => {
                     if (genreList.includes(e)) {
                         formdata.append("filter[generes][]", genreList[genreList.indexOf(e)]);
                     }
                 })
-            }else if(genre && !genreArray){
-                formdata.append("filter[generes][]", genreList[genreList.indexOf(genre)]);
             } else {
                 formdata.append("filter[generes][]", "-1");
             }
