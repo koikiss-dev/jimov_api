@@ -1,4 +1,3 @@
-import 'module-alias/register';
 import express from "express";
 import morgan from "morgan";
 import index from "./routes/app";

@@ -24,9 +24,6 @@
     "paths": {
       "@animetypes/*": [
         "./src/types/*",
-        "./src/scraper/sites/anime/*",
-        "./src/scraper/sites/manga/*",
-        "./src/scraper/sites/doramas/*"
       ],
       "@providers/*":[
         "./src/scraper/sites/anime/*",
