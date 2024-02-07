@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { AnimeBlix } from "@providers/AnimeBlix/AnimeBlix";
+import { AnimeBlix } from "../../../../scraper/sites/anime/AnimeBlix/AnimeBlix";
 const Anime = new AnimeBlix();
 const router = Router();
 
