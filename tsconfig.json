@@ -24,7 +24,7 @@
     "noImplicitThis": false,
     "strictNullChecks": false,
     "outDir": "./build",
-    "baseUrl": ".",
+    "baseUrl": "./",
     "paths": {
       "@animetypes/*": [
         "./src/types/*"
