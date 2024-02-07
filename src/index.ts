@@ -7,21 +7,21 @@ import cors from 'cors'
 
 
 /* Anime */
-import flv from "@routes/anime/animeflv/AnimeflvRoutes";
-import latinhd from "@routes/anime/animelatinohd/AnimeLatinoHDRoutes";
-import gogoanime from "@routes/anime/gogoanime/GogoAnimeRoute";
-import zoro from "@routes/anime/zoro/ZoroRoutes";
-import monoschinos from "@routes/anime/monoschinos/MonosChinosRoute";
-import tioanime from '@routes/anime/tioanime/TioAnimeRoute'
-import WcoStream from "@routes/anime/wcostream/wcostreamRoutes";
-import AnimeBlix from "@routes/anime/animeblix/AnimeBlixRoutes";
-import Animevostfr from "@routes/anime/animevostfr/AnimevostfrRoutes";
+import flv from "../src/routes/v1/anime/animeflv/AnimeflvRoutes";
+import latinhd from "../src/routes/v1/anime/animelatinohd/AnimeLatinoHDRoutes";
+import gogoanime from "../src/routes/v1/anime/gogoanime/GogoAnimeRoute";
+import zoro from "../src/routes/v1/anime/zoro/ZoroRoutes";
+import monoschinos from "../src/routes/v1/anime/monoschinos/MonosChinosRoute";
+import tioanime from '../src/routes/v1/anime/tioanime/TioAnimeRoute'
+import WcoStream from "../src/routes/v1/anime/wcostream/wcostreamRoutes";
+import AnimeBlix from "../src/routes/v1/anime/animeblix/AnimeBlixRoutes";
+import Animevostfr from "../src/routes/v1/anime/animevostfr/AnimevostfrRoutes";
 
 /* Manga */
-import comick from "@routes/manga/comick/ComickRoutes";
-import inmanga from "@routes/manga/inmanga/InmangaRoutes";
-import nhentai from "@routes/manga/nhentai/NhentaiRoutes"
-import mangareader from "@routes/manga/mangareader/MangaReaderRoutes";
+import comick from "../src/routes/v1/manga/comick/ComickRoutes";
+import inmanga from "../src/routes/v1/manga/inmanga/InmangaRoutes";
+import nhentai from "../src/routes/v1/manga/nhentai/NhentaiRoutes"
+import mangareader from "../src/routes/v1/manga/mangareader/MangaReaderRoutes";
 
 const app = express();
 const port = process.env.PORT || 3000;

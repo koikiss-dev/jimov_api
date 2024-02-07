@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Comick } from "@providers/comick/Comick";
+import { Comick } from "../../../../scraper/sites/manga/comick/Comick";
 const Manga = new Comick();
 const router = Router();
 

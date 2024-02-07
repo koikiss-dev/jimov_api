@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Inmanga } from "@providers/inmanga/Inmanga";
+import { Inmanga } from "../../../../scraper/sites/manga/inmanga/Inmanga";
 const Manga = new Inmanga();
 const router = Router();
 

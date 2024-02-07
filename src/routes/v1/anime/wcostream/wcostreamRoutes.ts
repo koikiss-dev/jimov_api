@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { WcoStream } from "@providers/wcostream/WcoStream";
+import { WcoStream } from "../../../../scraper/sites/anime/wcostream/WcoStream";
 import { RuntimeUnpacked } from "@animetypes/utils";
 const Anime = new WcoStream();
 const router = Router();
