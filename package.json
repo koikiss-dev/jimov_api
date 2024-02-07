@@ -3,8 +3,9 @@
   "version": "1.0.0",
   "description": "API for scraping multimedia content such as anime, movies, series, and manga",
   "main": "src/index.ts",
+  "type": "module",
   "scripts": {
-    "start": "node build/index.js",
+    "start": "node dist/src/index.js",
     "server": "nodemon src/index.ts",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "linter": "npx eslint src/scraper/* src/routes/*",
@@ -45,6 +46,7 @@
     "helmet": "^6.0.1",
     "morgan": "^1.10.0",
     "ts-node": "^10.9.1",
+    "tscpaths": "^0.0.9",
     "underscore": "^1.13.6",
     "unpacker": "^1.0.1"
   },

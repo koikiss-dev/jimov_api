@@ -26,11 +26,11 @@ export interface IMovie {
 }
 
 
-export class Movie {
+/* export class Movie {
 
   movie: IMovie;
 
   getMovie(): IMovie
 
-}
+} */
 

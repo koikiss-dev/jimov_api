@@ -1,7 +1,7 @@
 import express from "express";
 import morgan from "morgan";
-import index from "./routes/app";
-import providersList from "./routes/providers";
+import index from "@routes/app/"
+import providersList from "@routes/providers/";
 import helmet from "helmet";
 import cors from 'cors'
 
