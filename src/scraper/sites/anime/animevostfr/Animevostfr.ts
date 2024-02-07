@@ -19,7 +19,7 @@ export class Animevostfr {
         try {
             const { data } = await axios.get(`${this.url}/${anime}`);
             const $ = cheerio.load(data);
-           
+
 
             const AnimeTypes = $(".mvic-info .mvici-right p strong:contains(' Type:')").nextAll().text()
             const AnimeStatus = $(".mvic-info .mvici-right p a[rel='tag']").first().text()
@@ -27,28 +27,31 @@ export class Animevostfr {
             const AnimeDescription = $(".mvi-content .mvic-desc .desc p").html()
 
 
+
+
             const AnimeInfo: Anime = {
-                name: $(".Animevostfr .mvi-content .mvic-desc h1").text(),
+                name: $(".mvi-content .mvic-desc h1").text(),
                 url: `/anime/animevostfr/name/${anime}`,
-                synopsis: AnimeDescription.slice(AnimeDescription.indexOf("Synopsis:")+"Synopsis:".length,-1),
-                alt_name: [...AnimeDescription.slice(AnimeDescription.indexOf("Titre alternatif:")+"Titre alternatif:".length,AnimeDescription.indexOf("Synopsis:")).split("/").filter((n) => n.trim())],
+                synopsis: AnimeDescription.slice(AnimeDescription.indexOf("Synopsis:") + "Synopsis:".length, -1).trim(),
+                alt_name: [...AnimeDescription.slice(AnimeDescription.indexOf("Titre alternatif:") + "Titre alternatif:".length, AnimeDescription.indexOf("Synopsis:")).replace("<br>\n", "").split("/").map((n) => n.replace(/^\s+|\s+$|\s+(?=\s)/g,""))],
                 image: {
-                    url: $(".Animevostfr .mvi-content .mvic-thumb img").attr("data-lazy-src")
+                    url: $(".mvi-content .mvic-thumb img").attr("data-lazy-src")
                 },
-                genres: [...$(".mvic-info .mvici-left p").first().find("a").next().text().split(",")],
-                type: AnimeTypes == "Anime" ? "Anime" : AnimeTypes == "MOVIE" ? "Movie" : "Null" , //tv,pelicula,especial,ova
+                genres: [...$(".mvic-info .mvici-left p").first().text().replace("\n Genres:\n ","").split(",").map((n) => n.replace(/^\s+|\s+$|\s+(?=\s)/g,""))],
+                type: AnimeTypes == "Anime" ? "Anime" : AnimeTypes == "MOVIE" ? "Movie" : "Null", //tv,pelicula,especial,ova
                 status: AnimeStatus == "En cours" ? true : false,
                 date: AnimeDate ? { year: AnimeDate } : null,
                 episodes: []
             }
 
-            $("#seasonss .les-title").each((_i,e) => {
-  
+            $("#seasonss .les-title").each((_i, e) => {
+
+                const number = $(e).find("a").attr("href").substring($(e).find("a").attr("href").lastIndexOf("-") + 1).replace("/", "")
                 const AnimeEpisode: Episode = {
-                    name: "Episode " + $(e).find("a").text(),
-                    number: 4,
+                    name: "Episode " + number,
+                    number: number,
                     image: "",
-                    url: `/anime/animeblix/episode/${anime+"-"}`
+                    url: `/anime/animeblix/episode/${anime + "-" + number}`
                 }
 
                 AnimeInfo.episodes.push(AnimeEpisode);
@@ -66,7 +69,7 @@ export class Animevostfr {
             const number = episode.substring(episode.lastIndexOf("-") + 1)
             const anime = episode.substring(0, episode.lastIndexOf("-"))
 
-            const { data } = await axios.get(`${this.url}/${anime.replace("ver-","")}-${number}`);
+            const { data } = await axios.get(`${this.url}/${anime.replace("ver-", "")}-${number}`);
             const $ = cheerio.load(data);
 
             const AnimeEpisodeInfo: Episode = {
@@ -78,7 +81,7 @@ export class Animevostfr {
             }
 
 
-           $("").map((e) => {
+            $("").map((e) => {
 
                 const Server: EpisodeServer = {
                     name: "e.server.title",
