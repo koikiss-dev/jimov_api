@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { AnimeBlix } from "../../../../scraper/sites/anime/animeBlix/AnimeBlix";
+
 const Anime = new AnimeBlix();
 const router = Router();
 

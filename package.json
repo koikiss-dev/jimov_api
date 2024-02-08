@@ -4,13 +4,13 @@
   "description": "API for scraping multimedia content such as anime, movies, series, and manga",
   "main": "src/index.ts",
   "scripts": {
-    "start": "node build/index.js",
+    "start": "tsc && tsc-alias && node build/index.js",
     "start:stable": "ts-node build/index.js",
     "server": "nodemon src/index.ts",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
     "linter": "npx eslint src/scraper/* src/routes/*",
     "linter:win": "npx eslint src/scraper/** src/routes/**",
-    "build": "tsc",
+    "build": "tsc && tsc-alias",
     "zoro": "ts-node src/scraper/sites/anime/zoro/Zoro.ts",
     "heroku-postbuild": "npm run build",
     "start:dev": "nodemon src/index.ts",
@@ -48,6 +48,7 @@
     "helmet": "^6.0.1",
     "morgan": "^1.10.0",
     "ts-node": "^10.9.1",
+    "tsc-alias": "^1.8.8",
     "underscore": "^1.13.6",
     "unpacker": "^1.0.1"
   },
