@@ -32,6 +32,31 @@ r.get("/anime/tioanime/episode/:episode", async (req, res) => {
   }
 });
 
+//last episodes
+r.get("/anime/tioanime/last/:option", async (req, res) => {
+  try {
+    const { option } = req.params;
+
+    const tioanime = new TioAnime();
+    if ('episodes' === option) {
+      res.send(await tioanime.getLastEpisodes());
+    } else if ('animes' === option) {
+      res.send(await tioanime.getLastAnimes(null));
+    } else if ('movies' === option) {
+      res.send(await tioanime.getLastMovies());
+    } else if ('ovas' === option) {
+      res.send(await tioanime.getLastOvas());
+    } else if ('onas' === option) {
+      res.send(await tioanime.getLastOnas());
+    } else {
+      throw 'Invalid option in the URL';
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
+
 //filter
 r.get("/anime/tioanime/filter", async (req, res) => {
   try { 

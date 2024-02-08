@@ -58,6 +58,7 @@ app.use(comick);
 app.use(inmanga);
 app.use(nhentai)
 app.use(mangareader);
+app.use(manganelo);
 
 /* Manga */
 
