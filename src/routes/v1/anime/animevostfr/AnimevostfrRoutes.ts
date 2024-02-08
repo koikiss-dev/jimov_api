@@ -21,7 +21,7 @@ router.get("/anime/animevostfr/name/:name", async (req, res) => {
 });
 
 // Episode Info +(Video Servers)
-router.get("/anim/animevostfr/episode/:episode", async (req, res) => {
+router.get("/anime/animevostfr/episode/:episode", async (req, res) => {
     const { episode } = req.params
     const data = await Anime.GetEpisodeServers(episode)
     res.send(data)

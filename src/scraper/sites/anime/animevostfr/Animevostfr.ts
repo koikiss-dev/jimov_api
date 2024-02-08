@@ -33,11 +33,11 @@ export class Animevostfr {
                 name: $(".mvi-content .mvic-desc h1").text(),
                 url: `/anime/animevostfr/name/${anime}`,
                 synopsis: AnimeDescription.slice(AnimeDescription.indexOf("Synopsis:") + "Synopsis:".length, -1).trim(),
-                alt_name: [...AnimeDescription.slice(AnimeDescription.indexOf("Titre alternatif:") + "Titre alternatif:".length, AnimeDescription.indexOf("Synopsis:")).replace("<br>\n", "").split("/").map((n) => n.replace(/^\s+|\s+$|\s+(?=\s)/g,""))],
+                alt_name: [...AnimeDescription.slice(AnimeDescription.indexOf("Titre alternatif:") + "Titre alternatif:".length, AnimeDescription.indexOf("Synopsis:")).replace("<br>\n", "").split("/").map((n) => n.replace(/^\s+|\s+$|\s+(?=\s)/g, ""))],
                 image: {
                     url: $(".mvi-content .mvic-thumb img").attr("data-lazy-src")
                 },
-                genres: [...$(".mvic-info .mvici-left p").first().text().replace("\n Genres:\n ","").split(",").map((n) => n.replace(/^\s+|\s+$|\s+(?=\s)/g,""))],
+                genres: [...$(".mvic-info .mvici-left p").first().text().replace("\n Genres:\n ", "").split(",").map((n) => n.replace(/^\s+|\s+$|\s+(?=\s)/g, ""))],
                 type: AnimeTypes == "Anime" ? "Anime" : AnimeTypes == "MOVIE" ? "Movie" : "Null", //tv,pelicula,especial,ova
                 status: AnimeStatus == "En cours" ? true : false,
                 date: AnimeDate ? { year: AnimeDate } : null,
@@ -51,7 +51,7 @@ export class Animevostfr {
                     name: "Episode " + number,
                     number: number,
                     image: "",
-                    url: `/anime/animeblix/episode/${anime + "-" + number}`
+                    url: `/anime/animevostfr/episode/${anime + "-" + number}`
                 }
 
                 AnimeInfo.episodes.push(AnimeEpisode);
@@ -69,31 +69,55 @@ export class Animevostfr {
             const number = episode.substring(episode.lastIndexOf("-") + 1)
             const anime = episode.substring(0, episode.lastIndexOf("-"))
 
-            const { data } = await axios.get(`${this.url}/${anime.replace("ver-", "")}-${number}`);
+            const { data } = await axios.get(`${this.url}/episode/${anime}-episode-${number}`);
             const $ = cheerio.load(data);
+            const s = $('.form-group.list-server select option')
+            const e = $('.list-episodes select option')
+            const ListFilmId = []
+            const ListServer = []
+
+            s.map((_i, e) => ListServer.push($(e).val()))
+            e.map((_i, e) => ListFilmId.push($(e).attr("episodeid")))
+
+            /*
+                "SERVER_VIP"
+                "SERVER_HYDRAX"
+                "SERVER_PHOTOSS"
+                "SERVER_DOWNLOAD"							
+                "SERVER_PHOTOS"			
+                "SERVER_OPEN_LOAD"
+                "SERVER_OPEN_LOADS"				
+                "SERVER_OPEN_CDN"
+                "SERVER_OPEN_CDNO"						
+                "SERVER_PHOTO"
+                "SERVER_STREAM_MANGO"
+                "SERVER_RAPID_VIDEO"
+            */
 
             const AnimeEpisodeInfo: Episode = {
-                name: number,
-                url: `/anime/animeblix/episode/${episode}`,
+                name: "Episode " + number,
+                url: `/anime/animevostfr/episode/${episode}`,
                 number: number,
                 image: "",
                 servers: []
             }
 
-
-            $("").map((e) => {
-
-                const Server: EpisodeServer = {
-                    name: "e.server.title",
-                    url: "",
+            await Promise.all(ListServer.map(async (n) => {
+                const servers = await axios.get(`${this.url}/ajax-get-link-stream/?server=${n}&filmId=${ListFilmId[0]}`)
+                let currentData = servers.data
+                if (n == "opencdn" || n == "photo") {
+                    currentData = currentData.replace("?logo=https://animevostfr.tv/1234.png", "").replace("short.ink/", "abysscdn.com/?v=")
                 }
+                const Servers: EpisodeServer = {
+                    name: n,
+                    url: currentData,
+                }
+                AnimeEpisodeInfo.servers.push(Servers)
+            }))
 
-                Server.url = "https://api.animelatinohd.com/stream/"
-                Server.name = String(e)
 
-                AnimeEpisodeInfo.servers.push(Server)
-            })
 
+            AnimeEpisodeInfo.servers.sort((a: EpisodeServer, b: EpisodeServer) => a.name.length - b.name.length)
             return AnimeEpisodeInfo;
         } catch (error) {
             console.log(error)
