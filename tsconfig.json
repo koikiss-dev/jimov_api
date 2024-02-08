@@ -1,7 +1,7 @@
 {
   "extends": "@tsconfig/recommended/tsconfig.json",
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
@@ -19,7 +19,7 @@
     "noImplicitAny": false,
     "noImplicitThis": false,
     "strictNullChecks": false,
-    "outDir": "./build",
+    "outDir": "build",
     "paths": {
       "@animetypes/*": [
         "./src/types/*",
