@@ -15,8 +15,6 @@ export interface IManganatoFilterParams {
   page: number;
 };
 
-export type ManganatoFilterURLParams = keyof Omit<IManganatoFilterParams, "genres"> | "g_i" | "s";
-
 export const manganatoGenreList = {
   action: 2,
   adult: 3,

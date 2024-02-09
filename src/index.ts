@@ -5,7 +5,6 @@ import providersList from "./routes/providers";
 import helmet from "helmet";
 import cors from 'cors'
 
-
 /* Anime */
 import flv from "../src/routes/v1/anime/animeflv/AnimeflvRoutes";
 import latinhd from "../src/routes/v1/anime/animelatinohd/AnimeLatinoHDRoutes";
@@ -29,7 +28,6 @@ const port = process.env.PORT || 3000;
 
 app.use(index);
 app.use(providersList);
-
 //config
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
@@ -39,8 +37,7 @@ app.use(cors())
 
 //routes
 
-/* anime */
-
+/*anime*/
 app.use(flv);
 app.use(latinhd);
 app.use(gogoanime);
@@ -53,15 +50,15 @@ app.use(Animevostfr);
 
 /* anime */
 
-/* Manga */
 
+/*Manga*/
 app.use(comick);
 app.use(inmanga);
 app.use(nhentai)
 app.use(mangareader);
 app.use(manganelo);
+/*Manga*/
 
-/* Manga */
 
 
 /*error */
@@ -73,7 +70,6 @@ interface ErrorResponse {
   };
 }
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 app.use((err, res, _next) => {
   //console.log(err.statusCode);
   let response: ErrorResponse;

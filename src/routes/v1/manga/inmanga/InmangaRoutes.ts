@@ -6,7 +6,7 @@ const router = Router();
 
 router.get("/manga/inmanga/filter", async (req, res) => {
     const { search, type, genre } = req.query;
-    const data = await Manga.GetMangaByFilter(search as string, type as unknown as number, genre as []);
+    const data = await Manga.GetMangaByFilter(search as string, type as unknown as number, genre as string[]);
 
     res.send(data)
 });

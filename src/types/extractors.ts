@@ -30,7 +30,7 @@ export const filemoon = async (_url: string) => {
         
         let data = await response.text();
      
-       
+        console.log(btoa(data))
        // const $ = cheerio.load(data)
 
         //const Buffer = btoa($("script").get().at(-1).children[0].data)
