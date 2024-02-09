@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 import { Manga, MangaChapter, IMangaResult } from "../../../../types/manga"
-import { IResultSearch } from "@animetypes/search";
+import { IResultSearch } from "../../../../types/search";
 
 //Default Set Axios Cookie
 axios.defaults.withCredentials = true

@@ -1,22 +1,28 @@
 import express from "express";
 import morgan from "morgan";
-import index from "./routes/app";
-import providersList from "./routes/providers";
-import flv from "./routes/v1/anime/animeflv/AnimeflvRoutes";
-import latinhd from "./routes/v1/anime/animelatinohd/AnimeLatinoHDRoutes";
-import gogoanime from "./routes/v1/anime/gogoanime/GogoAnimeRoute";
-import zoro from "./routes/v1/anime/zoro/ZoroRoutes";
-import monoschinos from "./routes/v1/anime/monoschinos/MonosChinosRoute";
-import tioanime from './routes/v1/anime/tioanime/TioAnimeRoute'
-import comick from "./routes/v1/manga/comick/ComickRoutes";
-
-import inmanga from "./routes/v1/manga/inmanga/InmangaRoutes";
-import nhentai from "./routes/v1/manga/nhentai/NhentaiRoutes"
-import mangareader from "./routes/v1/manga/mangareader/MangaReaderRoutes";
-import manganelo from "./routes/v1/manga/manganelo/ManganeloRoutes";
+import index from "../src/routes/app";
+import providersList from "../src/routes/providers";
 import helmet from "helmet";
 import cors from 'cors'
-import WcoStream from "./routes/v1/anime/wcostream/wcostreamRoutes";
+
+/* Anime */
+import flv from "../src/routes/v1/anime/animeflv/AnimeflvRoutes";
+import latinhd from "../src/routes/v1/anime/animelatinohd/AnimeLatinoHDRoutes";
+import gogoanime from "../src/routes/v1/anime/gogoanime/GogoAnimeRoute";
+import zoro from "../src/routes/v1/anime/zoro/ZoroRoutes";
+import monoschinos from "../src/routes/v1/anime/monoschinos/MonosChinosRoute";
+import tioanime from '../src/routes/v1/anime/tioanime/TioAnimeRoute'
+import WcoStream from "../src/routes/v1/anime/wcostream/wcostreamRoutes";
+//import AnimeBlix from "../src/routes/v1/anime/animeblix/AnimeBlixRoutes";
+import Animevostfr from "../src/routes/v1/anime/animevostfr/AnimevostfrRoutes";
+
+/* Manga */
+import comick from "../src/routes/v1/manga/comick/ComickRoutes";
+import inmanga from "../src/routes/v1/manga/inmanga/InmangaRoutes";
+import nhentai from "../src/routes/v1/manga/nhentai/NhentaiRoutes"
+import mangareader from "../src/routes/v1/manga/mangareader/MangaReaderRoutes";
+import manganelo from "../src/routes/v1/manga/manganelo/ManganeloRoutes";
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -39,7 +45,11 @@ app.use(monoschinos);
 app.use(zoro);
 app.use(tioanime)
 app.use(WcoStream);
-/*anime*/
+//app.use(AnimeBlix);
+app.use(Animevostfr);
+
+/* anime */
+
 
 /*Manga*/
 app.use(comick);

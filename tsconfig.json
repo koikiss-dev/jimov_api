@@ -1,7 +1,7 @@
 {
   "extends": "@tsconfig/recommended/tsconfig.json",
   "compilerOptions": {
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
     "esModuleInterop": true,
@@ -22,21 +22,25 @@
     "outDir": "./build",
     "paths": {
       "@animetypes/*": [
-        "./src/types/*"
+        "./src/types/*",
       ],
       "@providers/*":[
         "./src/scraper/sites/anime/*",
         "./src/scraper/sites/manga/*",
         "./src/scraper/sites/doramas/*"
+
       ],
-      "@routesAnime/*": [
+      "@routes/manga/*": [
+        "./src/routes/v1/manga/*"
+      ],
+      "@routes/anime/*": [
         "./src/routes/v1/anime/*"
-      ]
+       ],
+      "@routes/doramas/*": [
+        "./src/routes/v1/doramas/*"
+      ],
     }
   },
-  "include": [
-    "src/**/*.ts"
-  ],
   "exclude": [
     "node_modules",
     "build",
