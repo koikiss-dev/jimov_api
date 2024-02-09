@@ -19,7 +19,7 @@
     "noImplicitAny": false,
     "noImplicitThis": false,
     "strictNullChecks": false,
-    "outDir": "build",
+    "outDir": "./build",
     "paths": {
       "@animetypes/*": [
         "./src/types/*",
@@ -41,9 +41,6 @@
       ],
     }
   },
-  "include": [
-    "src/**/*.ts"
-  ],
   "exclude": [
     "node_modules",
     "build",
