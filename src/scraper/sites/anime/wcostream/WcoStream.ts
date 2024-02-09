@@ -1,9 +1,9 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Anime } from "@animetypes/anime";
-import { Episode, EpisodeServer } from "@animetypes/episode";
-import { IResultSearch, IAnimeSearch, ResultSearch, AnimeSearch } from "@animetypes/search";
-import { UnPacked } from"@animetypes/utils";
+import { Anime } from "../../../../types/anime";
+import { Episode, EpisodeServer } from "../../../../types/episode";
+import { IResultSearch, IAnimeSearch, ResultSearch, AnimeSearch } from "../../../../types/search";
+import { UnPacked } from"../../../../types/utils";
 
 /** List of Domains
  * https://wcostream.tv

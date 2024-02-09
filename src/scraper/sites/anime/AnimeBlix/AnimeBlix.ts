@@ -1,8 +1,8 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Anime } from "@animetypes/anime";
-import { Episode, EpisodeServer } from "@animetypes/episode";
-import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "@animetypes/search";
+import { Anime } from "../../../../types/anime";
+import { Episode, EpisodeServer } from "../../../../types/episode";
+import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "../../../../types/search";
 //import { Calendar } from "@animetypes/date";
 
 /** List of Domains
@@ -91,26 +91,7 @@ export class AnimeBlix {
 
             const { data } = await axios.get(`${this.url}/${anime.replace("ver-","")}-${number}`);
             const $ = cheerio.load(data);
-            fetch("https://vwv.animeblix.org/back", {
-  "headers": {
-    "accept": "*/*",
-    "accept-language": "es-419,es;q=0.9,es-ES;q=0.8,en;q=0.7,en-GB;q=0.6,en-US;q=0.5",
-    "content-type": "application/x-www-form-urlencoded; charset=UTF-8",
-    "sec-ch-ua": "\"Not A(Brand\";v=\"99\", \"Microsoft Edge\";v=\"121\", \"Chromium\";v=\"121\"",
-    "sec-ch-ua-mobile": "?0",
-    "sec-ch-ua-platform": "\"Windows\"",
-    "sec-fetch-dest": "empty",
-    "sec-fetch-mode": "cors",
-    "sec-fetch-site": "same-origin",
-    "x-requested-with": "XMLHttpRequest",
-    "cookie": "dom3ic8zudi28v8lr6fgphwffqoz0j6c=85632e4b-e8b5-4427-be7b-8b3c7156a788%3A1%3A1; sb_main_47d33eb2af15845dedc4fb60a160b2b4=1; sb_count_47d33eb2af15845dedc4fb60a160b2b4=2; sb_onpage_47d33eb2af15845dedc4fb60a160b2b4=0; sb_page_47d33eb2af15845dedc4fb60a160b2b4=7; pp_main_325f99fa973f521d38ec7eea8396403e=1; pp_sub_325f99fa973f521d38ec7eea8396403e=1",
 
-    "Referrer-Policy": "strict-origin-when-cross-origin"
-  },
-  "body": "acc=opt&i=333334322d3132",
-  "method": "POST"
-}).then((e) =>e).then(async(e) =>console.log(await e.text()));
-        
             const AnimeEpisodeInfo: Episode = {
                 name: number,
                 url: `/anime/animeblix/episode/${episode}`,
