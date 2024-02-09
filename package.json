@@ -53,6 +53,7 @@
     "ts-alias": "^0.0.7",
     "ts-node": "^10.9.1",
     "tsc-alias": "^1.8.8",
+    "tsconfig-paths": "^4.2.0",
     "underscore": "^1.13.6",
     "unpacker": "^1.0.1"
   },
