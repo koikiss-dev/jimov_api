@@ -13,7 +13,7 @@ import zoro from "../src/routes/v1/anime/zoro/ZoroRoutes";
 import monoschinos from "../src/routes/v1/anime/monoschinos/MonosChinosRoute";
 import tioanime from '../src/routes/v1/anime/tioanime/TioAnimeRoute'
 import WcoStream from "../src/routes/v1/anime/wcostream/wcostreamRoutes";
-import AnimeBlix from "@routes/anime/animeblix/AnimeBlixRoutes";
+import AnimeBlix from "../src/routes/v1/anime/animeblix/AnimeBlixRoutes";
 import Animevostfr from "../src/routes/v1/anime/animevostfr/AnimevostfrRoutes";
 
 /* Manga */
