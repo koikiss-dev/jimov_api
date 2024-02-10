@@ -2,11 +2,15 @@ import { ManganatoAdvancedSearchURLManager } from "./managers/ManganatoURLManage
 
 export class ManganatoManagerUtils {
   private static instance: ManganatoManagerUtils;
-  readonly url: ManganatoAdvancedSearchURLManager = new ManganatoAdvancedSearchURLManager();
+  readonly url: ManganatoAdvancedSearchURLManager =
+    new ManganatoAdvancedSearchURLManager();
+
+  private constructor() {}
 
   static get Instance() {
-    if (!this.instance) this.instance = new ManganatoManagerUtils();
+    if (!ManganatoManagerUtils.instance)
+      ManganatoManagerUtils.instance = new ManganatoManagerUtils();
 
-    return this.instance;
+    return ManganatoManagerUtils.instance;
   }
 }
