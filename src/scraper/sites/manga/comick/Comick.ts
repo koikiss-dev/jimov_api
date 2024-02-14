@@ -14,6 +14,8 @@ axios.defaults.headers.common["User-Agent"] = "Mozilla/5.0 (Linux; Android 6.0.1
  * 
  * https://api.comick.io
  * 
+ * https://comick.cc
+ * 
  * https://meo.comick.pictures
 */
 
@@ -27,12 +29,12 @@ export class Comick {
             const { data } = await axios.get(`${this.api}/v1.0/search`, {
                 params: {
                     q: search,
-                    type: type,
+                    status: type,
                     year: year,
                     genre: genre,
                 }
             });
-
+        
             const ResultList: IResultSearch<IMangaResult> = {
                 results: []
             }
@@ -59,7 +61,7 @@ export class Comick {
             const { data } = await axios.get(`${this.api}/comic/${manga}`);
             // build static
             ///_next/data/S1XqseNRmzozm3TaUH1lU/comic/00-solo-leveling.json
-            const currentLang = lang ? `?lang=${lang}` : ""
+            const currentLang = lang ? `?lang=${lang}` : `?lang=en`
             const mangaInfoParseObj = data
 
             const dataApi = await axios.get(`${this.api}/comic/${mangaInfoParseObj.comic.hid}/chapters${currentLang}`);
@@ -130,7 +132,7 @@ export class Comick {
             if (JSON.parse($("#__NEXT_DATA__").html()).isFallback == false) {
                 const mangaChapterInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps
                 const mindate = new Date(mangaChapterInfoParseObj.chapter.created_at);
-
+                
                 const MangaChapterInfoChapter: MangaChapter = {
                     id: mangaChapterInfoParseObj.chapter.id,
                     title: mangaChapterInfoParseObj.seoTitle,
@@ -159,7 +161,7 @@ export class Comick {
                 const dataBuild = await axios.get(`${this.url}/_next/data/${buildid}/comic/${currentUrl}`);
 
                 const mindate = new Date(dataBuild.data.pageProps.chapter.created_at);
-
+              
                 const MangaChapterInfoChapter: MangaChapter = {
                     id: dataBuild.data.pageProps.chapter.id,
                     title: dataBuild.data.pageProps.seoTitle,

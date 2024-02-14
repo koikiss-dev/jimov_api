@@ -65,10 +65,7 @@ export class Inmanga {
     async GetMangaInfo(manga: string,cid: string): Promise<Manga> {
         try {
             const dataPost = await axios.get(`${this.url}/ver/manga/${manga}/${cid}`);
-
-            console.log(dataPost)
             const $_ = cheerio.load(dataPost.data);
-
 
             const MangaInfo: Manga = {
                 id: cid,
