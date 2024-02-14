@@ -7,9 +7,20 @@ import { IResultSearch } from "../../../../types/search";
 axios.defaults.withCredentials = true
 axios.defaults.headers.common["User-Agent"] = "Mozilla/5.0 (Linux; Android 6.0.1; SAMSUNG SM-G532G) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/12.0 Chrome/79.0.3945.136 Mobile Safari/537.36";
 
+/** List of Domains
+ * https://comick.app
+ * 
+ * https://api.comick.app
+ * 
+ * https://api.comick.io
+ * 
+ * https://meo.comick.pictures
+*/
+
+
 export class Comick {
     readonly url = "https://comick.app";
-    readonly api = "https://api.comick.app"
+    readonly api = "https://api.comick.io"
 
     async GetMangaByFilter(search?: string, type?: number, year?: string, genre?: string) {
         try {
@@ -46,11 +57,13 @@ export class Comick {
     async GetMangaInfo(manga: string, lang: string): Promise<Manga> {
         try {
             const { data } = await axios.get(`${this.api}/comic/${manga}`);
+            // build static
+            ///_next/data/S1XqseNRmzozm3TaUH1lU/comic/00-solo-leveling.json
             const currentLang = lang ? `?lang=${lang}` : ""
             const mangaInfoParseObj = data
 
             const dataApi = await axios.get(`${this.api}/comic/${mangaInfoParseObj.comic.hid}/chapters${currentLang}`);
-      
+   
             const MangaInfo: Manga = {
                 id: mangaInfoParseObj.comic.id,
                 title: mangaInfoParseObj.comic.title,
@@ -58,6 +71,7 @@ export class Comick {
                 url: `/manga/comick/title/${mangaInfoParseObj.comic.slug}`,
                 description: mangaInfoParseObj.comic.desc,
                 isNSFW: mangaInfoParseObj.comic.hentai,
+                langlist: mangaInfoParseObj.langList,
                 status: mangaInfoParseObj.comic.status == "1" ? "ongoing" : "completed",
                 authors: mangaInfoParseObj.authors.map((e: { name: string; }) => e.name),
                 genres: mangaInfoParseObj.comic.md_comic_md_genres.map((e: { md_genres: {name:string;} }) => e.md_genres.name),
@@ -119,8 +133,8 @@ export class Comick {
 
                 const MangaChapterInfoChapter: MangaChapter = {
                     id: mangaChapterInfoParseObj.chapter.id,
-                    title: mangaChapterInfoParseObj.chapter.title,
-                    url: `/manga/comick/chapter/`,
+                    title: mangaChapterInfoParseObj.seoTitle,
+                    url: `/manga/comick/chapter/${manga}`,
                     number: mangaChapterInfoParseObj.chapter.chap,
                     images: mangaChapterInfoParseObj.chapter.md_images.map((e: { w: number; h: number; name: string; b2key: string; }) => {
                         return {
@@ -148,8 +162,8 @@ export class Comick {
 
                 const MangaChapterInfoChapter: MangaChapter = {
                     id: dataBuild.data.pageProps.chapter.id,
-                    title: dataBuild.data.pageProps.chapter.title,
-                    url: `/manga/comick/chapter/`,
+                    title: dataBuild.data.pageProps.seoTitle,
+                    url: `/manga/comick/chapter/${manga}`,
                     number: dataBuild.data.pageProps.chapter.chap,
                     images: dataBuild.data.pageProps.chapter.md_images.map((s: { w: number; h: number; name: string; b2key: string; }) => {
                         return {
