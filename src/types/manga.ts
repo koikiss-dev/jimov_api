@@ -102,6 +102,10 @@ export interface IManga {
   genres?: string[];
   /** A list of the characters that are part of the history of manga */
   characters?: string[];
+
+  /** list of available languages */
+  langlist?: string[];
+
   /**
    * Contains a total list of chapters that make up the manga.
    * The 'volumes' property indicates the rank in the list of chapters
@@ -156,6 +160,8 @@ export class Manga implements IManga {
   status?: "ongoing" | "completed";
   /** @inheritdoc */
   authors?: string[];
+  /** @inheritdoc */
+  langlist?: string[];
   /** @inheritdoc */
   genres?: string[];
   /** @inheritdoc */
