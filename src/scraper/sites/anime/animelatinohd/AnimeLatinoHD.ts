@@ -8,7 +8,7 @@ import {
   IResultSearch,
   IAnimeSearch,
 } from "../../../../types/search";
-import { AnimeProviderModel } from "scraper/ScraperAnimeModel";
+import { AnimeProviderModel } from "../../../ScraperAnimeModel";
 
 export class AnimeLatinoHD extends AnimeProviderModel {
   readonly url = "https://www.animelatinohd.com";
@@ -133,8 +133,8 @@ export class AnimeLatinoHD extends AnimeProviderModel {
                    Server.url = "https://filemoon.sx" + "/e/" + id_file
                }*/
             AnimeEpisodeInfo.servers.push(Server);
-          },
-        ),
+          }
+        )
       );
 
       return AnimeEpisodeInfo;
@@ -148,7 +148,7 @@ export class AnimeLatinoHD extends AnimeProviderModel {
     type?: number,
     page?: number,
     year?: string,
-    genre?: string,
+    genre?: string
   ): Promise<IResultSearch<IAnimeSearch>> {
     try {
       const { data } = await axios.get(`${this.api}/api/anime/list`, {

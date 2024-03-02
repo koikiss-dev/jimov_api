@@ -23,13 +23,13 @@ describe("AnimeFlv", () => {
   });
 
   it("should filter anime successfully", async () => {
-    const result = await animeFlv.Filter(
+    const result = await animeFlv.GetAnimeByFilter(
       Genres.Action,
       "all",
       "all",
       StatusAnimeflv.OnGoing,
       1,
-      1,
+      1
     );
     expect(result.results.length).toBeGreaterThan(0);
   });

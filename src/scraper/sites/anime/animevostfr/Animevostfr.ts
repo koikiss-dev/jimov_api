@@ -8,7 +8,7 @@ import {
   IResultSearch,
   IAnimeSearch,
 } from "../../../../types/search";
-import { AnimeProviderModel } from "scraper/ScraperAnimeModel";
+import { AnimeProviderModel } from "../../../ScraperAnimeModel";
 //import { Calendar } from "@animetypes/date";
 
 /** List of Domains
@@ -27,7 +27,7 @@ export class Animevostfr extends AnimeProviderModel {
       const $ = cheerio.load(data);
 
       const AnimeTypes = $(
-        ".mvic-info .mvici-right p strong:contains(' Type:')",
+        ".mvic-info .mvici-right p strong:contains(' Type:')"
       )
         .nextAll()
         .text();
@@ -44,13 +44,13 @@ export class Animevostfr extends AnimeProviderModel {
         url: `/anime/animevostfr/name/${anime}`,
         synopsis: AnimeDescription.slice(
           AnimeDescription.indexOf("Synopsis:") + "Synopsis:".length,
-          -1,
+          -1
         ).trim(),
         alt_name: [
           ...AnimeDescription.slice(
             AnimeDescription.indexOf("Titre alternatif:") +
               "Titre alternatif:".length,
-            AnimeDescription.indexOf("Synopsis:"),
+            AnimeDescription.indexOf("Synopsis:")
           )
             .replace("<br>\n", "")
             .split("/")
@@ -105,7 +105,7 @@ export class Animevostfr extends AnimeProviderModel {
       const anime = episode.substring(0, episode.lastIndexOf("-"));
 
       const { data } = await axios.get(
-        `${this.url}/episode/${anime}-episode-${number}`,
+        `${this.url}/episode/${anime}-episode-${number}`
       );
       const $ = cheerio.load(data);
       const s = $(".form-group.list-server select option");
@@ -142,7 +142,7 @@ export class Animevostfr extends AnimeProviderModel {
       await Promise.all(
         ListServer.map(async (n) => {
           const servers = await axios.get(
-            `${this.url}/ajax-get-link-stream/?server=${n}&filmId=${ListFilmId[0]}`,
+            `${this.url}/ajax-get-link-stream/?server=${n}&filmId=${ListFilmId[0]}`
           );
           let currentData = servers.data;
           if (n == "opencdn" || n == "photo") {
@@ -155,11 +155,11 @@ export class Animevostfr extends AnimeProviderModel {
             url: currentData,
           };
           AnimeEpisodeInfo.servers.push(Servers);
-        }),
+        })
       );
 
       AnimeEpisodeInfo.servers.sort(
-        (a: EpisodeServer, b: EpisodeServer) => a.name.length - b.name.length,
+        (a: EpisodeServer, b: EpisodeServer) => a.name.length - b.name.length
       );
       return AnimeEpisodeInfo;
     } catch (error) {
@@ -172,7 +172,7 @@ export class Animevostfr extends AnimeProviderModel {
     type?: number,
     page?: number,
     year?: string,
-    genre?: string,
+    genre?: string
   ): Promise<IResultSearch<IAnimeSearch>> {
     try {
       const { data } = await axios.get(`${this.api}/api/anime/list`, {

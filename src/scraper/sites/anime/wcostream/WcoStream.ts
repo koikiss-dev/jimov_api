@@ -9,7 +9,7 @@ import {
   AnimeSearch,
 } from "../../../../types/search";
 import { UnPacked } from "../../../../types/utils";
-import { AnimeProviderModel } from "scraper/ScraperAnimeModel";
+import { AnimeProviderModel } from "../../../ScraperAnimeModel";
 
 /** List of Domains
  * https://wcostream.tv
@@ -50,10 +50,10 @@ export class WcoStream extends AnimeProviderModel {
       const $ = cheerio.load(data);
 
       const image = $(
-        "#category_description .ui-grid-solo .ui-block-a img",
+        "#category_description .ui-grid-solo .ui-block-a img"
       ).attr("src");
       const name = $(
-        ".main .ui-grid-solo.center .ui-block-a > .ui-bar.ui-bar-x",
+        ".main .ui-grid-solo.center .ui-block-a > .ui-bar.ui-bar-x"
       )
         .text()
         .replace("Share On", "");
@@ -95,7 +95,7 @@ export class WcoStream extends AnimeProviderModel {
             data.includes("English Dubbed")
               ? "English Dubbed"
               : "English Subbed",
-            "",
+            ""
           )
           .replace("Episode", "")
           .trim()
@@ -144,7 +144,7 @@ export class WcoStream extends AnimeProviderModel {
       const anime = episode.substring(0, episode.lastIndexOf("-"));
 
       const { data } = await axios.get(
-        `https://www.wcostream.tv/playlist-cat/${anime}`,
+        `https://www.wcostream.tv/playlist-cat/${anime}`
       );
       const $ = cheerio.load(data);
 
@@ -154,7 +154,7 @@ export class WcoStream extends AnimeProviderModel {
           .trim()
           .slice(mainUrl.search("playlist:") + 6, mainUrl.search("image: ") - 4)
           .trim()
-          .replace(",", ""),
+          .replace(",", "")
       );
 
       const mainData = await axios.get(this.url + mainOrigin);
@@ -162,7 +162,7 @@ export class WcoStream extends AnimeProviderModel {
         mainData.data
           .replaceAll(":image", " type='image'")
           .replaceAll(":source", " type='video'")
-          .trim(),
+          .trim()
       );
 
       const AnimeEpisodeInfo: Episode = {
@@ -224,7 +224,7 @@ export class WcoStream extends AnimeProviderModel {
 
   async GetAnimeByFilter(
     search?: string,
-    page?: number,
+    page?: number
   ): Promise<IResultSearch<IAnimeSearch>> {
     try {
       const formdata = new FormData();
@@ -278,8 +278,8 @@ export class WcoStream extends AnimeProviderModel {
     const RequestBR = await eval(
       UnBuffer.slice(
         UnBuffer.indexOf("{sources:[{file:") + "{sources:[{file:".length,
-        UnBuffer.indexOf("}],image:", 1),
-      ),
+        UnBuffer.indexOf("}],image:", 1)
+      )
     );
 
     return RequestBR;

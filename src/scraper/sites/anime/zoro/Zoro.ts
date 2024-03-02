@@ -7,7 +7,7 @@ import {
   ResultSearch,
   IAnimeSearch,
 } from "../../../../types/search";
-import { AnimeProviderModel } from "scraper/ScraperAnimeModel";
+import { AnimeProviderModel } from "../../../ScraperAnimeModel";
 
 export class Zoro extends AnimeProviderModel {
   readonly url = "https://aniwatch.to";
@@ -71,7 +71,7 @@ export class Zoro extends AnimeProviderModel {
     language?: string,
     sort?: string,
     genres?: string,
-    page_anime?: string,
+    page_anime?: string
   ) {
     try {
       const { data } = await axios.get(`${this.url}/filter`, {
@@ -125,7 +125,7 @@ export class Zoro extends AnimeProviderModel {
             Referer: `https://zoro.to/watch/${animename + "-" + ep}`,
             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
           },
-        },
+        }
       );
       const $ = load(data.html);
       const epi = new Episode();
@@ -172,7 +172,7 @@ export class Zoro extends AnimeProviderModel {
 
   private async getServers(id): Promise<any> {
     const { data } = await axios.get(
-      `${this.url}/ajax/v2/episode/sources?id=${id}`,
+      `${this.url}/ajax/v2/episode/sources?id=${id}`
     );
     return data;
   }

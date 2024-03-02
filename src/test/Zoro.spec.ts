@@ -16,7 +16,7 @@ describe("Zoro", () => {
     expect(animeInfo.genres.length).toBeGreaterThan(0);
   });
   it("should filter anime successfully", async () => {
-    const result = await zoro.Filter("2");
+    const result = await zoro.GetAnimeByFilter("2");
     expect(result.results.length).toBeGreaterThan(0);
   });
 });

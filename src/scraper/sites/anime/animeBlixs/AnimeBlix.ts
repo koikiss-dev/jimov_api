@@ -8,7 +8,7 @@ import {
   IResultSearch,
   IAnimeSearch,
 } from "../../../../types/search";
-import { AnimeProviderModel } from "scraper/ScraperAnimeModel";
+import { AnimeProviderModel } from "../../../ScraperAnimeModel";
 //import { Calendar } from "@animetypes/date";
 
 /** List of Domains
@@ -27,7 +27,7 @@ export class AnimeBlix extends AnimeProviderModel {
   async GetAnimeInfo(anime: string): Promise<Anime> {
     try {
       const { data } = await axios.get(
-        `${this.url}/animes/${anime.includes("ver-") ? anime : "ver-" + anime}`,
+        `${this.url}/animes/${anime.includes("ver-") ? anime : "ver-" + anime}`
       );
       const $ = cheerio.load(data);
 
@@ -38,7 +38,7 @@ export class AnimeBlix extends AnimeProviderModel {
         ? $(".cn .info .r .u li span[class='fi']").text()
         : $(".cn .info .r .u li span[class='es']").text();
       const AnimeDate = $(
-        ".cn .info .r .u li span:contains('Fecha de emisión:')",
+        ".cn .info .r .u li span:contains('Fecha de emisión:')"
       )
         .next()
         .text()
@@ -106,7 +106,7 @@ export class AnimeBlix extends AnimeProviderModel {
       const ReplaceSymbols: RegExp = /(,)+/g;
       const ListEpisode = ListEpisodeIndex.slice(
         ListEpisodeIndex.indexOf("var eps = "),
-        ListEpisodeIndex.indexOf(";</") - 1,
+        ListEpisodeIndex.indexOf(";</") - 1
       )
         .replace(RemoveSymbols, "")
         .replace(ReplaceSymbols, ",")
@@ -135,7 +135,7 @@ export class AnimeBlix extends AnimeProviderModel {
       const anime = episode.substring(0, episode.lastIndexOf("-"));
 
       const { data } = await axios.get(
-        `${this.url}/${anime.replace("ver-", "")}-${number}`,
+        `${this.url}/${anime.replace("ver-", "")}-${number}`
       );
       const $ = cheerio.load(data);
 
@@ -170,7 +170,7 @@ export class AnimeBlix extends AnimeProviderModel {
     type?: number,
     page?: number,
     year?: string,
-    genre?: string,
+    genre?: string
   ): Promise<IResultSearch<IAnimeSearch>> {
     try {
       const { data } = await axios.get(`${this.api}/api/anime/list`, {
