@@ -14,7 +14,7 @@ import {
   IResultSearch,
   IAnimeSearch,
 } from "../../../../types/search";
-import { AnimeProviderModel } from "src/scraper/ScraperAnimeModel";
+import { AnimeProviderModel } from "scraper/ScraperAnimeModel";
 
 export class AnimeFlv extends AnimeProviderModel {
   readonly url = "https://animeflv.ws";
@@ -58,7 +58,7 @@ export class AnimeFlv extends AnimeProviderModel {
         episode.name = $(e).children(".Title").text().trim();
         episode.url = `/anime/flv/episode/${`${l}`.replace(
           "/anime",
-          "/anime/flv"
+          "/anime/flv",
         )}`;
         episode.number = $(e).children("p").last().text().trim();
         episode.image = $(e).children("figure").find(".lazy").attr("src");
@@ -68,10 +68,10 @@ export class AnimeFlv extends AnimeProviderModel {
     } catch (error) {
       console.log(
         "An error occurred while getting the anime info: invalid name",
-        error
+        error,
       );
       throw new Error(
-        "An error occurred while getting the anime info: invalid name"
+        "An error occurred while getting the anime info: invalid name",
       );
     }
   }
@@ -83,7 +83,7 @@ export class AnimeFlv extends AnimeProviderModel {
     status?: StatusAnimeflv,
     ord?: OrderAnimeflv,
     page?: number,
-    title?: string
+    title?: string,
   ): Promise<IResultSearch<IAnimeSearch>> {
     try {
       const { data } = await axios.get(`${this.url}/browse`, {
@@ -144,7 +144,7 @@ export class AnimeFlv extends AnimeProviderModel {
         servers.url = videoData;
         if (videoData.includes("streaming.php")) {
           await this.getM3U(
-            `${videoData.replace("streaming.php", "ajax.php")}&refer=none`
+            `${videoData.replace("streaming.php", "ajax.php")}&refer=none`,
           ).then((g) => {
             if (g.source.length) {
               servers.file_url = g.source[0].file;

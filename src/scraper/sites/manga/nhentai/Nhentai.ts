@@ -47,7 +47,7 @@ class NhentaiMangaInfo {
   async getMangaInfoById(mangaId: string) {
     try {
       const { data } = await axios.get(`https://nhentai.to/g/${mangaId}`);
-      
+
       const $ = load(data);
 
       const manga = new Manga();
@@ -55,7 +55,6 @@ class NhentaiMangaInfo {
       manga.characters = [];
       manga.authors = [];
       manga.chapters = [];
-
 
       manga.title = $("div#info h1").text();
       manga.thumbnail = {

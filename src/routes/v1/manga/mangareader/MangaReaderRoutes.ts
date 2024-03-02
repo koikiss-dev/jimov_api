@@ -6,7 +6,7 @@ import {
   MangaReaderFilterScore,
   MangaReaderFilterSort,
   MangaReaderFilterStatus,
-  MangaReaderFilterType
+  MangaReaderFilterType,
 } from "../../../../scraper/sites/manga/MangaReader/MangaReaderTypes";
 
 const mangaReader = new MangaReader();
@@ -31,7 +31,8 @@ router.get("/manga/mangareader/filter", async (req, res) => {
     const status = req.query.status as MangaReaderFilterStatus;
     const ratingType = req.query.rating as MangaReaderFilterRatingType;
     const score = req.query.score as MangaReaderFilterScore;
-    const language = req.query.language as typeof MangaReaderFilterLanguage[number];
+    const language = req.query
+      .language as (typeof MangaReaderFilterLanguage)[number];
     const startYear = req.query.startyear as unknown as number;
     const startMonth = req.query.startmonth as unknown as number;
     const startDay = req.query.startday as unknown as number;
@@ -54,7 +55,7 @@ router.get("/manga/mangareader/filter", async (req, res) => {
       endMonth,
       endDay,
       sort,
-      numPage
+      numPage,
     });
 
     return res.status(200).send(data);
@@ -68,14 +69,14 @@ router.get("/manga/mangareader/chapter/:id", async (req, res) => {
   try {
     const id = req.params.id as unknown as number;
     const chapterNumber = req.query.number as unknown as number;
-    const language = req.query.lang as typeof MangaReaderFilterLanguage[number];
-
+    const language = req.query
+      .lang as (typeof MangaReaderFilterLanguage)[number];
 
     const data = await mangaReader.GetMangaChapters(
       id,
       chapterNumber,
       language,
-      "chapter"
+      "chapter",
     );
 
     return res.status(200).send(data);
@@ -89,14 +90,14 @@ router.get("/manga/mangareader/volume/:id", async (req, res) => {
   try {
     const id = req.params.id as unknown as number;
     const chapterNumber = req.query.number as unknown as number;
-    const language = req.query.lang as typeof MangaReaderFilterLanguage[number];
-
+    const language = req.query
+      .lang as (typeof MangaReaderFilterLanguage)[number];
 
     const data = await mangaReader.GetMangaChapters(
       id,
       chapterNumber,
       language,
-      "volume"
+      "volume",
     );
 
     return res.status(200).send(data);

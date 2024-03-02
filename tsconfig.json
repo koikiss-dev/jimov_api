@@ -25,29 +25,16 @@
     "outDir": "./build",
     "baseUrl": "./src",
     "paths": {
-      "@animetypes/*": [
-        "./types/*",
-      ],
-      "@providers/*":[
+      "@animetypes/*": ["./types/*"],
+      "@providers/*": [
         "./scraper/sites/anime/*",
         "./scraper/sites/manga/*",
         "./scraper/sites/doramas/*"
-
       ],
-      "@routes/manga/*": [
-        "./routes/v1/manga/*"
-      ],
-      "@routes/anime/*": [
-        "./routes/v1/anime/*"
-       ],
-      "@routes/doramas/*": [
-        "./routes/v1/doramas/*"
-      ],
+      "@routes/manga/*": ["./routes/v1/manga/*"],
+      "@routes/anime/*": ["./routes/v1/anime/*"],
+      "@routes/doramas/*": ["./routes/v1/doramas/*"]
     }
   },
-  "exclude": [
-    "node_modules",
-    "build",
-    "**/*.spec.ts"
-  ]
+  "exclude": ["node_modules", "build", "**/*.spec.ts"]
 }

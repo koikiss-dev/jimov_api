@@ -60,10 +60,10 @@ export class MangaBuddy {
 
         const dateText = $(e).find("time.chapter-update").text().trim(); //date string
         const yearMangaVerification = Number.isNaN(
-          Number(dateText.split(" ")[2])
+          Number(dateText.split(" ")[2]),
         );
         const dayMangaVerification = Number.isNaN(
-          Number(dateText.split(" ")[0])
+          Number(dateText.split(" ")[0]),
         );
 
         let monthAbbr;

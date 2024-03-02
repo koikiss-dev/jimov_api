@@ -135,7 +135,7 @@ export interface IMangaResult {
   thumbnail?: IImage;
   /** {@inheritdoc IManga.url} */
   url: `/manga/${string}/title/${string}`;
-}//filter
+} //filter
 
 /**
  * This class defines the basic properties that a manga website can
@@ -229,5 +229,5 @@ export class MangaVolume implements IMangaVolume {
   /** @inheritdoc */
   thumbnail?: string;
   /** @inheritdoc */
-  url?:`/manga/${string}/volume/${string}`; // title or number
+  url?: `/manga/${string}/volume/${string}`; // title or number
 }

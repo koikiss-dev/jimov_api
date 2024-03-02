@@ -1,8 +1,8 @@
 //Spanish Providers - TypeScript version
 
 /**
- * Anime search helpers, use them with you scrapping by filter (searching..), 
- * this format help you how you can return 
+ * Anime search helpers, use them with you scrapping by filter (searching..),
+ * this format help you how you can return
  * theses results
  *
  * @author Mawfyy
@@ -15,7 +15,7 @@ export interface IAnimeSearch {
   image: string;
   /** The anime URL from the API */
   url: `/anime/${string}/name/${string}` | string; // API url
-  /** 
+  /**
    * Defines the type of content to which the anime is directed, which
    * can be a movie, OVA, ONA, etc... */
   type?: string;
@@ -25,7 +25,7 @@ export interface IAnimeSearch {
  * To navigate more easily among the infinite number of results that the
  * API can return, we use this interface in which there is information
  * about which page is being searched and how many pages are still available.
- * 
+ *
  * @author Zukaritasu
  */
 export interface IPageNavigation {
@@ -36,13 +36,13 @@ export interface IPageNavigation {
   /** the next page number */
   next?: number;
   /** Indicates if there is a next page available */
-  hasNext?: boolean
+  hasNext?: boolean;
 }
 
 /**
  * Search results including information on the page number of the
  * searched web site
- * 
+ *
  * @author Zukaritasu
  */
 export interface IResultSearch<T> {
@@ -53,8 +53,8 @@ export interface IResultSearch<T> {
 }
 
 /**
- * Anime search helpers, use them with you scrapping by filter (searching..), 
- * this format help you how you can return 
+ * Anime search helpers, use them with you scrapping by filter (searching..),
+ * this format help you how you can return
  * theses results
  *
  * @author Mawfyy
@@ -74,7 +74,7 @@ export class AnimeSearch implements IAnimeSearch {
 /**
  * Search results including information on the page number of the
  * searched web site
- * 
+ *
  * @author Zukaritasu
  */
 export class ResultSearch<T> implements IResultSearch<T> {

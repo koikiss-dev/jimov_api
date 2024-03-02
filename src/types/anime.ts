@@ -1,8 +1,8 @@
 //anime data return standard
 
-import { ICalendar, IDatePeriod } from './date';
-import { IEpisode } from './episode';
-import { IImage } from './image';
+import { ICalendar, IDatePeriod } from "./date";
+import { IEpisode } from "./episode";
+import { IImage } from "./image";
 
 //spanish providers - TypeScript version
 
@@ -21,15 +21,15 @@ export interface IAnimeStats {
   rating?: string | number; // stars
 }
 
-/** 
+/**
  * Spectify chronology to that anime, in some pages puts what anime
- * should you see before to that anime 
+ * should you see before to that anime
  *
  * @author Mawfyy
  */
 export interface IChronology {
   name: string;
-  url: `/anime/${string}/name/${string}`| string;
+  url: `/anime/${string}/name/${string}` | string;
   image?: string;
 }
 
@@ -48,11 +48,11 @@ export interface IAnime {
   url: `/anime/${string}/name/${string}` | string;
   /** The anime synopsis */
   synopsis?: string;
-  /** 
+  /**
    * An <a href="./image.ts">IImage</a> interface object representing the anime
    * image and its banner. */
   image: IImage;
-  /** 
+  /**
    * The date from when the anime started until it ended. The end date may be
    * auxiliary in case the anime has not ended. */
   date?: IDatePeriod | ICalendar;
@@ -62,17 +62,17 @@ export interface IAnime {
   genres?: string[];
   /** Climatic station of which the anime was released */
   station?: ClimaticStation | string;
-  /** 
+  /**
    * Most anime websites have an anime statistics section including ratings and
    * number of views, etc... */
   stats?: IAnimeStats;
   /** Chronology of the anime. It is an array that contains the anime related to it. */
   chronology?: IChronology[];
-  /** 
+  /**
    * A list of the episodes of this anime. This property must be null or not used
    * if an IAnime object is used in IChronology. */
   episodes?: IEpisode[];
-  /** 
+  /**
    * The status of the anime indicating whether it is on air, finished
    * or still on hold. */
   status?: string | boolean;
@@ -95,9 +95,9 @@ export class AnimeStats implements IAnimeStats {
   rating?: string | number;
 }
 
-/** 
+/**
  * Spectify chronology to that anime, in some pages puts what anime
- * should you see before to that anime 
+ * should you see before to that anime
  *
  * @author Mawfyy
  */

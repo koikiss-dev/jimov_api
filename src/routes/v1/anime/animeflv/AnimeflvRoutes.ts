@@ -53,7 +53,7 @@ r.get("/anime/flv/filter", async (req, res) => {
       status,
       ord,
       page,
-      title
+      title,
     );
     res.send(animeInfo);
   } catch (error) {
