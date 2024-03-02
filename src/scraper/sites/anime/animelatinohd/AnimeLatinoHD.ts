@@ -2,104 +2,127 @@ import * as cheerio from "cheerio";
 import axios from "axios";
 import { Anime } from "@animetypes/anime";
 import { Episode, EpisodeServer } from "@animetypes/episode";
-import { AnimeSearch, ResultSearch, IResultSearch, IAnimeSearch } from "@animetypes/search";
+import {
+  AnimeSearch,
+  ResultSearch,
+  IResultSearch,
+  IAnimeSearch,
+} from "@animetypes/search";
+import { AnimeProviderModel } from "src/scraper/ScraperAnimeModel";
 
-export class AnimeLatinoHD {
-    readonly url = "https://www.animelatinohd.com";
-    readonly api = "https://api.animelatinohd.com";
+export class AnimeLatinoHD extends AnimeProviderModel {
+  readonly url = "https://www.animelatinohd.com";
+  readonly api = "https://api.animelatinohd.com";
 
-    async GetAnimeInfo(anime: string): Promise<Anime> {
-        try {
-            const { data } = await axios.get(`${this.url}/anime/${anime}`);
-            const $ = cheerio.load(data);
+  async GetAnimeInfo(anime: string): Promise<Anime> {
+    try {
+      const { data } = await axios.get(`${this.url}/anime/${anime}`);
+      const $ = cheerio.load(data);
 
-            const animeInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
-            const Dates = new Date(String(animeInfoParseObj.aired))
-            const DateFormat = new Intl.DateTimeFormat("en",{day:"numeric",month:"numeric",year:"numeric"}).format(Dates).split("/")
-            
-            const AnimeInfo: Anime = {
-                name: animeInfoParseObj.name,
-                url: `/anime/animelatinohd/name/${anime}`,
-                synopsis: animeInfoParseObj.overview,
-                alt_name: [...animeInfoParseObj.name_alternative.split(",")],
-                image: {
-                    url: "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.poster + "?&w=53&q=95"
-                },
-                genres: [...animeInfoParseObj.genres.split(",")],
-                type: animeInfoParseObj.type,
-                status: animeInfoParseObj.status == 1 ? "En emisión" : "Finalizado",
-                date: {year:DateFormat[2],month:DateFormat[1],day:DateFormat[0]},
-                episodes: []
-            }
+      const animeInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props
+        .pageProps.data;
+      const Dates = new Date(String(animeInfoParseObj.aired));
+      const DateFormat = new Intl.DateTimeFormat("en", {
+        day: "numeric",
+        month: "numeric",
+        year: "numeric",
+      })
+        .format(Dates)
+        .split("/");
 
-            animeInfoParseObj.episodes.map(e => {
-                const AnimeEpisode: Episode = {
-                    name: animeInfoParseObj.name,
-                    number: e.number + "",
-                    image: "https://www.themoviedb.org/t/p/original" + animeInfoParseObj.banner + "?&w=280&q=95",
-                    url: `/anime/animelatinohd/episode/${animeInfoParseObj.slug + "-" + e.number}`
-                }
+      const AnimeInfo: Anime = {
+        name: animeInfoParseObj.name,
+        url: `/anime/animelatinohd/name/${anime}`,
+        synopsis: animeInfoParseObj.overview,
+        alt_name: [...animeInfoParseObj.name_alternative.split(",")],
+        image: {
+          url:
+            "https://www.themoviedb.org/t/p/original" +
+            animeInfoParseObj.poster +
+            "?&w=53&q=95",
+        },
+        genres: [...animeInfoParseObj.genres.split(",")],
+        type: animeInfoParseObj.type,
+        status: animeInfoParseObj.status == 1 ? "En emisión" : "Finalizado",
+        date: { year: DateFormat[2], month: DateFormat[1], day: DateFormat[0] },
+        episodes: [],
+      };
 
-                AnimeInfo.episodes.push(AnimeEpisode);
-            })
+      animeInfoParseObj.episodes.map((e) => {
+        const AnimeEpisode: Episode = {
+          name: animeInfoParseObj.name,
+          number: e.number + "",
+          image:
+            "https://www.themoviedb.org/t/p/original" +
+            animeInfoParseObj.banner +
+            "?&w=280&q=95",
+          url: `/anime/animelatinohd/episode/${
+            animeInfoParseObj.slug + "-" + e.number
+          }`,
+        };
 
-            return AnimeInfo;
+        AnimeInfo.episodes.push(AnimeEpisode);
+      });
 
-        } catch (error) {
-            console.log(error)
-        }
+      return AnimeInfo;
+    } catch (error) {
+      console.log(error);
     }
-    async GetEpisodeServers(episode: string, lang: string): Promise<Episode> {
-        try {
+  }
+  async GetEpisodeServers(episode: string, lang: string): Promise<Episode> {
+    try {
+      const number = episode.substring(episode.lastIndexOf("-") + 1);
+      const anime = episode.substring(0, episode.lastIndexOf("-"));
+      const langType = [
+        { lang: "es", type: "Latino" },
+        { lang: "jp", type: "Subtitulado" },
+      ];
 
-            const number = episode.substring(episode.lastIndexOf("-") + 1)
-            const anime = episode.substring(0, episode.lastIndexOf("-"))
-            const langType = [{ lang: "es", type: "Latino" }, { lang: "jp", type: "Subtitulado" }]
+      const { data } = await axios.get(`${this.url}/ver/${anime}/${number}`);
+      const $ = cheerio.load(data);
 
-            const { data } = await axios.get(`${this.url}/ver/${anime}/${number}`);
-            const $ = cheerio.load(data);
+      const animeEpisodeParseObj = JSON.parse($("#__NEXT_DATA__").html()).props
+        .pageProps.data;
 
-            const animeEpisodeParseObj = JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data
+      const AnimeEpisodeInfo: Episode = {
+        name: animeEpisodeParseObj.anime.name,
+        url: `/anime/animelatinohd/episode/${episode}`,
+        number: number,
+        image: "",
+        servers: [],
+      };
 
-            const AnimeEpisodeInfo: Episode = {
-                name: animeEpisodeParseObj.anime.name,
-                url: `/anime/animelatinohd/episode/${episode}`,
-                number: number,
-                image: "",
-                servers: []
-            }
+      const sel_lang = langType.filter((e) => e.lang == lang);
+      let f_index = 0;
 
-            const sel_lang = langType.filter((e) => e.lang == lang)
-            let f_index = 0
+      if (sel_lang.length) {
+        $("#languaje option").each((_i, e) => {
+          if ($(e).text() == sel_lang[0].type) {
+            f_index = Number($(e).val());
+          }
+        });
+      } else {
+        $("#languaje option").each((_i, e) => {
+          f_index = Number($(e).val());
+        });
+      }
 
-            if (sel_lang.length) {
-                $("#languaje option").each((_i, e) => {
-                    if ($(e).text() == sel_lang[0].type) {
-                        f_index = Number($(e).val())
-                    }
-                })
-            } else {
-                $("#languaje option").each((_i, e) => {
-                    f_index = Number($(e).val())
-                })
-            }
+      await Promise.all(
+        animeEpisodeParseObj.players[f_index].map(
+          async (e: { server: { title: string }; id: string }) => {
+            //const min = await axios.get("https://filemoon.sx/e/smone1s7jjxv/CYM01HNMCGTSKT")
+            //const pageload = await BrowserHandler("https://animelatinohd.com/")
 
-            await Promise.all(animeEpisodeParseObj.players[f_index].map(async (e: { server: { title: string; }; id: string; }) => {
-               //const min = await axios.get("https://filemoon.sx/e/smone1s7jjxv/CYM01HNMCGTSKT")
-               //const pageload = await BrowserHandler("https://animelatinohd.com/")
-               
-                const Server: EpisodeServer = {
-                    name: e.server.title,
-                    url: "",
-                }
-                //const cookies = [{name: 'v_id', value: "https://api.animelatinohd.com/stream/"+e.id},];
-                Server.url = "https://api.animelatinohd.com/stream/" + e.id
-                Server.name = e.server.title
-                
-               
-                
-                //await pageload.page.setCookie(...cookies)
-                /*await pageload.page.evaluate(()=>{
+            const Server: EpisodeServer = {
+              name: e.server.title,
+              url: "",
+            };
+            //const cookies = [{name: 'v_id', value: "https://api.animelatinohd.com/stream/"+e.id},];
+            Server.url = "https://api.animelatinohd.com/stream/" + e.id;
+            Server.name = e.server.title;
+
+            //await pageload.page.setCookie(...cookies)
+            /*await pageload.page.evaluate(()=>{
                     function getCookie(cname) {
                         const name = cname + "=";
                         const decodedCookie = decodeURIComponent(document.cookie);
@@ -129,8 +152,8 @@ export class AnimeLatinoHD {
 
                 Server.url = unp*/
 
-                //state 1
-                /*if (e.server.title == "Beta") {
+            //state 1
+            /*if (e.server.title == "Beta") {
                    let sel = dat("script:contains('var foo_ui = function (event) {')")
                    let sort = String(sel.html())
                    let domain = eval(sort.slice(sort.search("const url"), sort.search("const langDef")).replace("const url =", "").trim())
@@ -150,53 +173,64 @@ export class AnimeLatinoHD {
                    Server.url = "https://filemoon.sx" + "/e/" + id_file
                }*/
 
-                AnimeEpisodeInfo.servers.push(Server)
-            }))
+            AnimeEpisodeInfo.servers.push(Server);
+          }
+        )
+      );
 
-            return AnimeEpisodeInfo;
-        } catch (error) {
-            console.log(error)
-        }
+      return AnimeEpisodeInfo;
+    } catch (error) {
+      console.log(error);
     }
+  }
 
-    async GetAnimeByFilter(search?: string, type?: number, page?: number, year?: string, genre?: string): Promise<IResultSearch<IAnimeSearch>> {
-        try {
-            const { data } = await axios.get(`${this.api}/api/anime/list`, {
-                params: {
-                    search: search,
-                    type: type,
-                    year: year,
-                    genre: genre,
-                    page: page
-                }
-            });
+  async GetAnimeByFilter(
+    search?: string,
+    type?: number,
+    page?: number,
+    year?: string,
+    genre?: string
+  ): Promise<IResultSearch<IAnimeSearch>> {
+    try {
+      const { data } = await axios.get(`${this.api}/api/anime/list`, {
+        params: {
+          search: search,
+          type: type,
+          year: year,
+          genre: genre,
+          page: page,
+        },
+      });
 
-            const animeSearchParseObj = data
+      const animeSearchParseObj = data;
 
-            const animeSearch: ResultSearch<IAnimeSearch> = {
-                nav: {
-                    count: animeSearchParseObj.data.length,
-                    current: animeSearchParseObj.current_page,
-                    next: animeSearchParseObj.data.length < 28 ? 0 : animeSearchParseObj.current_page + 1,
-                    hasNext: animeSearchParseObj.data.length < 28 ? false : true
-                },
-                results: []
-            }
-            animeSearchParseObj.data.map(e => {
-                const animeSearchData: AnimeSearch = {
-                    name: e.name,
-                    image: "https://www.themoviedb.org/t/p/original" + e.poster + "?&w=53&q=95",
-                    url: `/anime/animelatinohd/name/${e.slug}`,
-                    type: ""
-                }
-                animeSearch.results.push(animeSearchData)
-            })
-            return animeSearch;
-        } catch (error) {
-            console.log(error)
-        }
+      const animeSearch: ResultSearch<IAnimeSearch> = {
+        nav: {
+          count: animeSearchParseObj.data.length,
+          current: animeSearchParseObj.current_page,
+          next:
+            animeSearchParseObj.data.length < 28
+              ? 0
+              : animeSearchParseObj.current_page + 1,
+          hasNext: animeSearchParseObj.data.length < 28 ? false : true,
+        },
+        results: [],
+      };
+      animeSearchParseObj.data.map((e) => {
+        const animeSearchData: AnimeSearch = {
+          name: e.name,
+          image:
+            "https://www.themoviedb.org/t/p/original" +
+            e.poster +
+            "?&w=53&q=95",
+          url: `/anime/animelatinohd/name/${e.slug}`,
+          type: "",
+        };
+        animeSearch.results.push(animeSearchData);
+      });
+      return animeSearch;
+    } catch (error) {
+      console.log(error);
     }
-
+  }
 }
-
-

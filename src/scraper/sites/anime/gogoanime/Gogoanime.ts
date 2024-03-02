@@ -1,4 +1,4 @@
-import { getHTML } from "./assets/getHTML";
+/* import { getHTML } from "./assets/getHTML";
 import { Anime } from "../../../../types/anime";
 import { getAllAnimes } from "./assets/getAllAnimesHTML";
 import { Episode } from "../../../../types/episode";
@@ -178,3 +178,4 @@ export class GogoanimeServer {
 
 
 
+ */

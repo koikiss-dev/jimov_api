@@ -2,9 +2,14 @@ import axios from "axios";
 import { load } from "cheerio";
 import { Anime, Chronology } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
-import { AnimeSearch, ResultSearch, IAnimeSearch } from "../../../../types/search";
+import {
+  AnimeSearch,
+  ResultSearch,
+  IAnimeSearch,
+} from "../../../../types/search";
+import { AnimeProviderModel } from "src/scraper/ScraperAnimeModel";
 
-export class Zoro {
+export class Zoro extends AnimeProviderModel {
   readonly url = "https://aniwatch.to";
 
   async GetAnimeInfo(animeName: string): Promise<Anime> {
@@ -58,7 +63,7 @@ export class Zoro {
     }
   }
   //filter
-  async Filter(
+  async GetAnimeByFilter(
     type?: string,
     rated?: string,
     score?: string,
@@ -66,10 +71,9 @@ export class Zoro {
     language?: string,
     sort?: string,
     genres?: string,
-    page_anime?: string,
+    page_anime?: string
   ) {
     try {
-      
       const { data } = await axios.get(`${this.url}/filter`, {
         params: {
           type: type,
@@ -82,7 +86,7 @@ export class Zoro {
           page: page_anime || 1,
         },
       });
-      
+
       const $ = load(data);
       const most_cards = $("div.film_list div.film_list-wrap div.flw-item");
       //const page_index = $("div.pre-pagination nav ul li.active");
@@ -110,7 +114,7 @@ export class Zoro {
   }
 
   //episode server
-  async GetEpisodeServer(episode: string, ep: string) {
+  async GetEpisodeServers(episode: string, ep: string) {
     try {
       const animename = episode.toLowerCase().replace(/\s/g, "-");
       const { data } = await axios.get(
