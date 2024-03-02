@@ -1,5 +1,5 @@
 import { Router } from "express";
-import { Dramanice } from "@providers/dramanice/Dramanice";
+import { Dramanice } from "../../../../scraper/sites/doramas/dramanice/Dramanice";
 const Dorama = new Dramanice();
 const router = Router();
 

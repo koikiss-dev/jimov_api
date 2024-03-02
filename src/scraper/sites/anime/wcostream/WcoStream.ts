@@ -1,15 +1,14 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Anime } from "@animetypes/anime";
-import { Episode, EpisodeServer } from "@animetypes/episode";
+import { Anime } from "../../../../types/anime";
+import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
   IResultSearch,
   IAnimeSearch,
   ResultSearch,
   AnimeSearch,
-} from "@animetypes/search";
-import { UnPacked } from "@animetypes/utils";
-import { AnimeProviderModel } from "src/scraper/ScraperAnimeModel";
+} from "../../../../types/search";
+import { UnPacked } from "../../../../types/utils";
 
 /** List of Domains
  * https://wcostream.tv
@@ -271,10 +270,10 @@ export class WcoStream extends AnimeProviderModel {
   }
 
   async RuntimeUnpacked(data: string) {
-    const content = Buffer.from(data, "base64").toString();
-    const $ = cheerio.load(content);
-    const Buffers = $("script").get().at(-1).children[0].data;
-    const UnBuffer = UnPacked(Buffer.from(Buffers).toString("base64"));
+    const $ = cheerio.load(decodeURI(data));
+
+    const Buffer = btoa($("script").get().at(-1).children[0].data);
+    const UnBuffer = UnPacked(Buffer);
     const RequestBR = await eval(
       UnBuffer.slice(
         UnBuffer.indexOf("{sources:[{file:") + "{sources:[{file:".length,

@@ -1,5 +1,6 @@
 export const manganatoOrderByOptionsList = ["topview", "newest", "az"] as const;
-export type manganatoOrderByOptions = typeof manganatoOrderByOptionsList[number];
+export type manganatoOrderByOptions =
+  (typeof manganatoOrderByOptionsList)[number];
 
 export interface IManganatoFilterParams {
   /**
@@ -13,9 +14,12 @@ export interface IManganatoFilterParams {
   genres: string;
   /** Results page */
   page: number;
-};
+}
 
-export type ManganatoFilterURLParams = keyof Omit<IManganatoFilterParams, "genres"> | "g_i" | "s";
+export type ManganatoFilterURLParams =
+  | keyof Omit<IManganatoFilterParams, "genres">
+  | "g_i"
+  | "s";
 
 export const manganatoGenreList = {
   action: 2,
@@ -59,5 +63,5 @@ export const manganatoGenreList = {
   manhua: 44,
   isekai: 45,
   pornographic: 47,
-  erotica: 48
+  erotica: 48,
 } as const;

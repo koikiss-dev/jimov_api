@@ -1,5 +1,11 @@
 import { URLSearchParams } from "url";
-import { IManganatoFilterParams, manganatoGenreList, manganatoOrderByOptions, manganatoOrderByOptionsList, ManganatoFilterURLParams } from "../ManganatoTypes";
+import {
+  IManganatoFilterParams,
+  ManganatoFilterURLParams,
+  manganatoGenreList,
+  manganatoOrderByOptions,
+  manganatoOrderByOptionsList,
+} from "../ManganatoTypes";
 import { ManganatoManager } from "./ManganatoManager";
 
 export class ManganatoAdvancedSearchURLManager extends ManganatoManager {
@@ -11,9 +17,9 @@ export class ManganatoAdvancedSearchURLManager extends ManganatoManager {
   }
 
   private processGenres(genresArray: string[]): number[] {
-    let arrGenerated: number[] = [];
+    const arrGenerated: number[] = [];
 
-    for (let genre of genresArray) {
+    for (const genre of genresArray) {
       if (manganatoGenreList[genre.toLowerCase()])
         arrGenerated.push(manganatoGenreList[genre.toLowerCase()]);
       else continue;
@@ -27,13 +33,18 @@ export class ManganatoAdvancedSearchURLManager extends ManganatoManager {
   }
 
   private processStatus(status: unknown) {
-    return (typeof status === "string" && (status.toLowerCase() === "ongoing" || status.toLowerCase() === "completed"))
+    return typeof status === "string" &&
+      (status.toLowerCase() === "ongoing" ||
+        status.toLowerCase() === "completed")
       ? status
       : "";
   }
 
   private processOrderBy(order: unknown) {
-    return (typeof order === "string" && manganatoOrderByOptionsList.includes(order.toLowerCase() as manganatoOrderByOptions))
+    return typeof order === "string" &&
+      manganatoOrderByOptionsList.includes(
+        order.toLowerCase() as manganatoOrderByOptions,
+      )
       ? order
       : "";
   }
@@ -44,7 +55,7 @@ export class ManganatoAdvancedSearchURLManager extends ManganatoManager {
       g_i: "",
       sts: this.processStatus(params.sts),
       orby: this.processOrderBy(params.orby),
-      page: params.page ? params.page.toString() : ""
+      page: params.page ? params.page.toString() : "",
     } satisfies Record<ManganatoFilterURLParams, string>;
 
     if (params.genres) {
