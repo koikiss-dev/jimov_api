@@ -160,7 +160,14 @@ async function getLastAnimes(url?: string): Promise<types.Anime[]> {
     for (let i = 0; i < elements.length; i++) {
         const href = $(elements[i]).find('a').attr('href');
         if (utils.isUsableValue(href) && href !== 'https://monoschinos2.com/emision?p=2') {
-            animes.push(await getAnime(href));
+            //animes.push(await getAnime(href));
+
+            let anime   = new types.Anime();
+            anime.url   = $(elements[i]).find('a').attr('href');
+            anime.image = new types.Image($(elements[i]).find('a img').attr('src'));
+            anime.name  = $(elements[i]).find('h3.seristitles').text();
+            
+            animes.push(anime);
         }
     }
     return animes;
