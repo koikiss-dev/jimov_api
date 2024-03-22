@@ -5,6 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "node ./build/src/index.js",
+    "start:pm2": "pm2 start ./build/src/index.js",
     "server": "nodemon src/index.ts",
     "start:vercel": "node build/index.js",
     "format": "prettier --ignore-path .gitignore --write \"**/*.+(js|ts|json)\"",
