@@ -1,7 +1,11 @@
 import axios from "axios";
 import { load } from "cheerio";
-import { Manga, IMangaChapter, IMangaResult } from "../../../../types/manga";
-import { IResultSearch } from "@animetypes/search";
+import {
+  Manga,
+  type IMangaChapter,
+  type IMangaResult,
+} from "../../../../types/manga";
+import { type IResultSearch } from "@animetypes/search";
 export class MangaBuddy {
   readonly url = "https://mangabuddy.com";
 
@@ -60,10 +64,10 @@ export class MangaBuddy {
 
         const dateText = $(e).find("time.chapter-update").text().trim(); //date string
         const yearMangaVerification = Number.isNaN(
-          Number(dateText.split(" ")[2]),
+          Number(dateText.split(" ")[2])
         );
         const dayMangaVerification = Number.isNaN(
-          Number(dateText.split(" ")[0]),
+          Number(dateText.split(" ")[0])
         );
 
         let monthAbbr;

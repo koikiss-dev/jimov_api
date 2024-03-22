@@ -3,7 +3,7 @@ import axios from "axios";
 import { load } from "cheerio";
 import { Image } from "../../../../types/image";
 import { ManganatoManagerUtils } from "./ManganatoManagerUtils";
-import { IManganatoFilterParams } from "./ManganatoTypes";
+import { type IManganatoFilterParams } from "./ManganatoTypes";
 import { ResultSearch } from "../../../../types/search";
 
 export class Manganelo {
@@ -25,7 +25,7 @@ export class Manganelo {
 
   private GetMangaStatus(data: cheerio.Root) {
     const selector = data(
-      "div.panel-story-info > div.story-info-right > table > tbody > tr:nth-child(3) > td.table-value",
+      "div.panel-story-info > div.story-info-right > table > tbody > tr:nth-child(3) > td.table-value"
     );
 
     if (selector.length == 0) return null;
@@ -36,7 +36,7 @@ export class Manganelo {
 
   private GetMangaAuthors(data: cheerio.Root): string[] | null {
     const selector = data(
-      "div.panel-story-info > div.story-info-right > table > tbody > tr:nth-child(2) > td.table-value",
+      "div.panel-story-info > div.story-info-right > table > tbody > tr:nth-child(2) > td.table-value"
     );
 
     if (selector.length == 0 && selector.find("a.a-h").length == 0) return null;
@@ -51,7 +51,7 @@ export class Manganelo {
 
   private GetMangaGenres(data: cheerio.Root): string[] | null {
     const selector = data(
-      "div.panel-story-info > div.story-info-right > table > tbody > tr:nth-child(4) > td.table-value",
+      "div.panel-story-info > div.story-info-right > table > tbody > tr:nth-child(4) > td.table-value"
     );
 
     if (selector.length == 0 && selector.find("a.a-h").length == 0) return null;
@@ -67,7 +67,7 @@ export class Manganelo {
   private isNsfw(genres: string[]) {
     return genres.some(
       (genre) =>
-        genre === "Pornographic" || genre === "Mature" || genre === "Erotica",
+        genre === "Pornographic" || genre === "Mature" || genre === "Erotica"
     );
   }
 
@@ -124,7 +124,7 @@ export class Manganelo {
     const thumbnail =
       this.url +
       $(
-        "div.panel-story-info > div.story-info-left > span.info-image > img",
+        "div.panel-story-info > div.story-info-left > span.info-image > img"
       ).attr("src");
     const altTitle = $("table > tbody > tr:nth-child(1) > td.table-value > h2")
       .text()
@@ -181,7 +181,7 @@ export class Manganelo {
 
   async GetMangaChapters(mangaId: string, chapterNumber: number) {
     const { data } = await axios.get(
-      `${this.url}/chapter/manga-${mangaId}/chapter-${chapterNumber}`,
+      `${this.url}/chapter/manga-${mangaId}/chapter-${chapterNumber}`
     );
     const $ = load(data);
 

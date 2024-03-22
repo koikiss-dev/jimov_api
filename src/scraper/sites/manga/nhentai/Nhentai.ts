@@ -1,7 +1,7 @@
 import axios from "axios";
 import { load } from "cheerio";
 import { getFilterByPages } from "./assets/getFilterByPage";
-import { IMangaChapter, Manga } from "../../../../types/manga";
+import { type IMangaChapter, Manga } from "../../../../types/manga";
 
 export class Nhentai {
   async filter(mangaName: string) {
@@ -102,9 +102,9 @@ class NhentaiGetMangaChapters {
           mangaImagesPages.push(
             $(chapterImage)
               .attr("data-src")
-              .replace("cdn.dogehls.xyz", "t7.nhentai.net"),
+              .replace("cdn.dogehls.xyz", "t7.nhentai.net")
           );
-        },
+        }
       );
 
       mangaChapters.push({

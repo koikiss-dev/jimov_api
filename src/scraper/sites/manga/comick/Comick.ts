@@ -1,7 +1,11 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Manga, MangaChapter, IMangaResult } from "../../../../types/manga";
-import { IResultSearch } from "../../../../types/search";
+import {
+  Manga,
+  MangaChapter,
+  type IMangaResult,
+} from "../../../../types/manga";
+import { type IResultSearch } from "../../../../types/search";
 
 //Default Set Axios Cookie
 axios.defaults.withCredentials = true;
@@ -28,7 +32,7 @@ export class Comick {
     search?: string,
     type?: number,
     year?: string,
-    genre?: string,
+    genre?: string
   ) {
     try {
       const { data } = await axios.get(`${this.api}/v1.0/search`, {
@@ -59,7 +63,7 @@ export class Comick {
             url: `/manga/comick/title/${e.slug}`,
           };
           ResultList.results.push(ListMangaResult);
-        },
+        }
       );
 
       return ResultList;
@@ -77,14 +81,14 @@ export class Comick {
       const mangaInfoParseObj = data;
 
       const dataApi = await axios.get(
-        `${this.api}/comic/${mangaInfoParseObj.comic.hid}/chapters${currentLang}`,
+        `${this.api}/comic/${mangaInfoParseObj.comic.hid}/chapters${currentLang}`
       );
 
       const MangaInfo: Manga = {
         id: mangaInfoParseObj.comic.id,
         title: mangaInfoParseObj.comic.title,
         altTitles: mangaInfoParseObj.comic.md_titles.map(
-          (e: { title: string }) => e.title,
+          (e: { title: string }) => e.title
         ),
         url: `/manga/comick/title/${mangaInfoParseObj.comic.slug}`,
         description: mangaInfoParseObj.comic.desc,
@@ -93,7 +97,7 @@ export class Comick {
         status: mangaInfoParseObj.comic.status == "1" ? "ongoing" : "completed",
         authors: mangaInfoParseObj.authors.map((e: { name: string }) => e.name),
         genres: mangaInfoParseObj.comic.md_comic_md_genres.map(
-          (e: { md_genres: { name: string } }) => e.md_genres.name,
+          (e: { md_genres: { name: string } }) => e.md_genres.name
         ),
         chapters: [],
         thumbnail: {
@@ -131,9 +135,9 @@ export class Comick {
             },
           };
           return MangaInfo.chapters.push(
-            !langChapter.includes("?lang=id") ? MangaInfoChapter : null,
+            !langChapter.includes("?lang=id") ? MangaInfoChapter : null
           );
-        },
+        }
       );
 
       return MangaInfo;
@@ -159,7 +163,7 @@ export class Comick {
       }
 
       const { data } = await axios.get(
-        `${this.url}/comic/${title}/${urlchange}`,
+        `${this.url}/comic/${title}/${urlchange}`
       );
       const $ = cheerio.load(data);
 
@@ -181,7 +185,7 @@ export class Comick {
                 name: e.name,
                 image: "https://meo.comick.pictures/" + e.b2key,
               };
-            },
+            }
           ),
           cover:
             "https://meo.comick.pictures/" +
@@ -200,7 +204,7 @@ export class Comick {
             ? `${title}/${hid}.json?slug=${title}&chapter=${hid}`
             : `${title}/${hid}-chapter-${idNumber}${currentLang}.json?slug=${title}&chapter=${hid}-chapter-${idNumber}${currentLang}`;
         const dataBuild = await axios.get(
-          `${this.url}/_next/data/${buildid}/comic/${currentUrl}`,
+          `${this.url}/_next/data/${buildid}/comic/${currentUrl}`
         );
 
         const mindate = new Date(dataBuild.data.pageProps.chapter.created_at);
@@ -218,7 +222,7 @@ export class Comick {
                 name: s.name,
                 image: "https://meo.comick.pictures/" + s.b2key,
               };
-            },
+            }
           ),
           cover:
             "https://meo.comick.pictures/" +

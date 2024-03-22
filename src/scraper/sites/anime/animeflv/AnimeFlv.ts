@@ -11,8 +11,8 @@ import {
 import {
   AnimeSearch,
   ResultSearch,
-  IResultSearch,
-  IAnimeSearch,
+  type IResultSearch,
+  type IAnimeSearch,
 } from "../../../../types/search";
 import { AnimeProviderModel } from "../../../ScraperAnimeModel";
 

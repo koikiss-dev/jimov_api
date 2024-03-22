@@ -5,7 +5,7 @@ import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
   AnimeSearch,
   ResultSearch,
-  IAnimeSearch,
+  type IAnimeSearch,
 } from "../../../../types/search";
 import { AnimeProviderModel } from "../../../ScraperAnimeModel";
 

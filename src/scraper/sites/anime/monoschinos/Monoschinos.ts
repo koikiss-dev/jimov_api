@@ -4,8 +4,8 @@ import { api, utils } from "../../../../types/utils";
 import * as types from "../../../../types/.";
 import {
   ResultSearch,
-  IResultSearch,
-  IAnimeSearch,
+  type IResultSearch,
+  type IAnimeSearch,
 } from "../../../../types/search";
 
 const PageInfo = {
@@ -32,9 +32,9 @@ async function getEpisodeServers(url: string): Promise<types.EpisodeServer[]> {
         new types.EpisodeServer(
           $(element).text().trim(),
           Buffer.from($(element).attr("data-player"), "base64").toString(
-            "binary",
-          ),
-        ),
+            "binary"
+          )
+        )
       );
     });
   return servers;
@@ -103,7 +103,7 @@ function getAnimeEpisodes($): types.Episode[] {
       episode.name = $(element).find("img.animeimghv").attr("alt");
       episode.url = api.getEpisodeURL(
         PageInfo,
-        $(element).find("a").attr("href"),
+        $(element).find("a").attr("href")
       );
       episodes.push(episode);
     });
@@ -157,7 +157,7 @@ async function getAnime(url: string): Promise<types.Anime> {
   // The anime page in monoschinos does not define the chronology and type
   const $ = cheerio.load((await axios.get(url)).data);
   const calendar = getAnimeCalendar(
-    $($("div.chapterdetails nav").children()[1]),
+    $($("div.chapterdetails nav").children()[1])
   );
   const anime = new types.Anime();
   anime.name = $("div.chapterdetails").find("h1").text();
@@ -167,7 +167,7 @@ async function getAnime(url: string): Promise<types.Anime> {
   anime.genres = getGenres($);
   anime.image = new types.Image(
     $("div.chapterpic img").attr("src"),
-    $("div.herobg img").attr("src"),
+    $("div.herobg img").attr("src")
   );
   anime.status =
     "estreno" === $("div.butns button.btn1").text().toLowerCase().trim();
@@ -186,7 +186,7 @@ async function getAnime(url: string): Promise<types.Anime> {
 async function getLastAnimes(url?: string): Promise<types.Anime[]> {
   let animes: types.Anime[] = [];
   const $ = cheerio.load(
-    (await axios.get(url ?? `${PageInfo.url}/emision`)).data,
+    (await axios.get(url ?? `${PageInfo.url}/emision`)).data
   );
   const elements = $("div.heroarea div.heromain div.row").children();
   for (let i = 0; i < elements.length; i++) {
@@ -221,7 +221,7 @@ export class Monoschinos {
     category?: string,
     genre?: string,
     year?: string,
-    letter?: string,
+    letter?: string
   ): Promise<IResultSearch<IAnimeSearch>> {
     const animes = new ResultSearch<IAnimeSearch>();
     const link = utils.isUsableValue(name)

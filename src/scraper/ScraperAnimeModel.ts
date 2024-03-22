@@ -1,5 +1,5 @@
 import { Anime } from "../types/anime";
-import { IResultSearch, IAnimeSearch } from "../types/search";
+import { type IResultSearch, type IAnimeSearch } from "../types/search";
 import { Episode } from "../types/episode";
 
 export abstract class AnimeProviderModel {

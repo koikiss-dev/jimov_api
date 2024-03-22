@@ -5,8 +5,8 @@ import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
   AnimeSearch,
   ResultSearch,
-  IResultSearch,
-  IAnimeSearch,
+  type IResultSearch,
+  type IAnimeSearch,
 } from "../../../../types/search";
 
 export class Dramanice {
@@ -132,8 +132,8 @@ export class Dramanice {
                    Server.url = "https://filemoon.sx" + "/e/" + id_file
                }*/
             AnimeEpisodeInfo.servers.push(Server);
-          },
-        ),
+          }
+        )
       );
 
       return AnimeEpisodeInfo;
@@ -147,7 +147,7 @@ export class Dramanice {
     type?: number,
     page?: number,
     year?: string,
-    genre?: string,
+    genre?: string
   ): Promise<IResultSearch<IAnimeSearch>> {
     try {
       const { data } = await axios.get(`${this.api}/api/anime/list`, {

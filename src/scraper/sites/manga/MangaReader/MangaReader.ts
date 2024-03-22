@@ -1,6 +1,6 @@
 import { Image } from "../../../../types/image";
 import {
-  IMangaResult,
+  type IMangaResult,
   Manga,
   MangaChapter,
   MangaVolume,
@@ -12,7 +12,7 @@ import {
   MangaReaderChapterType,
   MangaReaderFilterData,
 } from "./MangaReaderTypes";
-import { IResultSearch, ResultSearch } from "../../../../types/search";
+import { type IResultSearch, ResultSearch } from "../../../../types/search";
 
 export class MangaReader {
   readonly url = "https://mangareader.to";
@@ -22,7 +22,7 @@ export class MangaReader {
     const $ = load(data);
 
     const rangeResult: number[] = $(
-      "div.volume-list-ul div.manga_list div.manga_list-wrap",
+      "div.volume-list-ul div.manga_list div.manga_list-wrap"
     )
       .find("div.item")
       .map((_, element) => {
@@ -41,7 +41,7 @@ export class MangaReader {
     mangaId: number,
     chapterNumber: number,
     language: (typeof MangaReaderFilterLanguage)[number],
-    type: MangaReaderChapterType,
+    type: MangaReaderChapterType
   ): Promise<string> {
     const { data } = await axios.get(`${this.url}/a-${mangaId}`);
     const $ = load(data);
@@ -91,11 +91,11 @@ export class MangaReader {
     else if (type === "volume") idType = "vol";
 
     const { data: pagesAjaxData } = await axios.get(
-      `${this.url}/ajax/image/list/${idType}/${chapterId}?mode=horizontal&quality=high`,
+      `${this.url}/ajax/image/list/${idType}/${chapterId}?mode=horizontal&quality=high`
     );
     const $pagesAjaxData = load(pagesAjaxData.html);
     const pagesSection = $pagesAjaxData(
-      "div#main-wrapper div.container-reader-hoz div#divslide div.divslide-wrapper div.ds-item",
+      "div#main-wrapper div.container-reader-hoz div#divslide div.divslide-wrapper div.ds-item"
     ).find("div.ds-image");
 
     let pages = pagesSection
@@ -109,14 +109,14 @@ export class MangaReader {
     try {
       const { data } = await axios.get(`${this.url}/a-${mangaId}`);
       const { data: charactersAjaxList } = await axios.get(
-        `${this.url}/ajax/character/list/${mangaId}`,
+        `${this.url}/ajax/character/list/${mangaId}`
       );
 
       const $ = load(data);
       const $characterListAjaxResult = load(charactersAjaxList.html);
 
       const charactersSection = $characterListAjaxResult(
-        "div.character-list div.cl-item div.cli-info",
+        "div.character-list div.cl-item div.cli-info"
       );
 
       const title = $("h2.manga-name").text().trim();
@@ -124,7 +124,7 @@ export class MangaReader {
         ? Array.of($("div.manga-name-or").text().trim())
         : null;
       const thumbnailUrl = $("div.manga-poster img.manga-poster-img").attr(
-        "src",
+        "src"
       );
       const description = $("div.description").text().trim();
       const status = $("div.anisc-info div.item")
@@ -196,7 +196,7 @@ export class MangaReader {
 
       manga.volumes = [];
       const mangaVolumeItemSection = $(
-        "div.volume-list-ul div.manga_list div.manga_list-wrap",
+        "div.volume-list-ul div.manga_list div.manga_list-wrap"
       );
 
       let langVolumeCode: string = ``;
@@ -243,13 +243,13 @@ export class MangaReader {
     } catch (error) {
       console.log(error);
       throw new Error(
-        "I've found an error while trying to get the manga info.",
+        "I've found an error while trying to get the manga info."
       );
     }
   }
 
   async Filter(
-    options: MangaReaderFilterData,
+    options: MangaReaderFilterData
   ): Promise<IResultSearch<IMangaResult>> {
     const {
       type,
@@ -337,11 +337,11 @@ export class MangaReader {
     mangaId: number,
     chapterNumber: number,
     language: (typeof MangaReaderFilterLanguage)[number],
-    type: MangaReaderChapterType,
+    type: MangaReaderChapterType
   ) {
     try {
       const { data } = await axios.get(
-        `${this.url}/read/a-${mangaId}/${language}/${type}-${chapterNumber}`,
+        `${this.url}/read/a-${mangaId}/${language}/${type}-${chapterNumber}`
       );
       const $ = load(data);
 
@@ -353,7 +353,7 @@ export class MangaReader {
         mangaId,
         chapterNumber,
         language,
-        type,
+        type
       );
 
       if (type === "chapter") {
@@ -384,7 +384,7 @@ export class MangaReader {
     } catch (error) {
       console.log(error);
       throw new Error(
-        `I've found an error while trying to get the manga ${type} pages.`,
+        `I've found an error while trying to get the manga ${type} pages.`
       );
     }
   }

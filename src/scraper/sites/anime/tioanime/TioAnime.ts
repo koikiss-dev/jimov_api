@@ -4,8 +4,8 @@ import { utils } from "../../../../types/utils";
 import * as types from "../../../../types/.";
 import {
   ResultSearch,
-  IResultSearch,
-  IAnimeSearch,
+  type IResultSearch,
+  type IAnimeSearch,
 } from "../../../../types/search";
 
 const PageInfo = {
@@ -21,8 +21,8 @@ function getAnimeChronology($) {
       new types.Chronology(
         $(element).find("h3.title").text(),
         PageInfo.url + $(element).find("div.media-body a").attr("href"),
-        PageInfo.url + $(element).find("figure.fa-play-circle img").attr("src"),
-      ),
+        PageInfo.url + $(element).find("figure.fa-play-circle img").attr("src")
+      )
     );
   });
   return chrono_list;
@@ -37,11 +37,11 @@ async function getEpisodeServers(url) {
     const videos = new Function(
       script
         .substring(0, script.indexOf("$(document)"))
-        .replace("var videos =", "return"),
+        .replace("var videos =", "return")
     )();
     for (let i = 0; i < videos.length; i++) {
       servers.push(
-        new types.EpisodeServer(videos[i][0], videos[i][1].replace("\\", "")),
+        new types.EpisodeServer(videos[i][0], videos[i][1].replace("\\", ""))
       );
     }
 
@@ -149,7 +149,7 @@ async function getAnime(url) {
   //anime.url        = url;
   anime.url = url.replace(
     "https://tioanime.com/anime/",
-    "/anime/tioanime/name/",
+    "/anime/tioanime/name/"
   );
   //anime.type       = $('div.meta span.anime-type-peli').text();
   anime.type = (() => {
@@ -171,8 +171,8 @@ async function getAnime(url) {
     new types.Calendar(
       data.info.length < 4
         ? parseInt($("div.meta span.year").text().trim().substring(0, 4))
-        : new Date(data.info[3]).getFullYear(),
-    ),
+        : new Date(data.info[3]).getFullYear()
+    )
   );
   anime.synopsis = $("p.sinopsis").text().trim();
   anime.genres = getGenres($, $("div.container p.genres span"));
@@ -180,7 +180,7 @@ async function getAnime(url) {
     PageInfo.url + $("div.container div.thumb figure img").attr("src"),
     $("figure.backdrop img").attr("src") == undefined
       ? ""
-      : PageInfo.url + $("figure.backdrop img").attr("src"),
+      : PageInfo.url + $("figure.backdrop img").attr("src")
   );
   anime.status = $("div.thumb a.status").text().trim() === "En emision";
   anime.station = $("div.meta span.fa-snowflake").text().trim().split("\n")[0];
@@ -197,7 +197,7 @@ async function getLastAnimes(url: string) {
     const elements = $(
       utils.isUsableValue(url)
         ? "ul.animes"
-        : "div.container section ul.list-unstyled.row li",
+        : "div.container section ul.list-unstyled.row li"
     ).children();
     for (let i = 0; i < elements.length; i++) {
       const anime_url = $(elements[i]).find("article.anime a").attr("href");
@@ -216,15 +216,14 @@ async function getSectionContents(section: number) {
   let animes: types.IAnime[] = [];
   try {
     const $ = cheerio.load(
-      (await axios.get(`${PageInfo.url}/directorio?type%5B%5D=${section}`))
-        .data,
+      (await axios.get(`${PageInfo.url}/directorio?type%5B%5D=${section}`)).data
     );
     const elements = $(`ul.animes`).children();
     for (let i = 0; i < elements.length; i++) {
       animes.push(
         await getAnime(
-          PageInfo.url + $(elements[i]).find("article.anime a").attr("href"),
-        ),
+          PageInfo.url + $(elements[i]).find("article.anime a").attr("href")
+        )
       );
     }
   } catch (error) {
@@ -284,7 +283,7 @@ export class TioAnime {
     genres?: string[],
     year_range?: IYearRange,
     status?: number,
-    sort?: string,
+    sort?: string
   ): Promise<IResultSearch<IAnimeSearch>> {
     const animes = new ResultSearch<IAnimeSearch>();
     let usable;
@@ -298,11 +297,11 @@ export class TioAnime {
             ? `q=${name}`
             : `${this.arrayToURLParams("type", types)}${this.arrayToURLParams(
                 "genero",
-                genres,
+                genres
               )}year=${year_range.begin}%2C${year_range.end}&status=${
                 status ?? 2
               }&sort=${sort ?? "recent"}`
-        }`,
+        }`
       )
     ).forEach((element) => {
       if (utils.isUsableValue(element)) {

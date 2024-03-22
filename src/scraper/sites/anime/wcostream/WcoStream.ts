@@ -3,8 +3,8 @@ import axios from "axios";
 import { Anime } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
-  IResultSearch,
-  IAnimeSearch,
+  type IResultSearch,
+  type IAnimeSearch,
   ResultSearch,
   AnimeSearch,
 } from "../../../../types/search";
