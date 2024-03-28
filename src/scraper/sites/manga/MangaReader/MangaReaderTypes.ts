@@ -6,7 +6,7 @@ export enum MangaReaderFilterType {
   LightNovel,
   Manhwa,
   Manhua,
-  Comic = 8
+  Comic = 8,
 }
 
 export enum MangaReaderFilterStatus {
@@ -15,7 +15,7 @@ export enum MangaReaderFilterStatus {
   Publishing,
   OnHiatus,
   Discontinued,
-  NotYetPublished
+  NotYetPublished,
 }
 
 export enum MangaReaderFilterRatingType {
@@ -25,7 +25,7 @@ export enum MangaReaderFilterRatingType {
   Teens,
   Mature,
   MildNudity,
-  Adults
+  Adults,
 }
 
 export enum MangaReaderFilterScore {
@@ -39,10 +39,17 @@ export enum MangaReaderFilterScore {
   Good,
   VeryGood,
   Great,
-  Masterpiece
+  Masterpiece,
 }
 
-export const MangaReaderFilterLanguage = ["", "en", "ja", "ko", "zh", "fr"] as const;
+export const MangaReaderFilterLanguage = [
+  "",
+  "en",
+  "ja",
+  "ko",
+  "zh",
+  "fr",
+] as const;
 
 export enum MangaReaderFilterSort {
   All = "",
@@ -50,7 +57,7 @@ export enum MangaReaderFilterSort {
   Score = "score",
   NameAZ = "name-az",
   ReleaseDate = "release-date",
-  MostViewed = "most-viewed"
+  MostViewed = "most-viewed",
 }
 
 export type MangaReaderChapterType = "chapter" | "volume";
@@ -60,7 +67,7 @@ export interface MangaReaderFilterData {
   status?: MangaReaderFilterStatus;
   ratingType?: MangaReaderFilterRatingType;
   score?: MangaReaderFilterScore;
-  language?: typeof MangaReaderFilterLanguage[number];
+  language?: (typeof MangaReaderFilterLanguage)[number];
   startYear?: number;
   startMonth?: number;
   startDay?: number;

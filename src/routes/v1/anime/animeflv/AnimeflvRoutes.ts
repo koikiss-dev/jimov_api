@@ -8,7 +8,6 @@ import {
 } from "../../../../scraper/sites/anime/animeflv/animeflv_helper";
 const r = Router();
 
-
 //anime info
 r.get("/anime/flv/name/:name", async (req, res) => {
   try {
@@ -34,7 +33,7 @@ r.get("/anime/flv/episode/:episode", async (req, res) => {
     res.status(500).send(error);
   }
 });
- 
+
 //filter
 r.get("/anime/flv/filter", async (req, res) => {
   try {
@@ -47,7 +46,15 @@ r.get("/anime/flv/filter", async (req, res) => {
     const title = req.query.title as string;
 
     const flv = new AnimeFlv();
-    const animeInfo = await flv.Filter(gen, date, type, status, ord, page, title);
+    const animeInfo = await flv.GetAnimeByFilter(
+      gen,
+      date,
+      type,
+      status,
+      ord,
+      page,
+      title,
+    );
     res.send(animeInfo);
   } catch (error) {
     console.log(error);

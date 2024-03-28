@@ -8,7 +8,7 @@ r.get("/anime/tioanime/name/:name", async (req, res) => {
     const { name } = req.params;
     const tioanime = new TioAnime();
     const animeInfo = await tioanime.getAnime(
-      `https://tioanime.com/anime/${name}`
+      `https://tioanime.com/anime/${name}`,
     );
     res.send(animeInfo);
   } catch (error) {
@@ -23,7 +23,7 @@ r.get("/anime/tioanime/episode/:episode", async (req, res) => {
     const { episode } = req.params;
     const tioanime = new TioAnime();
     const animeInfo = await tioanime.getEpisodeServers(
-      `https://tioanime.com/ver/${episode}`
+      `https://tioanime.com/ver/${episode}`,
     );
     res.send(animeInfo);
   } catch (error) {
@@ -38,18 +38,18 @@ r.get("/anime/tioanime/last/:option", async (req, res) => {
     const { option } = req.params;
 
     const tioanime = new TioAnime();
-    if ('episodes' === option) {
+    if ("episodes" === option) {
       res.send(await tioanime.getLastEpisodes());
-    } else if ('animes' === option) {
+    } else if ("animes" === option) {
       res.send(await tioanime.getLastAnimes(null));
-    } else if ('movies' === option) {
+    } else if ("movies" === option) {
       res.send(await tioanime.getLastMovies());
-    } else if ('ovas' === option) {
+    } else if ("ovas" === option) {
       res.send(await tioanime.getLastOvas());
-    } else if ('onas' === option) {
+    } else if ("onas" === option) {
       res.send(await tioanime.getLastOnas());
     } else {
-      throw 'Invalid option in the URL';
+      throw "Invalid option in the URL";
     }
   } catch (error) {
     console.log(error);
@@ -59,21 +59,29 @@ r.get("/anime/tioanime/last/:option", async (req, res) => {
 
 //filter
 r.get("/anime/tioanime/filter", async (req, res) => {
-  try { 
+  try {
     const title = req.query.title as string;
     const types = (req.query.type as string[]) ?? [];
     const genres = (req.query.gen as string[]) ?? [];
 
     const begin = (req.query.begin_year as unknown as number) ?? 1950;
-    const end = (req.query.end_year as unknown as number) ?? new Date().getFullYear();
+    const end =
+      (req.query.end_year as unknown as number) ?? new Date().getFullYear();
 
     const status = (req.query.status as unknown as number) ?? 2;
     const sort = (req.query.sort as string) ?? "recent";
 
     const tioanime = new TioAnime();
-    const animeInfo = await tioanime.filter(title, types, genres, {begin, end}, status, sort);
+    const animeInfo = await tioanime.filter(
+      title,
+      types,
+      genres,
+      { begin, end },
+      status,
+      sort,
+    );
     res.send(animeInfo);
-   //console.log(tioanime.filter(types, genres, { begin: begin, end: end }, status, sort).then(result => { console.log(result) } ));
+    //console.log(tioanime.filter(types, genres, { begin: begin, end: end }, status, sort).then(result => { console.log(result) } ));
   } catch (error) {
     console.log(error);
     res.status(500).send(error);

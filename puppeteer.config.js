@@ -4,5 +4,5 @@ const { Configuration } = require("puppeteer");
 
 /** @type {Configuration} */
 module.exports = {
-  cacheDirectory: join(os.homedir(), ".cache", "puppeteer")
-}
+  cacheDirectory: join(os.homedir(), ".cache", "puppeteer"),
+};

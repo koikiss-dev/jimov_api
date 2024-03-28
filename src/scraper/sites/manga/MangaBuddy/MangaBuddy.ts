@@ -1,7 +1,11 @@
 import axios from "axios";
 import { load } from "cheerio";
-import { Manga, IMangaChapter, IMangaResult } from "../../../../types/manga";
-import { IResultSearch } from "@animetypes/search";
+import {
+  Manga,
+  type IMangaChapter,
+  type IMangaResult,
+} from "../../../../types/manga";
+import { type IResultSearch } from "@animetypes/search";
 export class MangaBuddy {
   readonly url = "https://mangabuddy.com";
 

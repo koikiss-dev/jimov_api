@@ -11,7 +11,7 @@ interface ProviderScraper {
   status: number | string;
   icon: string;
   url: string;
-  apiID: string
+  apiID: string;
   favicon: string | string[];
 }
 

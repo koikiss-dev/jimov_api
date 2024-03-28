@@ -11,11 +11,12 @@ import {
 import {
   AnimeSearch,
   ResultSearch,
-  IResultSearch,
-  IAnimeSearch,
+  type IResultSearch,
+  type IAnimeSearch,
 } from "../../../../types/search";
+import { AnimeProviderModel } from "../../../ScraperAnimeModel";
 
-export class AnimeFlv {
+export class AnimeFlv extends AnimeProviderModel {
   readonly url = "https://animeflv.ws";
 
   async GetAnimeInfo(anime: string): Promise<Anime> {
@@ -75,7 +76,7 @@ export class AnimeFlv {
     }
   }
 
-  async Filter(
+  async GetAnimeByFilter(
     gen?: Genres | string,
     date?: string,
     type?: TypeAnimeflv,
@@ -128,22 +129,24 @@ export class AnimeFlv {
       const $ = load(data);
       const title = $(".CapiTop").children("h1").text().trim();
       const getLinks = $(".CpCnA .anime_muti_link li");
-      const numberEpisode =  episode.substring(episode.lastIndexOf("-") + 1)
+      const numberEpisode = episode.substring(episode.lastIndexOf("-") + 1);
       const episodeReturn = new Episode();
       episodeReturn.name = title;
       episodeReturn.url = `/anime/flv/episode/${episode}`;
       episodeReturn.number = numberEpisode as unknown as string;
       episodeReturn.servers = [];
 
-      const promises = getLinks.map(async(_i, e) => {
+      const promises = getLinks.map(async (_i, e) => {
         const servers = new EpisodeServer();
         const title = $(e).attr("title");
         const videoData = $(e).attr("data-video");
         servers.name = title;
         servers.url = videoData;
-        if(videoData.includes("streaming.php")){
-          await this.getM3U(`${videoData.replace("streaming.php", "ajax.php")}&refer=none`).then((g) => {
-            if(g.source.length){
+        if (videoData.includes("streaming.php")) {
+          await this.getM3U(
+            `${videoData.replace("streaming.php", "ajax.php")}&refer=none`
+          ).then((g) => {
+            if (g.source.length) {
               servers.file_url = g.source[0].file;
             }
           });
@@ -185,7 +188,7 @@ export class AnimeFlv {
 
       return res.data;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 }
