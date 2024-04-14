@@ -102,8 +102,6 @@ export class AnimeLatinoHD extends AnimeProviderModel {
       await Promise.all(
         animeEpisodeParseObj.players[f_index].map(
           async (e: { server: { title: string }; id: string }) => {
-            //let min = await axios.get("https://api.animelatinohd.com/stream/" + e.id, { headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.62", "Referer": "https://www.animelatinohd.com/" } })
-            // let dat = cheerio.load(min.data)
 
             const Server: EpisodeServer = {
               name: e.server.title,
@@ -112,26 +110,6 @@ export class AnimeLatinoHD extends AnimeProviderModel {
             Server.url = "https://api.animelatinohd.com/stream/" + e.id;
             Server.name = e.server.title;
 
-            //state 1
-            /*if (e.server.title == "Beta") {
-                   let sel = dat("script:contains('var foo_ui = function (event) {')")
-                   let sort = String(sel.html())
-                   let domain = eval(sort.slice(sort.search("const url"), sort.search("const langDef")).replace("const url =", "").trim())
-
-                   let sortMORE = sort.slice(sort.search('ajax'), sort.search("method: 'post',"))
-                   let obj_sort = sortMORE.replace("ajax({", "").trim().replace("url:", "").replace(",", "").replace('"', "").replace('"', "").trim()
-                   let id_file = obj_sort.slice(obj_sort.lastIndexOf("/"), obj_sort.length)
-                   Server.url = domain + "/v" + id_file
-
-               } else if (e.server.title == "Gamma") {
-                   Server.url = dat('meta[name="og:url"]').attr("content")
-               } else {
-                   let sel = dat("script[data-cfasync='false']")
-                   let sort = String(sel.html())
-                   let sortMORE = sort.slice(sort.lastIndexOf("master") + 7, sort.lastIndexOf("hls2") - 11)
-                   let id_file = sortMORE.replace("_x", "")
-                   Server.url = "https://filemoon.sx" + "/e/" + id_file
-               }*/
             AnimeEpisodeInfo.servers.push(Server);
           }
         )
