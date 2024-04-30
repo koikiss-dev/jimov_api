@@ -9,7 +9,7 @@ import {
   AnimeSearch,
 } from "../../../../types/search";
 import { UnPacked } from "../../../../types/utils";
-import { AnimeProviderModel } from "../../../ScraperAnimeModel";
+import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 
 /** List of Domains
  * https://wcostream.tv
@@ -36,10 +36,10 @@ axios.defaults.withCredentials = true;
 axios.defaults.headers.common["User-Agent"] =
   "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36 Edg/117.0.2045.55";
 
-export class WcoStream extends AnimeProviderModel {
+export class WcoStream extends AnimeScraperModel {
   readonly url = "https://www.wcostream.tv";
 
-  async GetAnimeInfo(anime: string): Promise<Anime> {
+  async GetItemInfo(anime: string): Promise<Anime> {
     try {
       const { data } = await axios.get(`${this.url}/anime/${anime}`, {
         headers: {
@@ -222,7 +222,7 @@ export class WcoStream extends AnimeProviderModel {
     }
   }
 
-  async GetAnimeByFilter(
+  async GetItemByFilter(
     search?: string,
     page?: number
   ): Promise<IResultSearch<IAnimeSearch>> {

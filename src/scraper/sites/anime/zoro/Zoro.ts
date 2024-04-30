@@ -1,5 +1,6 @@
 import axios from "axios";
 import { load } from "cheerio";
+import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 import { Anime, Chronology } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
@@ -7,12 +8,11 @@ import {
   ResultSearch,
   type IAnimeSearch,
 } from "../../../../types/search";
-import { AnimeProviderModel } from "../../../ScraperAnimeModel";
 
-export class Zoro extends AnimeProviderModel {
+export class Zoro extends AnimeScraperModel {
   readonly url = "https://aniwatch.to";
 
-  async GetAnimeInfo(animeName: string): Promise<Anime> {
+  async GetItemInfo(animeName: string): Promise<Anime> {
     try {
       const response = await axios.get(`${this.url}/${animeName}`);
       const $ = load(response.data);
@@ -63,7 +63,7 @@ export class Zoro extends AnimeProviderModel {
     }
   }
   //filter
-  async GetAnimeByFilter(
+  async GetItemByFilter(
     type?: string,
     rated?: string,
     score?: string,

@@ -8,7 +8,7 @@ import {
   type IResultSearch,
   type IAnimeSearch,
 } from "../../../../types/search";
-import { AnimeProviderModel } from "../../../ScraperAnimeModel";
+import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 //import { Calendar } from "@animetypes/date";
 
 /** List of Domains
@@ -17,11 +17,11 @@ import { AnimeProviderModel } from "../../../ScraperAnimeModel";
  *
  */
 
-export class Animevostfr extends AnimeProviderModel {
+export class Animevostfr extends AnimeScraperModel {
   readonly url = "https://animevostfr.tv";
   readonly api = "https://api.animelatinohd.com";
 
-  async GetAnimeInfo(anime: string): Promise<Anime> {
+  async GetItemInfo(anime: string): Promise<Anime> {
     try {
       const { data } = await axios.get(`${this.url}/${anime}`);
       const $ = cheerio.load(data);
@@ -120,12 +120,12 @@ export class Animevostfr extends AnimeProviderModel {
                 "SERVER_VIP"
                 "SERVER_HYDRAX"
                 "SERVER_PHOTOSS"
-                "SERVER_DOWNLOAD"							
-                "SERVER_PHOTOS"			
+                "SERVER_DOWNLOAD"
+                "SERVER_PHOTOS"
                 "SERVER_OPEN_LOAD"
-                "SERVER_OPEN_LOADS"				
+                "SERVER_OPEN_LOADS"
                 "SERVER_OPEN_CDN"
-                "SERVER_OPEN_CDNO"						
+                "SERVER_OPEN_CDNO"
                 "SERVER_PHOTO"
                 "SERVER_STREAM_MANGO"
                 "SERVER_RAPID_VIDEO"
@@ -167,7 +167,7 @@ export class Animevostfr extends AnimeProviderModel {
     }
   }
 
-  async GetAnimeByFilter(
+  async GetItemByFilter(
     search?: string,
     type?: number,
     page?: number,

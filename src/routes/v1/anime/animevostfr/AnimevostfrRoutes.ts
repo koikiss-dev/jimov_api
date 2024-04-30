@@ -7,7 +7,7 @@ const router = Router();
 router.get("/anime/animevostfr/filter", async (req, res) => {
   const { search, type, page, year, genre } = req.query;
 
-  const data = await Anime.GetAnimeByFilter(
+  const data = await Anime.GetItemByFilter(
     search as string,
     type as unknown as number,
     page as unknown as number,
@@ -20,7 +20,7 @@ router.get("/anime/animevostfr/filter", async (req, res) => {
 // Anime Info +(Episodes list)
 router.get("/anime/animevostfr/name/:name", async (req, res) => {
   const { name } = req.params;
-  const data = await Anime.GetAnimeInfo(name);
+  const data = await Anime.GetItemInfo(name);
   res.send(data);
 });
 
