@@ -30,21 +30,31 @@ export class Comick {
 
   async GetMangaByFilter(
     search?: string,
+    status?: number,
     type?: number,
-    year?: string,
-    genre?: string
+    year?: number,
+    genre?: string,
+    page?: number
   ) {
     try {
       const { data } = await axios.get(`${this.api}/v1.0/search`, {
         params: {
           q: search,
-          status: type,
+          status: status,
+          type:type,
           year: year,
+          page: page,
           genre: genre,
         },
       });
-
       const ResultList: IResultSearch<IMangaResult> = {
+        nav: { count: data.length,
+          current: page ? page : 1,
+          next:
+           data.length < 49
+              ? 0
+              : page + 1,
+          hasNext: data.length < 49 ? false : true, },
         results: [],
       };
       data.map(
@@ -74,16 +84,20 @@ export class Comick {
 
   async GetMangaInfo(manga: string, lang: string): Promise<Manga> {
     try {
-      const { data } = await axios.get(`${this.api}/comic/${manga}`);
-      // build static
-      ///_next/data/S1XqseNRmzozm3TaUH1lU/comic/00-solo-leveling.json
-      const currentLang = lang ? `?lang=${lang}` : `?lang=en`;
-      const mangaInfoParseObj = data;
-
-      const dataApi = await axios.get(
-        `${this.api}/comic/${mangaInfoParseObj.comic.hid}/chapters${currentLang}`
+      const { data } = await axios.get(
+        `${this.url}/comic/${manga}`
       );
-
+      const $ = cheerio.load(data);
+      const mangaInfoParseObj = JSON.parse($("#__NEXT_DATA__").html())
+        .props.pageProps;
+      const buildId = JSON.parse($("#__NEXT_DATA__").html()).buildId;
+      const currentLang = lang ? `?lang=${lang}` : `?lang=en`;
+      let dataApi = null
+      if (mangaInfoParseObj.firstChap) {
+        dataApi = await axios.get(
+          `${this.url}/_next/data/${buildId}/comic/${manga}/${mangaInfoParseObj.firstChap.hid + "-chapter-" + mangaInfoParseObj.firstChap.chap + "-" + mangaInfoParseObj.firstChap.lang}.json`
+        );
+      }
       const MangaInfo: Manga = {
         id: mangaInfoParseObj.comic.id,
         title: mangaInfoParseObj.comic.title,
@@ -106,40 +120,39 @@ export class Comick {
             mangaInfoParseObj.comic.md_covers[0].b2key,
         },
       };
+      if (mangaInfoParseObj.firstChap) {
+        dataApi.data.pageProps.chapters.map(
+          (e: {
+            id: number;
+            title: string;
+            hid: string;
+            chap: number;
+            created_at: string;
+            lang: string;
+          }) => {
+            const mindate = new Date(e.created_at);
+            const langChapter = currentLang ? currentLang : "?lang=" + e.lang;
 
-      dataApi.data.chapters.map(
-        (e: {
-          id: number;
-          title: string;
-          hid: string;
-          chap: number;
-          created_at: string;
-          lang: string;
-        }) => {
-          const mindate = new Date(e.created_at);
-          const langChapter = currentLang ? currentLang : "?lang=" + e.lang;
-
-          const MangaInfoChapter: MangaChapter = {
-            id: e.id,
-            title: e.title,
-            url: `/manga/comick/chapter/${e.hid}-${
-              mangaInfoParseObj.comic.slug
-            }-${e.chap ? e.chap : "err"}${langChapter}`,
-            number: e.chap,
-            images: null,
-            cover: null,
-            date: {
-              year: mindate.getFullYear() ? mindate.getFullYear() : null,
-              month: mindate.getMonth() ? mindate.getMonth() : null,
-              day: mindate.getDay() ? mindate.getDay() : null,
-            },
-          };
-          return MangaInfo.chapters.push(
-            !langChapter.includes("?lang=id") ? MangaInfoChapter : null
-          );
-        }
-      );
-
+            const MangaInfoChapter: MangaChapter = {
+              id: e.id,
+              title: e.title,
+              url: `/manga/comick/chapter/${e.hid}-${mangaInfoParseObj.comic.slug
+                }-${e.chap ? e.chap : "err"}${langChapter}`,
+              number: e.chap,
+              images: null,
+              cover: null,
+              date: {
+                year: mindate.getFullYear() ? mindate.getFullYear() : null,
+                month: mindate.getMonth() ? mindate.getMonth() : null,
+                day: mindate.getDay() ? mindate.getDay() : null,
+              },
+            };
+            return MangaInfo.chapters.push(
+              !langChapter.includes("?lang=id") ? MangaInfoChapter : null
+            );
+          }
+        );
+      }
       return MangaInfo;
     } catch (error) {
       console.log(error);

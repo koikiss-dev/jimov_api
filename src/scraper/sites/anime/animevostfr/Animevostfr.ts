@@ -135,9 +135,7 @@ export class Animevostfr extends AnimeProviderModel {
       };
       await Promise.all(
         ListServer.map(async (n: string) => {
-
           if (n == "opencdn" || n == "photo" || n == "vip") {
-
             const sservers = await axios.get(
               `${this.url}/ajax-get-link-stream/?server=${n}&filmId=${ListFilmId}`
             );
@@ -146,15 +144,12 @@ export class Animevostfr extends AnimeProviderModel {
               .replace(`?logo=${this.url}/1234.png`, "")
               .replace("hydrax.net/watch", "abysscdn.com/")
               .replace("short.ink/", "abysscdn.com/?v=");
-            console.log(n, currentData)
             let Servers: EpisodeServer = {
               name: n,
               url: currentData,
             };
-
             AnimeEpisodeInfo.servers.push(Servers);
           }
-
           return AnimeEpisodeInfo
         })
       )
