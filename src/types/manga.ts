@@ -1,6 +1,7 @@
 import { IImage } from "./image";
 import { ICalendar } from "./date";
 import { IResultSearch } from "./search";
+import { BaseMedia, type IBaseMedia, type IBaseResult } from "./base";
 
 /**
  * The chapter is part of the manga and is also part of a volume. It is made
@@ -79,27 +80,15 @@ export interface IMangaVolume {
  *
  * @author Zukaritasu
  */
-export interface IManga {
+export interface IMangaMedia extends IBaseMedia {
   /** Manga ID */
   id: number | string;
-  /** The URL of the manga in the API location */
-  url: `/manga/${string}/title/${string}`;
-  /** The title of the manga. */
-  title: string;
-  /** The title of the manga in other languages (alternative names) */
-  altTitles?: string[];
   /**
    * Manga cover or miniature. Some manga pages show the cover and the
    * banner, hence the use of the IImage interface. */
   thumbnail?: IImage;
-  /** Synopsis or description of the manga */
-  description?: string;
-  /** Indicates the status of the manga, in progress or completed. */
-  status?: "ongoing" | "completed";
   /** A list with the name of the authors of the manga */
   authors?: string[];
-  /** Genres manga */
-  genres?: string[];
   /** A list of the characters that are part of the history of manga */
   characters?: string[];
 
@@ -113,8 +102,6 @@ export interface IManga {
   chapters?: IMangaChapter[];
   /** A list of manga volumes */
   volumes?: IMangaVolume[];
-  /** Indicates if the content of the manga is for +18 */
-  isNSFW: boolean;
 }
 
 /**
@@ -126,15 +113,13 @@ export interface IManga {
  *
  * @author Zukaritasu
  */
-export interface IMangaResult {
-  /** {@inheritdoc IManga.id} */
+export interface IMangaResult extends IBaseResult {
+  /** Manga ID */
   id: number | string;
-  /** {@inheritdoc IManga.title} */
-  title: string;
-  /** {@inheritdoc IManga.thumbnail} */
+  /**
+   * Manga cover or miniature. Some manga pages show the cover and the
+   * banner, hence the use of the IImage interface. */
   thumbnail?: IImage;
-  /** {@inheritdoc IManga.url} */
-  url: `/manga/${string}/title/${string}`;
 } //filter
 
 /**
@@ -143,35 +128,21 @@ export interface IMangaResult {
  *
  * @author Zukaritasu
  */
-export class Manga implements IManga {
+export class MangaMedia extends BaseMedia implements IMangaMedia {
   /** @inheritdoc */
-  id: string;
-  /** @inheritdoc */
-  url: `/manga/${string}/title/${string}`;
-  /** @inheritdoc */
-  title: string;
-  /** @inheritdoc */
-  altTitles?: string[];
+  id: string | number;
   /** @inheritdoc */
   thumbnail?: IImage;
   /** @inheritdoc */
-  description?: string;
-  /** @inheritdoc */
-  status?: "ongoing" | "completed";
-  /** @inheritdoc */
   authors?: string[];
   /** @inheritdoc */
-  langlist?: string[];
-  /** @inheritdoc */
-  genres?: string[];
-  /** @inheritdoc */
   characters?: string[];
+  /** @inheritdoc */
+  langlist?: string[];
   /** @inheritdoc */
   chapters?: IMangaChapter[];
   /** @inheritdoc */
   volumes?: IMangaVolume[];
-  /** @inheritdoc */
-  isNSFW: boolean;
 }
 
 ////////////////////
