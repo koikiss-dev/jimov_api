@@ -1,5 +1,6 @@
 //anime data return standard
 
+import { BaseMedia, type IBaseMedia } from "./base";
 import { ICalendar, IDatePeriod } from "./date";
 import { IEpisode } from "./episode";
 import { IImage } from "./image";
@@ -37,29 +38,19 @@ export interface IChronology {
  * Spectify the anime structure that you scrapped
  * @author Zukaritasu
  */
-export interface IAnime {
-  /** Name of the anime */
-  name: string;
-  /** Alternative names describing the name of the anime in another language */
-  alt_name?: string | string[];
-  /** Anime identifier that can be used when the anime name is not used in the URL. */
-  id?: number;
-  /** The URL or location of the anime in the API */
-  url: `/anime/${string}/name/${string}` | string;
-  /** The anime synopsis */
-  synopsis?: string;
+export interface IAnimeMedia extends IBaseMedia {
   /**
    * An <a href="./image.ts">IImage</a> interface object representing the anime
    * image and its banner. */
   image: IImage;
+  /** Anime identifier that can be used when the anime name is not used in the URL. */
+  id?: number;
   /**
    * The date from when the anime started until it ended. The end date may be
    * auxiliary in case the anime has not ended. */
   date?: IDatePeriod | ICalendar;
   /** The type of anime that indicates whether it is a movie, a special, TV, etc.. */
   type?: AnimeType;
-  /** Genres that apply to anime */
-  genres?: string[];
   /** Climatic station of which the anime was released */
   station?: ClimaticStation | string;
   /**
@@ -72,12 +63,6 @@ export interface IAnime {
    * A list of the episodes of this anime. This property must be null or not used
    * if an IAnime object is used in IChronology. */
   episodes?: IEpisode[];
-  /**
-   * The status of the anime indicating whether it is on air, finished
-   * or still on hold. */
-  status?: string | boolean;
-  /** Indicates whether the anime is adult content. */
-  nsfw?: boolean;
 }
 
 /**---------------- Interfaces implementation ---------------- **/
@@ -120,35 +105,21 @@ export class Chronology implements IChronology {
  * Spectify the anime structure that you scrapped
  * @author Zukaritasu
  */
-export class Anime implements IAnime {
-  /** @inheritdoc */
-  name: string;
-  /** @inheritdoc */
-  alt_name?: string | string[];
-  /** @inheritdoc */
-  id?: number;
-  /** @inheritdoc */
-  url: `/anime/${string}/name/${string}` | string;
-  /** @inheritdoc */
-  synopsis: string;
+export class AnimeMedia extends BaseMedia implements IAnimeMedia {
   /** @inheritdoc */
   image: IImage;
+  /** @inheritdoc */
+  id?: number;
   /** @inheritdoc */
   date?: IDatePeriod | ICalendar;
   /** @inheritdoc */
   type?: AnimeType;
   /** @inheritdoc */
-  genres: string[] = [];
+  station?: ClimaticStation | string;
   /** @inheritdoc */
   stats?: IAnimeStats;
   /** @inheritdoc */
-  station?: ClimaticStation | string;
-  /** @inheritdoc */
   chronology?: IChronology[];
   /** @inheritdoc */
-  episodes: IEpisode[] = [];
-  /** @inheritdoc */
-  status?: string | boolean;
-  /** @inheritdoc */
-  nsfw?: boolean;
+  episodes?: IEpisode[];
 }
