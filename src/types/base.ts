@@ -1,14 +1,4 @@
 /**
- * Here will stay all possible names of the types of providers. These options
- * will be used to create a new URL of the media in the API. Modify it every
- * time you need to add a new type of provider.
- *
- * Examples: `/anime/flv/...` or `/manga/comick/...`
- *
- * @author Victor
- */
-
-/**
  * The base interface to create new types of providers.
  *
  * @author Victor
