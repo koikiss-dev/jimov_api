@@ -83,6 +83,8 @@ export interface IMangaVolume {
 export interface IMangaMedia extends IBaseMedia {
   /** Manga ID */
   id: number | string;
+  /** URL or location of the manga in the API. */
+  url: `/manga/${string}/name/${string}` | string;
   /**
    * Manga cover or miniature. Some manga pages show the cover and the
    * banner, hence the use of the IImage interface. */
@@ -116,6 +118,8 @@ export interface IMangaMedia extends IBaseMedia {
 export interface IMangaResult extends IBaseResult {
   /** Manga ID */
   id: number | string;
+  /** The manga URL from the API */
+  url: `/manga/${string}/name/${string}` | string;
   /**
    * Manga cover or miniature. Some manga pages show the cover and the
    * banner, hence the use of the IImage interface. */
@@ -131,6 +135,8 @@ export interface IMangaResult extends IBaseResult {
 export class MangaMedia extends BaseMedia implements IMangaMedia {
   /** @inheritdoc */
   id: string | number;
+  /** @inheritdoc */
+  url: `/manga/${string}/name/${string}` | string;
   /** @inheritdoc */
   thumbnail?: IImage;
   /** @inheritdoc */

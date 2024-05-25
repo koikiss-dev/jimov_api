@@ -43,6 +43,8 @@ export interface IAnimeMedia extends IBaseMedia {
    * An <a href="./image.ts">IImage</a> interface object representing the anime
    * image and its banner. */
   image: IImage;
+  /** URL or location of the anime in the API. */
+  url: `/anime/${string}/name/${string}` | string;
   /** Anime identifier that can be used when the anime name is not used in the URL. */
   id?: number;
   /**
@@ -108,6 +110,8 @@ export class Chronology implements IChronology {
 export class AnimeMedia extends BaseMedia implements IAnimeMedia {
   /** @inheritdoc */
   image: IImage;
+  /** @inheritdoc */
+  url: `/anime/${string}/name/${string}` | string;
   /** @inheritdoc */
   id?: number;
   /** @inheritdoc */

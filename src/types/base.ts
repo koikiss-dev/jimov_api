@@ -7,7 +7,6 @@
  *
  * @author Victor
  */
-export type MediaURLOptions = "anime" | "manga";
 
 /**
  * The base interface to create new types of providers.
@@ -17,8 +16,6 @@ export type MediaURLOptions = "anime" | "manga";
 export interface IBaseMedia {
   /** Name or title of the media */
   name: string;
-  /** URL or location of the media in the API. */
-  url: `/${MediaURLOptions}/${string}/name/${string}` | string;
   /** Alternative names or titles in different languages. */
   alt_names?: string[] | string;
   /** Description or synopsis of the media. */
@@ -39,8 +36,6 @@ export interface IBaseMedia {
 export interface IBaseResult {
   /** Name of the media that was the result of your search */
   name: string;
-  /** The media URL from the API */
-  url: `/${MediaURLOptions}/${string}/name/${string}` | string;
 }
 
 /**
@@ -51,8 +46,6 @@ export interface IBaseResult {
 export abstract class BaseMedia implements IBaseMedia {
   /** @inheritdoc */
   name: string;
-  /** @inheritdoc */
-  url: `/${MediaURLOptions}/${string}/name/${string}` | string;
   /** @inheritdoc */
   alt_names?: string[] | string;
   /** @inheritdoc */
@@ -73,6 +66,4 @@ export abstract class BaseMedia implements IBaseMedia {
 export abstract class BaseResult implements IBaseResult {
   /** @inheritdoc */
   name: string;
-  /** @inheritdoc */
-  url: `/${MediaURLOptions}/${string}/name/${string}` | string;
 }

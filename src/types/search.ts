@@ -11,6 +11,8 @@ import { BaseResult, type IBaseResult } from "./base";
  * @author Zukaritasu
  */
 export interface IAnimeResult extends IBaseResult {
+  /** The anime URL from the API */
+  url: `/anime/${string}/name/${string}` | string;
   /** The URL of the anime image */
   image: string;
   /**
@@ -59,6 +61,8 @@ export interface IResultSearch<T extends IBaseResult> {
  * @author Zukaritasu
  */
 export class AnimeResult extends BaseResult implements IAnimeResult {
+  /** @inheritdoc */
+  url: `/anime/${string}/name/${string}` | string;
   /** @inheritdoc */
   image: string;
   /** @inheritdoc */
