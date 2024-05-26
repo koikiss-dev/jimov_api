@@ -1,7 +1,7 @@
 import { IImage } from "./image";
 import { ICalendar } from "./date";
 import { IResultSearch } from "./search";
-import { BaseMedia, type IBaseMedia, type IBaseResult } from "./base";
+import { BaseChapter, BaseMedia, type IBaseChapter, type IBaseMedia, type IBaseResult } from "./base";
 
 /**
  * The chapter is part of the manga and is also part of a volume. It is made
@@ -9,25 +9,19 @@ import { BaseMedia, type IBaseMedia, type IBaseResult } from "./base";
  *
  * @author Zukaritasu
  */
-export interface IMangaChapter {
+export interface IMangaChapter extends IBaseChapter {
   /** ID or chapter identifier of the chapter that is part of the manga */
   id: number | string;
-  /** Chapter title. May contain the manga chapter number. */
-  title: string;
-  /**
-   * A brief description of what the new chapter brings. This property
-   * is optional because not all websites have it available. */
-  description?: string;
   /** URL of the chapter in the API location */
   url: `/manga/${string}/chapter/${string}`;
-  /** Chapter number */
-  number: number;
   /**
    * Images of the manga chapter.
    * The first image may contain the cover of the chapter. */
   images: string[];
-  /** The cover page of the chapter. Refers to the first page of the chapter. */
-  cover?: string;
+  /**
+   * A brief description of what the new chapter brings. This property
+   * is optional because not all websites have it available. */
+  description?: string;
   /**
    * The date on which the chapter was published. This is optional because
    * in some cases it is not specified. */
@@ -159,21 +153,15 @@ export class MangaMedia extends BaseMedia implements IMangaMedia {
  *
  * @author Zukaritasu
  */
-export class MangaChapter implements IMangaChapter {
+export class MangaChapter extends BaseChapter implements IMangaChapter {
   /** @inheritdoc */
   id: number | string;
-  /** @inheritdoc */
-  title: string;
   /** @inheritdoc */
   description?: string;
   /** @inheritdoc */
   url: `/manga/${string}/chapter/${string}`;
   /** @inheritdoc */
-  number: number;
-  /** @inheritdoc */
   images: string[] = [];
-  /** @inheritdoc */
-  cover?: string;
   /** @inheritdoc */
   date?: ICalendar;
 }
