@@ -1,5 +1,7 @@
 //Spanish Providers - TypeScript version
 
+import { BaseChapter, type IBaseChapter } from "./base";
+
 /**
  * This interface only puts the server name where host episode,
  * and url to that episode
@@ -25,21 +27,13 @@ export interface IEpisodeServer {
  *
  * @author Zukaritasu
  */
-export interface IEpisode {
-  /**
-   * Name of anime episode. May contain the chapter number concatenated
-   * with the anime name. */
-  name: string;
+export interface IEpisode extends IBaseChapter {
   /** The episode URL in the API query */
   url: `/anime/${string}/episode/${string | number}` | string;
-  /** The episode number. By default the value can be 0 in string or integer. */
-  number: number | string;
   /**
    * List of available servers where the episode is located. Remember that
    * this is not the download link of the episode but of the video player. */
   servers?: IEpisodeServer[];
-  /** The image of the episode shown as thumbnail */
-  image: string;
 }
 
 /**
@@ -70,15 +64,9 @@ export class EpisodeServer implements IEpisodeServer {
  *
  * @author Zukaritasu
  */
-export class Episode implements IEpisode {
-  /** @inheritdoc */
-  name: string;
+export class Episode extends BaseChapter implements IEpisode {
   /** @inheritdoc */
   url: `/anime/${string}/episode/${string | number}` | string;
   /** @inheritdoc */
-  number: number | string;
-  /** @inheritdoc */
   servers?: IEpisodeServer[] = [];
-  /** @inheritdoc */
-  image: string;
 }
