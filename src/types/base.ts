@@ -1,3 +1,5 @@
+import type { IImage } from "./image";
+
 /**
  * The base interface to create new types of providers.
  *
@@ -16,6 +18,23 @@ export interface IBaseMedia {
   status?: string | boolean | "ongoing" | "completed";
   /** Indicates if the content is intended for adult audiences. */
   nsfw?: boolean;
+}
+
+/**
+ * The base interface to create new chapter classes for new types of providers.
+ *
+ * @author Victor
+ */
+export interface IBaseChapter {
+  /**
+   * Name of the media chapter. May contain the chapter number concatenated
+   * with the media name.
+   */
+  name: string;
+  /** The chapter number. */
+  num: number;
+  /** The image of the chapter shown as thumbnail */
+  thumbnail?: IImage;
 }
 
 /**
@@ -56,4 +75,18 @@ export abstract class BaseMedia implements IBaseMedia {
 export abstract class BaseResult implements IBaseResult {
   /** @inheritdoc */
   name: string;
+}
+
+/**
+ * Extends the properties of a base chapter to create a new one.
+ *
+ * @author Victor
+ */
+export abstract class BaseChapter implements IBaseChapter {
+  /** @inheritdoc */
+  name: string;
+  /** @inheritdoc */
+  num: number;
+  /** @inheritdoc */
+  thumbnail?: IImage;
 }
