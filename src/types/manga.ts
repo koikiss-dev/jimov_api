@@ -38,7 +38,7 @@ export interface IMangaChapter extends IBaseChapter {
  *
  * @author Zukaritasu
  */
-export interface IMangaVolume {
+export interface IMangaVolume extends IBaseChapter {
   /** Manga volume ID */
   id: number | string;
   /**
@@ -47,23 +47,13 @@ export interface IMangaVolume {
    * the last chapter is the end. */
   range: [number, number];
   /**
-   * The title of the volume. The title may contain a short explanation
-   * of what the volume contains. */
-  title?: string;
-  /**
    * Description or introduction that explains a little of what is to
    * come in the next chapters that make up the volume. */
-  description?: string;
-  /** Manga volume number */
-  number?: number; //number
+  synopsis?: string;
   /** Images of the manga volume. */
   images: string[];
   /** The date on which the first chapter of the volume was published. */
   date?: ICalendar;
-  /**
-   * The image or cover of the volume.
-   * This property contains the URL of the image */
-  thumbnail?: string;
   /** URL of the volume in the API location */
   url?: `/manga/${string}/volume/${string}`; // title or number
 }
@@ -176,23 +166,17 @@ export class MangaChapter extends BaseChapter implements IMangaChapter {
  *
  * @author Zukaritasu
  */
-export class MangaVolume implements IMangaVolume {
+export class MangaVolume extends BaseChapter implements IMangaVolume {
   /** @inheritdoc */
   id: number | string;
   /** @inheritdoc */
   range: [number, number] = [0, 0];
   /** @inheritdoc */
-  title?: string;
-  /** @inheritdoc */
-  description?: string;
-  /** @inheritdoc */
-  number?: number; //number
+  synopsis?: string;
   /** @inheritdoc */
   images: string[];
   /** @inheritdoc */
   date?: ICalendar;
-  /** @inheritdoc */
-  thumbnail?: string;
   /** @inheritdoc */
   url?: `/manga/${string}/volume/${string}`; // title or number
 }
