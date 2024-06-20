@@ -1,12 +1,10 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Anime } from "../../../../types/anime";
+import { AnimeMedia } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
-  type IResultSearch,
-  type IAnimeSearch,
   ResultSearch,
-  AnimeSearch,
+  AnimeResult
 } from "../../../../types/search";
 import { UnPacked } from "../../../../types/utils";
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
@@ -39,7 +37,7 @@ axios.defaults.headers.common["User-Agent"] =
 export class WcoStream extends AnimeScraperModel {
   readonly url = "https://www.wcostream.tv";
 
-  async GetItemInfo(anime: string): Promise<Anime> {
+  async GetItemInfo(anime: string): Promise<AnimeMedia> {
     try {
       const { data } = await axios.get(`${this.url}/anime/${anime}`, {
         headers: {
@@ -62,7 +60,7 @@ export class WcoStream extends AnimeScraperModel {
         .replace("Genre;", "")
         .replace("Language; ", "");
 
-      const AnimeInfo: Anime = {
+      const AnimeInfo: AnimeMedia = {
         name: name,
         url: `/anime/wcostream/name/${anime}`,
         synopsis: $("#category_description .ui-grid-solo .ui-block-a div p")
@@ -110,14 +108,14 @@ export class WcoStream extends AnimeScraperModel {
         if (data && !data.includes("Movie") && !data.includes("OVA")) {
           const AnimeEpisode: Episode = {
             name: data,
-            number: episode,
-            image: `https://cdn.animationexplore.com/thumbs/${$(e)
+            num: Number(episode),
+            thumbnail: {url:`https://cdn.animationexplore.com/thumbs/${$(e)
               .find("a")
               .attr("href")
               .replace("https://www.wcostream.tv/", "")
               .replace("/", "")
               .replace(/[^a-zA-Z0-9 ]/g, " ")
-              .replace(/\s+/g, "-")}.jpg`,
+              .replace(/\s+/g, "-")}.jpg`},
             url: `/anime/wcostream/episode/${
               anime.replace(/[^a-zA-Z0-9 ]/g, " ").replace(/\s+/g, "-") +
               "-" +
@@ -170,8 +168,7 @@ export class WcoStream extends AnimeScraperModel {
         url: `/anime/wcostream/episode/${episode}${
           season ? "?season=" + season : ""
         }`,
-        number: NumEpisode,
-        image: "",
+        num: Number(NumEpisode),
         servers: [],
       };
 
@@ -187,7 +184,7 @@ export class WcoStream extends AnimeScraperModel {
             .replace("<![CDATA[", "")
             .replace("]]>", "")
             .trim();
-          AnimeEpisodeInfo.image = $$(e).find("jwplayer[type='image']").text();
+          AnimeEpisodeInfo.thumbnail.url = $$(e).find("jwplayer[type='image']").text();
           const Server: EpisodeServer = {
             name:
               "JWplayer - " +
@@ -204,7 +201,7 @@ export class WcoStream extends AnimeScraperModel {
             .replace("<![CDATA[", "")
             .replace("]]>", "")
             .trim();
-          AnimeEpisodeInfo.image = $$(e).find("jwplayer[type='image']").text();
+          AnimeEpisodeInfo.thumbnail.url = $$(e).find("jwplayer[type='image']").text();
 
           const Server: EpisodeServer = {
             name:
@@ -225,7 +222,7 @@ export class WcoStream extends AnimeScraperModel {
   async GetItemByFilter(
     search?: string,
     page?: number
-  ): Promise<IResultSearch<IAnimeSearch>> {
+  ): Promise<ResultSearch<AnimeResult>> {
     try {
       const formdata = new FormData();
       formdata.append("catara", search);
@@ -234,7 +231,7 @@ export class WcoStream extends AnimeScraperModel {
       const { data } = await axios.post(`${this.url}/search`, formdata);
 
       const $ = cheerio.load(data);
-      const animeSearch: ResultSearch<IAnimeSearch> = {
+      const animeSearch: ResultSearch<AnimeResult> = {
         nav: {
           count: $("#blog .cerceve").length,
           current: Number(page ? page : 1),
@@ -252,7 +249,7 @@ export class WcoStream extends AnimeScraperModel {
           (animeSearch.nav.current > 1 ? i + 1 : i) <=
             28 * animeSearch.nav.current
         ) {
-          const animeSearchData: AnimeSearch = {
+          const animeSearchData: AnimeResult = {
             name: $(e).find(".iccerceve a").attr("title"),
             image: $(e).find(".iccerceve a img").attr("src"),
             url: `/anime/wcostream/name/${$(e)

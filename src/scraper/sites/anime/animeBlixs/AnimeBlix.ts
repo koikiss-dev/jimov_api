@@ -1,12 +1,11 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Anime } from "../../../../types/anime";
+import { AnimeMedia } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
-  AnimeSearch,
   ResultSearch,
   type IResultSearch,
-  type IAnimeSearch,
+  type IAnimeResult,
 } from "../../../../types/search";
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 //import { Calendar } from "@animetypes/date";
@@ -24,7 +23,7 @@ export class AnimeBlix extends AnimeScraperModel {
   readonly url = "https://vwv.animeblix.org";
   readonly api = "https://api.animelatinohd.com";
 
-  async GetItemInfo(anime: string): Promise<Anime> {
+  async GetItemInfo(anime: string): Promise<AnimeMedia> {
     try {
       const { data } = await axios.get(
         `${this.url}/animes/${anime.includes("ver-") ? anime : "ver-" + anime}`
@@ -76,11 +75,11 @@ export class AnimeBlix extends AnimeScraperModel {
       }
 
       const AltNames = AcceptAlts.slice(0, AltsSlice);
-      const AnimeInfo: Anime = {
+      const AnimeInfo: AnimeMedia = {
         name: $(".cn .ti h1 strong").text(),
         url: `/anime/animeblix/name/${anime}`,
         synopsis: $(".cn .info .r .tx .content p").first().text(),
-        alt_name: [...AltNames.split("---")],
+        alt_names: [...AltNames.split("---")],
         image: {
           url: $(".cn .info .l .i img").attr("data-src"),
         },
@@ -116,8 +115,7 @@ export class AnimeBlix extends AnimeScraperModel {
       ListEpisode.map((e) => {
         const AnimeEpisode: Episode = {
           name: "Episode " + e,
-          number: e,
-          image: "",
+          num: Number(e),
           url: `/anime/animeblix/episode/${anime + "-" + e}`,
         };
 
@@ -142,8 +140,7 @@ export class AnimeBlix extends AnimeScraperModel {
       const AnimeEpisodeInfo: Episode = {
         name: number,
         url: `/anime/animeblix/episode/${episode}`,
-        number: number,
-        image: "",
+        num: Number(number),
         servers: [],
       };
 
@@ -171,7 +168,7 @@ export class AnimeBlix extends AnimeScraperModel {
     page?: number,
     year?: string,
     genre?: string
-  ): Promise<IResultSearch<IAnimeSearch>> {
+  ): Promise<IResultSearch<IAnimeResult>> {
     try {
       const { data } = await axios.get(`${this.api}/api/anime/list`, {
         params: {
@@ -185,7 +182,7 @@ export class AnimeBlix extends AnimeScraperModel {
 
       const animeSearchParseObj = data;
 
-      const animeSearch: ResultSearch<IAnimeSearch> = {
+      const animeSearch: ResultSearch<IAnimeResult> = {
         nav: {
           count: animeSearchParseObj.data.length,
           current: animeSearchParseObj.current_page,
@@ -198,7 +195,7 @@ export class AnimeBlix extends AnimeScraperModel {
         results: [],
       };
       animeSearchParseObj.data.map((e) => {
-        const animeSearchData: AnimeSearch = {
+        const animeSearchData: IAnimeResult = {
           name: e.name,
           image:
             "https://www.themoviedb.org/t/p/original" +

@@ -6,17 +6,12 @@ import CryptoJS from 'crypto-js'
 
 import {
   ResultSearch,
-  type IResultSearch,
-  type IAnimeResult,
+  AnimeResult
 } from "../../../../types/search";
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 
 export class AnimeLatinoHD extends AnimeScraperModel {
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  public GetItemByFilter(..._args: unknown[]): Promise<IResultSearch<IAnimeResult>> {
-    throw new Error("Method not implemented.");
-  }
-  
+
   readonly url = "https://www.animelatinohd.com";
   readonly api = "https://web.animelatinohd.com";
   readonly key = "l7z8rIhQDXIH6pl66ZEQgPkNwkDlilgdOHMMWkxkzzE="
@@ -155,13 +150,13 @@ export class AnimeLatinoHD extends AnimeScraperModel {
   
   return CryptoJS.enc.Base64.stringify(r)
   }
-  async GetAnimeByFilter(
+  async GetItemByFilter(
     search?: string,
     type?: number,
     page?: number,
     year?: string,
     genre?: string
-  ): Promise<IResultSearch<IAnimeResult>> {
+  ): Promise<ResultSearch<AnimeResult>> {
     try {
 
       const { data } = await axios.get(`${this.api}/api/anime/list`, {
@@ -176,7 +171,7 @@ export class AnimeLatinoHD extends AnimeScraperModel {
   
       const animeSearchParseObj = JSON.parse(this.decrypt(data.data));
 
-      const animeSearch: ResultSearch<IAnimeResult> = {
+      const animeSearch: ResultSearch<AnimeResult> = {
         nav: {
           count: animeSearchParseObj.data.length,
           current: animeSearchParseObj.current_page,
@@ -189,7 +184,7 @@ export class AnimeLatinoHD extends AnimeScraperModel {
         results: [],
       };
       animeSearchParseObj.data.map((e) => {
-        const animeSearchData: IAnimeResult = {
+        const animeSearchData: AnimeResult = {
           name: e.name,
           image:
             "https://www.themoviedb.org/t/p/original" +
