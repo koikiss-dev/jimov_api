@@ -4,8 +4,7 @@ import { AnimeMedia } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
   ResultSearch,
-  type IResultSearch,
-  type IAnimeResult,
+  AnimeResult,
 } from "../../../../types/search";
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 
@@ -158,7 +157,7 @@ export class Animevostfr extends AnimeScraperModel {
   async GetItemByFilter(
     search?: string,
     page?: number
-  ): Promise<IResultSearch<IAnimeResult>> {
+  ): Promise<ResultSearch<AnimeResult>> {
     try {
       const { data } = await axios.get(`${this.url}/page/${page ? page : 1}`, {
         params: {
@@ -168,7 +167,7 @@ export class Animevostfr extends AnimeScraperModel {
 
       const $ = cheerio.load(data);
 
-      const animeSearch: ResultSearch<IAnimeResult> = {
+      const animeSearch: ResultSearch<AnimeResult> = {
         nav: {
           count: $(".movies-list .ml-item").length,
           current: page ? Number(page) : 1,
@@ -182,7 +181,7 @@ export class Animevostfr extends AnimeScraperModel {
       };
 
       $(".movies-list .ml-item").each((_i, e) => {
-        const animeSearchData: IAnimeResult = {
+        const animeSearchData: AnimeResult = {
           name: $(e).find(".mli-info").text(),
           image: $(e).find(".mli-thumb").attr("data-original"),
           url: `/anime/animevostfr/name/${$(e).find(".ml-mask").attr("href").replace(this.url, "").replace("/", "").replace("/", "")}`,
