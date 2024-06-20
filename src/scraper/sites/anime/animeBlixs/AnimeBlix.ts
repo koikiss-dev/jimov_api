@@ -8,7 +8,7 @@ import {
   type IResultSearch,
   type IAnimeSearch,
 } from "../../../../types/search";
-import { AnimeProviderModel } from "../../../ScraperAnimeModel";
+import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 //import { Calendar } from "@animetypes/date";
 
 /** List of Domains
@@ -20,11 +20,11 @@ import { AnimeProviderModel } from "../../../ScraperAnimeModel";
  *
  */
 
-export class AnimeBlix extends AnimeProviderModel {
+export class AnimeBlix extends AnimeScraperModel {
   readonly url = "https://vwv.animeblix.org";
   readonly api = "https://api.animelatinohd.com";
 
-  async GetAnimeInfo(anime: string): Promise<Anime> {
+  async GetItemInfo(anime: string): Promise<Anime> {
     try {
       const { data } = await axios.get(
         `${this.url}/animes/${anime.includes("ver-") ? anime : "ver-" + anime}`
@@ -165,7 +165,7 @@ export class AnimeBlix extends AnimeProviderModel {
     }
   }
 
-  async GetAnimeByFilter(
+  async GetItemByFilter(
     search?: string,
     type?: number,
     page?: number,

@@ -1,33 +1,37 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Anime } from "../../../../types/anime";
+import { AnimeMedia } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
 import CryptoJS from 'crypto-js'
 
 import {
-  AnimeSearch,
   ResultSearch,
   type IResultSearch,
-  type IAnimeSearch,
+  type IAnimeResult,
 } from "../../../../types/search";
-import { AnimeProviderModel } from "../../../ScraperAnimeModel";
+import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 
-export class AnimeLatinoHD extends AnimeProviderModel {
+export class AnimeLatinoHD extends AnimeScraperModel {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  public GetItemByFilter(..._args: unknown[]): Promise<IResultSearch<IAnimeResult>> {
+    throw new Error("Method not implemented.");
+  }
+  
   readonly url = "https://www.animelatinohd.com";
   readonly api = "https://web.animelatinohd.com";
   readonly key = "l7z8rIhQDXIH6pl66ZEQgPkNwkDlilgdOHMMWkxkzzE="
 
-  async GetAnimeInfo(anime: string): Promise<Anime> {
+  async GetItemInfo(anime: string): Promise<AnimeMedia> {
     try {
       const { data } = await axios.get(`${this.url}/anime/${anime}`);
       const $ = cheerio.load(data);
 
       const animeInfoParseObj = JSON.parse(this.decrypt(JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data));
-      const AnimeInfo: Anime = {
+      const AnimeInfo: AnimeMedia = {
         name: animeInfoParseObj.name,
         url: `/anime/animelatinohd/name/${anime}`,
         synopsis: animeInfoParseObj.overview,
-        alt_name: [...animeInfoParseObj.name_alternative.split(",")],
+        alt_names: [...animeInfoParseObj.name_alternative.split(",")],
         image: {
           url:
             "https://www.themoviedb.org/t/p/original" +
@@ -44,11 +48,10 @@ export class AnimeLatinoHD extends AnimeProviderModel {
       animeInfoParseObj.episodes.map((e) => {
         const AnimeEpisode: Episode = {
           name: animeInfoParseObj.name,
-          number: e.number + "",
-          image:
-            "https://www.themoviedb.org/t/p/original" +
-            animeInfoParseObj.banner +
-            "?&w=280&q=95",
+          num: Number(e.number),
+          thumbnail:{
+            url :"https://www.themoviedb.org/t/p/original" + animeInfoParseObj.banner + "?&w=280&q=95"
+          },
           url: `/anime/animelatinohd/episode/${
             animeInfoParseObj.slug + "-" + e.number
           }`,
@@ -79,8 +82,7 @@ export class AnimeLatinoHD extends AnimeProviderModel {
       const AnimeEpisodeInfo: Episode = {
         name: animeEpisodeParseObj.anime.name,
         url: `/anime/animelatinohd/episode/${episode}`,
-        number: number,
-        image: "",
+        num: Number(number),
         servers: [],
       };
 
@@ -131,8 +133,6 @@ export class AnimeLatinoHD extends AnimeProviderModel {
     })
     return CryptoJS.enc.Utf8.stringify(n)
   }
-
-
   encrypt(data:string | number){
     let t = CryptoJS.lib.WordArray.random(16)
     let r
@@ -161,7 +161,7 @@ export class AnimeLatinoHD extends AnimeProviderModel {
     page?: number,
     year?: string,
     genre?: string
-  ): Promise<IResultSearch<IAnimeSearch>> {
+  ): Promise<IResultSearch<IAnimeResult>> {
     try {
 
       const { data } = await axios.get(`${this.api}/api/anime/list`, {
@@ -176,7 +176,7 @@ export class AnimeLatinoHD extends AnimeProviderModel {
   
       const animeSearchParseObj = JSON.parse(this.decrypt(data.data));
 
-      const animeSearch: ResultSearch<IAnimeSearch> = {
+      const animeSearch: ResultSearch<IAnimeResult> = {
         nav: {
           count: animeSearchParseObj.data.length,
           current: animeSearchParseObj.current_page,
@@ -189,7 +189,7 @@ export class AnimeLatinoHD extends AnimeProviderModel {
         results: [],
       };
       animeSearchParseObj.data.map((e) => {
-        const animeSearchData: AnimeSearch = {
+        const animeSearchData: IAnimeResult = {
           name: e.name,
           image:
             "https://www.themoviedb.org/t/p/original" +

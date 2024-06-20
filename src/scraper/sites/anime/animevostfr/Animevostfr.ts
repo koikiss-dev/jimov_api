@@ -1,14 +1,13 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Anime } from "../../../../types/anime";
+import { AnimeMedia } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
-  AnimeSearch,
   ResultSearch,
   type IResultSearch,
-  type IAnimeSearch,
+  type IAnimeResult,
 } from "../../../../types/search";
-import { AnimeProviderModel } from "../../../ScraperAnimeModel";
+import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 
 /** List of Domains
  *
@@ -16,10 +15,10 @@ import { AnimeProviderModel } from "../../../ScraperAnimeModel";
  *
  */
 
-export class Animevostfr extends AnimeProviderModel {
+export class Animevostfr extends AnimeScraperModel {
   readonly url = "https://animevostfr.tv";
 
-  async GetAnimeInfo(anime: string): Promise<Anime> {
+  async GetItemInfo(anime: string): Promise<AnimeMedia> {
     try {
       const { data } = await axios.get(`${this.url}/${anime}`);
       const $ = cheerio.load(data);
@@ -37,14 +36,14 @@ export class Animevostfr extends AnimeProviderModel {
         .text();
       const AnimeDescription = $(".mvi-content .mvic-desc .desc p").html();
 
-      const AnimeInfo: Anime = {
+      const AnimeInfo: AnimeMedia = {
         name: $(".mvi-content .mvic-desc h1").text(),
         url: `/anime/animevostfr/name/${anime}`,
         synopsis: AnimeDescription.slice(
           AnimeDescription.indexOf("Synopsis:") + "Synopsis:".length,
           -1
         ).trim(),
-        alt_name: [
+        alt_names: [
           ...AnimeDescription.slice(
             AnimeDescription.indexOf("Titre alternatif:") +
             "Titre alternatif:".length,
@@ -84,8 +83,7 @@ export class Animevostfr extends AnimeProviderModel {
           .replace("/", "");
         const AnimeEpisode: Episode = {
           name: "Episode " + number,
-          number: number,
-          image: "",
+          num: Number(number),
           url: `/anime/animevostfr/episode/${anime + "-" + number}`,
         };
 
@@ -112,25 +110,23 @@ export class Animevostfr extends AnimeProviderModel {
       const ListServer = [];
       s.map((_i, e) => ListServer.push($(e).val()));
       /*
-                "SERVER_VIP"
-                "SERVER_HYDRAX"
-                "SERVER_PHOTOSS"
-                "SERVER_DOWNLOAD"							
-                "SERVER_PHOTOS"			
-                "SERVER_OPEN_LOAD"
-                "SERVER_OPEN_LOADS"				
-                "SERVER_OPEN_CDN"
-                "SERVER_OPEN_CDNO"						
-                "SERVER_PHOTO"
-                "SERVER_STREAM_MANGO"
-                "SERVER_RAPID_VIDEO"
-            */
-
+      "SERVER_VIP"
+      "SERVER_HYDRAX"
+      "SERVER_PHOTOSS"
+      "SERVER_DOWNLOAD"
+      "SERVER_PHOTOS"
+      "SERVER_OPEN_LOAD"
+      "SERVER_OPEN_LOADS"
+      "SERVER_OPEN_CDN"
+      "SERVER_OPEN_CDNO"
+      "SERVER_PHOTO"
+      "SERVER_STREAM_MANGO"
+      "SERVER_RAPID_VIDEO"
+      */
       const AnimeEpisodeInfo: Episode = {
         name: "Episode " + number,
         url: `/anime/animevostfr/episode/${episode}`,
-        number: number,
-        image: "",
+        num: Number(number),
         servers: [],
       };
       await Promise.all(
@@ -144,7 +140,7 @@ export class Animevostfr extends AnimeProviderModel {
               .replace(`?logo=${this.url}/1234.png`, "")
               .replace("hydrax.net/watch", "abysscdn.com/")
               .replace("short.ink/", "abysscdn.com/?v=");
-            let Servers: EpisodeServer = {
+            const Servers: EpisodeServer = {
               name: n,
               url: currentData,
             };
@@ -155,13 +151,14 @@ export class Animevostfr extends AnimeProviderModel {
       )
       return AnimeEpisodeInfo;
     } catch (error) {
+      console.log(error)
     }
   }
 
-  async GetAnimeByFilter(
+  async GetItemByFilter(
     search?: string,
     page?: number
-  ): Promise<IResultSearch<IAnimeSearch>> {
+  ): Promise<IResultSearch<IAnimeResult>> {
     try {
       const { data } = await axios.get(`${this.url}/page/${page ? page : 1}`, {
         params: {
@@ -171,7 +168,7 @@ export class Animevostfr extends AnimeProviderModel {
 
       const $ = cheerio.load(data);
 
-      const animeSearch: ResultSearch<IAnimeSearch> = {
+      const animeSearch: ResultSearch<IAnimeResult> = {
         nav: {
           count: $(".movies-list .ml-item").length,
           current: page ? Number(page) : 1,
@@ -185,7 +182,7 @@ export class Animevostfr extends AnimeProviderModel {
       };
 
       $(".movies-list .ml-item").each((_i, e) => {
-        const animeSearchData: AnimeSearch = {
+        const animeSearchData: IAnimeResult = {
           name: $(e).find(".mli-info").text(),
           image: $(e).find(".mli-thumb").attr("data-original"),
           url: `/anime/animevostfr/name/${$(e).find(".ml-mask").attr("href").replace(this.url, "").replace("/", "").replace("/", "")}`,

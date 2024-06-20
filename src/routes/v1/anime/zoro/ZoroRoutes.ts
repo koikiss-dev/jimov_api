@@ -7,7 +7,7 @@ r.get("/anime/zoro/name/:name", async (req, res) => {
   try {
     const { name } = req.params;
     const zoro = new Zoro();
-    const animeInfo = await zoro.GetAnimeInfo(name);
+    const animeInfo = await zoro.GetItemInfo(name);
     res.send(animeInfo);
   } catch (error) {
     console.log(error);
@@ -41,7 +41,7 @@ r.get("/anime/zoro/filter", async (req, res) => {
     const page = req.query.page as string;
 
     const zoro = new Zoro();
-    const animeInfo = await zoro.GetAnimeByFilter(
+    const animeInfo = await zoro.GetItemByFilter(
       type,
       rated,
       score,
