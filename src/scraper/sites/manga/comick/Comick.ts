@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 import {
-  Manga,
+  MangaMedia,
   MangaChapter,
   type IMangaResult,
 } from "../../../../types/manga";
@@ -35,7 +35,7 @@ export class Comick {
     year?: number,
     genre?: string,
     page?: number
-  ) {
+  ): Promise<IResultSearch<IMangaResult>> {
     try {
       const { data } = await axios.get(`${this.api}/v1.0/search`, {
         params: {
@@ -66,7 +66,7 @@ export class Comick {
         }) => {
           const ListMangaResult: IMangaResult = {
             id: e.id,
-            title: e.title,
+            name: e.title,
             thumbnail: {
               url: "https://meo.comick.pictures/" + e.md_covers[0].b2key,
             },
@@ -82,7 +82,7 @@ export class Comick {
     }
   }
 
-  async GetMangaInfo(manga: string, lang: string): Promise<Manga> {
+  async GetMangaInfo(manga: string, lang: string): Promise<MangaMedia> {
     try {
       const { data } = await axios.get(
         `${this.url}/comic/${manga}`
@@ -98,15 +98,15 @@ export class Comick {
           `${this.url}/_next/data/${buildId}/comic/${manga}/${mangaInfoParseObj.firstChap.hid + "-chapter-" + mangaInfoParseObj.firstChap.chap + "-" + mangaInfoParseObj.firstChap.lang}.json`
         );
       }
-      const MangaInfo: Manga = {
+      const MangaInfo: MangaMedia = {
         id: mangaInfoParseObj.comic.id,
-        title: mangaInfoParseObj.comic.title,
-        altTitles: mangaInfoParseObj.comic.md_titles.map(
+        name: mangaInfoParseObj.comic.title,
+        alt_names: mangaInfoParseObj.comic.md_titles.map(
           (e: { title: string }) => e.title
         ),
         url: `/manga/comick/title/${mangaInfoParseObj.comic.slug}`,
-        description: mangaInfoParseObj.comic.desc,
-        isNSFW: mangaInfoParseObj.comic.hentai,
+        synopsis: mangaInfoParseObj.comic.desc,
+        nsfw: mangaInfoParseObj.comic.hentai,
         langlist: mangaInfoParseObj.langList,
         status: mangaInfoParseObj.comic.status == "1" ? "ongoing" : "completed",
         authors: mangaInfoParseObj.authors.map((e: { name: string }) => e.name),
@@ -135,12 +135,11 @@ export class Comick {
 
             const MangaInfoChapter: MangaChapter = {
               id: e.id,
-              title: e.title,
+              name: e.title,
               url: `/manga/comick/chapter/${e.hid}-${mangaInfoParseObj.comic.slug
                 }-${e.chap ? e.chap : "err"}${langChapter}`,
-              number: e.chap,
+              num: Number(e.chap),
               images: null,
-              cover: null,
               date: {
                 year: mindate.getFullYear() ? mindate.getFullYear() : null,
                 month: mindate.getMonth() ? mindate.getMonth() : null,
@@ -187,9 +186,9 @@ export class Comick {
 
         const MangaChapterInfoChapter: MangaChapter = {
           id: mangaChapterInfoParseObj.chapter.id,
-          title: mangaChapterInfoParseObj.seoTitle,
+          name: mangaChapterInfoParseObj.seoTitle,
           url: `/manga/comick/chapter/${manga}`,
-          number: mangaChapterInfoParseObj.chapter.chap,
+          num: mangaChapterInfoParseObj.chapter.chap,
           images: mangaChapterInfoParseObj.chapter.md_images.map(
             (e: { w: number; h: number; name: string; b2key: string }) => {
               return {
@@ -200,9 +199,7 @@ export class Comick {
               };
             }
           ),
-          cover:
-            "https://meo.comick.pictures/" +
-            mangaChapterInfoParseObj.chapter.md_comics.md_covers[0].b2key,
+          thumbnail:{url:null,banner:"https://meo.comick.pictures/" +mangaChapterInfoParseObj.chapter.md_comics.md_covers[0].b2key},
           date: {
             year: mindate.getFullYear() ? mindate.getFullYear() : null,
             month: mindate.getMonth() ? mindate.getMonth() : null,
@@ -224,9 +221,9 @@ export class Comick {
 
         const MangaChapterInfoChapter: MangaChapter = {
           id: dataBuild.data.pageProps.chapter.id,
-          title: dataBuild.data.pageProps.seoTitle,
+          name: dataBuild.data.pageProps.seoTitle,
           url: `/manga/comick/chapter/${manga}`,
-          number: dataBuild.data.pageProps.chapter.chap,
+          num: dataBuild.data.pageProps.chapter.chap,
           images: dataBuild.data.pageProps.chapter.md_images.map(
             (s: { w: number; h: number; name: string; b2key: string }) => {
               return {
@@ -237,9 +234,7 @@ export class Comick {
               };
             }
           ),
-          cover:
-            "https://meo.comick.pictures/" +
-            dataBuild.data.pageProps.chapter.md_comics.md_covers[0].b2key,
+          thumbnail:{url:null,banner:"https://meo.comick.pictures/" +dataBuild.data.pageProps.chapter.md_comics.md_covers[0].b2key},
           date: {
             year: mindate.getFullYear() ? mindate.getFullYear() : null,
             month: mindate.getMonth() ? mindate.getMonth() : null,

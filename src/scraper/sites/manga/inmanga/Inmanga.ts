@@ -1,7 +1,7 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
 import {
-  Manga,
+  MangaMedia,
   MangaChapter,
   type IMangaResult,
 } from "../../../../types/manga";
@@ -117,7 +117,7 @@ export class Inmanga {
 
         const ListMangaResult: IMangaResult = {
           id: null,
-          title: title,
+          name: title,
           thumbnail: {
             url: `https://inmanga.com/thumbnails/manga/${name}/${cid}`,
           },
@@ -134,22 +134,23 @@ export class Inmanga {
     }
   }
 
-  async GetMangaInfo(manga: string, cid: string): Promise<Manga> {
+  async GetMangaInfo(manga: string, cid: string): Promise<MangaMedia> {
     try {
       const dataPost = await axios.get(`${this.url}/ver/manga/${manga}/${cid}`);
       const $_ = cheerio.load(dataPost.data);
+      const AltNames = []
 
-      const MangaInfo: Manga = {
+      const MangaInfo: MangaMedia = {
         id: cid,
-        title: $_("div.col-md-3.col-sm-4 div.panel-heading.visible-xs").text(),
-        altTitles: [],
+        name: $_("div.col-md-3.col-sm-4 div.panel-heading.visible-xs").text(),
+        alt_names: AltNames,
         url: `/manga/inmanga/title/${manga}`,
-        description: $_(
+        synopsis: $_(
           "body > div > section > div > div > div:nth-child(6) > div > div.panel-body"
         )
           .text()
           .trim(),
-        isNSFW: false,
+        nsfw: false,
         status:
           $_(".col-md-3.col-sm-4 .list-group > a:nth-child(1) > span").text() ==
           "En emisión"
@@ -162,17 +163,17 @@ export class Inmanga {
           url: `https://inmanga.com/thumbnails/manga/${manga}/${cid}`,
         },
       };
-
       $_(
         ".col-md-9.col-sm-8.col-xs-12 .panel.widget .panel-heading .text-muted span"
       ).each((_i, e) =>
-        MangaInfo.altTitles.push($_(e).text().replace(";", ""))
+        AltNames.push($_(e).text().replace(";", ""))
       );
+      
       $_(
         ".col-md-9.col-sm-8.col-xs-12 .panel.widget .panel-heading .label.ml-sm"
       ).each((_i, e) => MangaInfo.genres.push($_(e).text().trim()));
 
-      MangaInfo.altTitles.slice(MangaInfo.altTitles.indexOf('""'), 0);
+      MangaInfo.alt_names.slice(MangaInfo.alt_names.indexOf('""'), 0);
       MangaInfo.genres.slice(MangaInfo.genres.indexOf('""'), 0);
 
       const dataChPost = await axios.get(
@@ -188,11 +189,10 @@ export class Inmanga {
         }) => {
           const MangaInfoChapter: MangaChapter = {
             id: e.Id,
-            title: e.MangaName,
+            name: e.MangaName,
             url: `/manga/inmanga/chapter/${manga}-${e.Number}?cid=${e.Identification}`, // Change url (: = title ) manga.replace(/[^a-zA-Z:]/g," ")
-            number: e.Number,
+            num: e.Number,
             images: null,
-            cover: null,
             date: {
               year: null,
               month: null,
@@ -223,11 +223,10 @@ export class Inmanga {
 
       const MangaChapterInfoChapter: MangaChapter = {
         id: 1,
-        title: "",
+        name: "",
         url: `/manga/inmanga/chapter/`,
-        number: idNumber,
+        num: idNumber,
         images: allimages,
-        cover: null,
         date: {
           year: null,
           month: null,
