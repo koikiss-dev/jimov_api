@@ -4,8 +4,7 @@ import { AnimeMedia } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
   ResultSearch,
-  type IResultSearch,
-  type IAnimeResult,
+  AnimeResult
 } from "../../../../types/search";
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 //import { Calendar } from "@animetypes/date";
@@ -168,7 +167,7 @@ export class AnimeBlix extends AnimeScraperModel {
     page?: number,
     year?: string,
     genre?: string
-  ): Promise<IResultSearch<IAnimeResult>> {
+  ): Promise<ResultSearch<AnimeResult>> {
     try {
       const { data } = await axios.get(`${this.api}/api/anime/list`, {
         params: {
@@ -182,7 +181,7 @@ export class AnimeBlix extends AnimeScraperModel {
 
       const animeSearchParseObj = data;
 
-      const animeSearch: ResultSearch<IAnimeResult> = {
+      const animeSearch: ResultSearch<AnimeResult> = {
         nav: {
           count: animeSearchParseObj.data.length,
           current: animeSearchParseObj.current_page,
@@ -195,7 +194,7 @@ export class AnimeBlix extends AnimeScraperModel {
         results: [],
       };
       animeSearchParseObj.data.map((e) => {
-        const animeSearchData: IAnimeResult = {
+        const animeSearchData: AnimeResult = {
           name: e.name,
           image:
             "https://www.themoviedb.org/t/p/original" +
