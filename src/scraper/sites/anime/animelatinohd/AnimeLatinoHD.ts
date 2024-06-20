@@ -2,6 +2,8 @@ import * as cheerio from "cheerio";
 import axios from "axios";
 import { Anime } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
+import CryptoJS from 'crypto-js'
+
 import {
   AnimeSearch,
   ResultSearch,
@@ -12,16 +14,15 @@ import { AnimeProviderModel } from "../../../ScraperAnimeModel";
 
 export class AnimeLatinoHD extends AnimeProviderModel {
   readonly url = "https://www.animelatinohd.com";
-  readonly api = "https://api.animelatinohd.com";
+  readonly api = "https://web.animelatinohd.com";
+  readonly key = "l7z8rIhQDXIH6pl66ZEQgPkNwkDlilgdOHMMWkxkzzE="
 
   async GetAnimeInfo(anime: string): Promise<Anime> {
     try {
       const { data } = await axios.get(`${this.url}/anime/${anime}`);
       const $ = cheerio.load(data);
 
-      const animeInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props
-        .pageProps.data;
-
+      const animeInfoParseObj = JSON.parse(this.decrypt(JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data));
       const AnimeInfo: Anime = {
         name: animeInfoParseObj.name,
         url: `/anime/animelatinohd/name/${anime}`,
@@ -73,8 +74,7 @@ export class AnimeLatinoHD extends AnimeProviderModel {
       const { data } = await axios.get(`${this.url}/ver/${anime}/${number}`);
       const $ = cheerio.load(data);
 
-      const animeEpisodeParseObj = JSON.parse($("#__NEXT_DATA__").html()).props
-        .pageProps.data;
+      const animeEpisodeParseObj = JSON.parse(this.decrypt(JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data));
 
       const AnimeEpisodeInfo: Episode = {
         name: animeEpisodeParseObj.anime.name,
@@ -102,12 +102,12 @@ export class AnimeLatinoHD extends AnimeProviderModel {
       await Promise.all(
         animeEpisodeParseObj.players[f_index].map(
           async (e: { server: { title: string }; id: string }) => {
-
+            const warpVideo = await axios.get(this.api +'/video/'+this.encrypt(JSON.stringify(e.id)))
             const Server: EpisodeServer = {
               name: e.server.title,
               url: "",
             };
-            Server.url = "https://api.animelatinohd.com/stream/" + e.id;
+            Server.url = `${warpVideo.request.res.responseUrl}`;
             Server.name = e.server.title;
 
             AnimeEpisodeInfo.servers.push(Server);
@@ -120,7 +120,42 @@ export class AnimeLatinoHD extends AnimeProviderModel {
       console.log(error);
     }
   }
+  
+  decrypt(data: string){
+    let t = CryptoJS.enc.Base64.parse(data).toString(CryptoJS.enc.Utf8)
+    t = JSON.parse(t)
+    const a = CryptoJS.enc.Base64.parse(t.iv)
+    const n = CryptoJS.AES.decrypt(t.value, CryptoJS.enc.Base64.parse(this.key), {
+      iv:a,
+      mode:CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7
+    })
+    return CryptoJS.enc.Utf8.stringify(n)
+  }
 
+
+  encrypt(data:string | number){
+    let t = CryptoJS.lib.WordArray.random(16)
+    let r
+    const a = CryptoJS.enc.Base64.parse(this.key)
+    const n = {
+      iv: t,
+      mode:CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7
+  }
+   
+    const s = CryptoJS.AES.encrypt(data, a, n).toString();
+
+  r = {
+      iv: t = CryptoJS.enc.Base64.stringify(t),
+      value: s,
+      mac: CryptoJS.HmacSHA256(t + s, a).toString()
+  };
+  r = JSON.stringify(r)
+  r = CryptoJS.enc.Utf8.parse(r)
+  
+  return CryptoJS.enc.Base64.stringify(r)
+  }
   async GetAnimeByFilter(
     search?: string,
     type?: number,
@@ -129,6 +164,7 @@ export class AnimeLatinoHD extends AnimeProviderModel {
     genre?: string
   ): Promise<IResultSearch<IAnimeSearch>> {
     try {
+
       const { data } = await axios.get(`${this.api}/api/anime/list`, {
         params: {
           search: search,
@@ -138,8 +174,8 @@ export class AnimeLatinoHD extends AnimeProviderModel {
           page: page,
         },
       });
-
-      const animeSearchParseObj = data;
+  
+      const animeSearchParseObj = JSON.parse(this.decrypt(data.data));
 
       const animeSearch: ResultSearch<IAnimeSearch> = {
         nav: {
