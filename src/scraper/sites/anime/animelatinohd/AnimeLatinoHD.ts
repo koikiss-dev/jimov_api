@@ -102,13 +102,13 @@ export class AnimeLatinoHD extends AnimeProviderModel {
       await Promise.all(
         animeEpisodeParseObj.players[f_index].map(
           async (e:{ id:number,server: { title: string } }) => {
-  
-            const warpVideo = await axios.get(this.api +'/video/'+this.encrypt(animeEpisodeParseObj.players[0][0].id))
+            const id = JSON.stringify(e.id)
+            const warpVideo = await axios.get(this.api +'/video/'+this.encrypt(JSON.stringify(animeEpisodeParseObj.players[0][0].id)))
             const Server: EpisodeServer = {
               name: e.server.title,
               url: "",
             };
-            Server.url = `${warpVideo.request.res.responseUrl}`;
+            Server.url = `${id} - ${warpVideo.request.res.responseUrl}`;
             Server.name = e.server.title;
 
             AnimeEpisodeInfo.servers.push(Server);
