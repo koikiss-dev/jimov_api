@@ -99,22 +99,20 @@ export class AnimeLatinoHD extends AnimeProviderModel {
         });
       }
 
-      await Promise.all(
-        animeEpisodeParseObj.players[f_index].map(
-          async (e:{ id:number,server: { title: string } }) => {
-            const id = JSON.stringify(e.id)
-            const warpVideo = await axios.get(this.api +'/video/'+this.encrypt(JSON.stringify(animeEpisodeParseObj.players[0][0].id)))
+
+      for (let index = 0; index < animeEpisodeParseObj.players[f_index].length; index++) {
+            const warpVideo = await axios.get(this.api +'/video/'+this.encrypt(JSON.stringify(animeEpisodeParseObj.players[f_index][index].id)))
             const Server: EpisodeServer = {
-              name: e.server.title,
+              name: animeEpisodeParseObj.players[f_index][index].server.title,
               url: "",
             };
-            Server.url = `${id} - ${warpVideo.request.res.responseUrl}`;
-            Server.name = e.server.title;
+            Server.url = `${animeEpisodeParseObj.players[f_index][index].id} - ${warpVideo.request.res.responseUrl}`;
+            Server.name = animeEpisodeParseObj.players[f_index][index].server.title;
 
-            AnimeEpisodeInfo.servers.push(Server);
-          }
-        )
-      );
+            AnimeEpisodeInfo.servers.push(Server); 
+        }
+       
+      
       AnimeEpisodeInfo.servers.sort((a,b) => a.name.localeCompare(b.name))
       return AnimeEpisodeInfo;
     } catch (error) {
