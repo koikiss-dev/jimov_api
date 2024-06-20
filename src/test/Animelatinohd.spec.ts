@@ -8,7 +8,7 @@ describe("AnimeLatinohd", () => {
   });
 
   it("should get anime info successfully", async () => {
-    const animeInfo = await animelatinohd.GetAnimeInfo("wonder-egg-priority");
+    const animeInfo = await animelatinohd.GetItemInfo("wonder-egg-priority");
     expect(animeInfo.name).toBe("Wonder Egg Priority");
     expect(animeInfo.alt_name).toContain("ワンダーエッグ・プライオリティ");
     expect(animeInfo.image.url).toContain(".jpg");
@@ -19,7 +19,7 @@ describe("AnimeLatinohd", () => {
   });
 
   it("should filter anime successfully", async () => {
-    const result = await animelatinohd.GetAnimeByFilter();
+    const result = await animelatinohd.GetItemByFilter();
     expect(result.results.length).toBeGreaterThan(0);
   }, 10000);
 });

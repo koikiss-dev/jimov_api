@@ -8,13 +8,13 @@ import {
   type IResultSearch,
   type IAnimeSearch,
 } from "../../../../types/search";
-import { AnimeProviderModel } from "../../../ScraperAnimeModel";
+import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 
-export class AnimeLatinoHD extends AnimeProviderModel {
+export class AnimeLatinoHD extends AnimeScraperModel {
   readonly url = "https://www.animelatinohd.com";
   readonly api = "https://api.animelatinohd.com";
 
-  async GetAnimeInfo(anime: string): Promise<Anime> {
+  async GetItemInfo(anime: string): Promise<Anime> {
     try {
       const { data } = await axios.get(`${this.url}/anime/${anime}`);
       const $ = cheerio.load(data);
@@ -143,7 +143,7 @@ export class AnimeLatinoHD extends AnimeProviderModel {
     }
   }
 
-  async GetAnimeByFilter(
+  async GetItemByFilter(
     search?: string,
     type?: number,
     page?: number,

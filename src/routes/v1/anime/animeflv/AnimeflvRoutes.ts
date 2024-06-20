@@ -13,7 +13,7 @@ r.get("/anime/flv/name/:name", async (req, res) => {
   try {
     const { name } = req.params;
     const flv = new AnimeFlv();
-    const animeInfo = await flv.GetAnimeInfo(name);
+    const animeInfo = await flv.GetItemInfo(name);
     res.send(animeInfo);
   } catch (error) {
     console.log(error);
@@ -46,7 +46,7 @@ r.get("/anime/flv/filter", async (req, res) => {
     const title = req.query.title as string;
 
     const flv = new AnimeFlv();
-    const animeInfo = await flv.GetAnimeByFilter(
+    const animeInfo = await flv.GetItemByFilter(
       gen,
       date,
       type,
