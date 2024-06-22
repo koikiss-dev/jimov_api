@@ -15,7 +15,7 @@ axios.defaults.headers.common["User-Agent"] =
 export class Inmanga {
   readonly url = "https://inmanga.com";
 
-  async GetMangaByFilter(search?: string, type?: number, genre?: string[]) {
+  async GetMangaByFilter(search?: string, type?: number, genre?: string[]): Promise<IResultSearch<IMangaResult>> {
     try {
       const formdata = new FormData();
       formdata.append("filter[queryString]", search);
