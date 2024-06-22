@@ -1,7 +1,7 @@
 import { Image } from "../../../../types/image";
 import {
   type IMangaResult,
-  Manga,
+  MangaMedia,
   MangaChapter,
   MangaVolume,
 } from "../../../../types/manga";
@@ -13,11 +13,12 @@ import {
   MangaReaderFilterData,
 } from "./MangaReaderTypes";
 import { type IResultSearch, ResultSearch } from "../../../../types/search";
+import { MangaScraperModel } from "../../../../models/MangaScraperModel";
 
-export class MangaReader {
+export class MangaReader extends MangaScraperModel {
   readonly url = "https://mangareader.to";
 
-  private async GetMangaVolumeRange(mangaId: number) {
+  private async GetMangaVolumeRange(mangaId: string) {
     const { data } = await axios.get(`${this.url}/a-${mangaId}`);
     const $ = load(data);
 
@@ -38,7 +39,7 @@ export class MangaReader {
   }
 
   private async GetSpecificMangaChapterName(
-    mangaId: number,
+    mangaId: string,
     chapterNumber: number,
     language: (typeof MangaReaderFilterLanguage)[number],
     type: MangaReaderChapterType
@@ -105,7 +106,7 @@ export class MangaReader {
     return pages;
   }
 
-  async GetMangaInfo(mangaId: number): Promise<Manga> {
+  async GetItemInfo(mangaId: string): Promise<MangaMedia> {
     try {
       const { data } = await axios.get(`${this.url}/a-${mangaId}`);
       const { data: charactersAjaxList } = await axios.get(
@@ -139,13 +140,13 @@ export class MangaReader {
         .map((_, element) => $(element).text().trim())
         .get();
 
-      const manga = new Manga();
+      const manga = new MangaMedia();
 
       manga.id = mangaId.toString();
-      manga.title = title;
-      manga.altTitles = altTitle;
+      manga.name = title;
+      manga.alt_names = altTitle;
       manga.thumbnail = new Image(thumbnailUrl);
-      manga.description = description || null;
+      manga.synopsis = description || null;
 
       if (status === "Finished") manga.status = "completed";
       else manga.status = "ongoing";
@@ -183,7 +184,7 @@ export class MangaReader {
             .at(1)
             .replace(":", "");
 
-          mangaChapter.title = mangaTitle;
+          mangaChapter.name = mangaTitle;
           mangaChapter.id = mangaId.toString();
           mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${mangaChapterNumber}&lang=${langCode}`;
           mangaChapter.images = null;
@@ -224,9 +225,9 @@ export class MangaReader {
 
           mangaVolume.range = [mangaVolumeRange.at(-1), mangaVolumeRange.at(0)];
           mangaVolume.id = mangaId.toString();
-          mangaVolume.title = mangaVolumeTitle;
-          mangaVolume.number = Number(mangaVolumeNumber);
-          mangaVolume.thumbnail = mangaVolumeThumbnail;
+          mangaVolume.name = mangaVolumeTitle;
+          mangaVolume.num = Number(mangaVolumeNumber);
+          mangaVolume.thumbnail = new Image(mangaVolumeThumbnail);
           mangaVolume.url = `/manga/mangareader/volume/${mangaId.toString()}?number=${mangaVolumeNumber}&lang=${langVolumeCode}`;
 
           manga.volumes.push(mangaVolume);
@@ -236,8 +237,8 @@ export class MangaReader {
         mangaGenres.some((genre) => genre === "Hentai" || genre === "Ecchi") ===
         true
       )
-        manga.isNSFW = true;
-      else manga.isNSFW = false;
+        manga.nsfw = true;
+      else manga.nsfw = false;
 
       return manga;
     } catch (error) {
@@ -248,7 +249,7 @@ export class MangaReader {
     }
   }
 
-  async Filter(
+  async GetItemByFilter(
     options: MangaReaderFilterData
   ): Promise<IResultSearch<IMangaResult>> {
     const {
@@ -324,7 +325,7 @@ export class MangaReader {
 
       mangaFilterResults.results.push({
         id: mangaResultsID,
-        title: mangaResultsTitle,
+        name: mangaResultsTitle,
         thumbnail: new Image(mangaResultsThumbnail),
         url: `/manga/mangareader/title/${mangaResultsID}`,
       });
@@ -334,7 +335,7 @@ export class MangaReader {
   }
 
   async GetMangaChapters(
-    mangaId: number,
+    mangaId: string,
     chapterNumber: number,
     language: (typeof MangaReaderFilterLanguage)[number],
     type: MangaReaderChapterType
@@ -360,10 +361,10 @@ export class MangaReader {
         const mangaChapter = new MangaChapter();
         const chapterPages = await this.GetMangaPages(chapterId, "chapter");
 
-        mangaChapter.title = mangaChapterName;
+        mangaChapter.name = mangaChapterName;
         mangaChapter.id = mangaId;
         mangaChapter.images = chapterPages;
-        mangaChapter.number = chapterNumber;
+        mangaChapter.num = chapterNumber;
         mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${chapterNumber}&lang=${language}`;
 
         return mangaChapter;
@@ -372,11 +373,11 @@ export class MangaReader {
         const mangaVolumeRange = await this.GetMangaVolumeRange(mangaId);
         const volumePages = await this.GetMangaPages(chapterId, "volume");
 
-        mangaVolume.title = mangaChapterName;
+        mangaVolume.name = mangaChapterName;
         mangaVolume.id = mangaId;
         mangaVolume.range = [mangaVolumeRange.at(-1), mangaVolumeRange.at(0)];
         mangaVolume.images = volumePages;
-        mangaVolume.number = chapterNumber;
+        mangaVolume.num = chapterNumber;
         mangaVolume.url = `/manga/mangareader/volume/${mangaId.toString()}?number=${chapterNumber}&lang=${language}`;
 
         return mangaVolume;

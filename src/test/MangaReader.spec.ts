@@ -18,7 +18,7 @@ describe("MangaReader", () => {
 
   it("should return manga info successfully", async () => {
     const testsList: Array<{
-      id: number;
+      id: string;
       mangaName: string;
       altName: string[];
       mangaGenres: string[];
@@ -28,7 +28,7 @@ describe("MangaReader", () => {
       hasChapters: boolean;
     }> = [
       {
-        id: 65961,
+        id: "65961",
         mangaName: "Zashisu",
         altName: ["ザシス"],
         mangaGenres: ["Horror", "Mystery", "Psychological", "School", "Seinen"],
@@ -38,7 +38,7 @@ describe("MangaReader", () => {
         hasChapters: true,
       },
       {
-        id: 65941,
+        id: "65941",
         mangaName: "Mitsuba no Monogatari",
         altName: ["みつばものがたり 呪いの少女と死の輪舞《ロンド》"],
         mangaGenres: ["Fantasy"],
@@ -48,7 +48,7 @@ describe("MangaReader", () => {
         hasChapters: true,
       },
       {
-        id: 65795,
+        id: "65795",
         mangaName:
           "Akuyaku Reijou ni Tensei suru no Mahou ni Muchuu de Itara Ouji ni Dekiaisaremashita",
         altName: ["悪役令嬢に転生するも魔法に夢中でいたら王子に溺愛されました"],
@@ -59,7 +59,7 @@ describe("MangaReader", () => {
         hasChapters: true,
       },
       {
-        id: 65879,
+        id: "65879",
         mangaName: "My Star Is the Lewdest",
         altName: ["俺の女優が一番淫ら"],
         mangaGenres: ["Comedy", "Ecchi"],
@@ -69,7 +69,7 @@ describe("MangaReader", () => {
         hasChapters: true,
       },
       {
-        id: 65789,
+        id: "65789",
         mangaName: "Hoop Days",
         altName: ["ディアボーイズ"],
         mangaGenres: ["Drama", "Slice of Life", "Sports"],
@@ -91,11 +91,11 @@ describe("MangaReader", () => {
         hasVolumes,
         hasChapters,
       } = fields;
-      const mangaInfo = await mangareader.GetMangaInfo(id);
+      const mangaInfo = await mangareader.GetItemInfo(id);
 
-      expect(mangaInfo.title).toStrictEqual(mangaName);
-      expect(mangaInfo.altTitles).toStrictEqual(altName);
-      expect(mangaInfo.isNSFW).toStrictEqual(isNsfw);
+      expect(mangaInfo.name).toStrictEqual(mangaName);
+      expect(mangaInfo.alt_names).toStrictEqual(altName);
+      expect(mangaInfo.nsfw).toStrictEqual(isNsfw);
       expect(mangaInfo.genres).toStrictEqual(mangaGenres);
       expect(mangaInfo.status).toStrictEqual(status);
 
@@ -200,7 +200,7 @@ describe("MangaReader", () => {
         numPage,
       } = fields;
 
-      const filter = await mangareader.Filter({
+      const filter = await mangareader.GetItemByFilter({
         type: type,
         status: status,
         ratingType: ratingType,
@@ -225,21 +225,21 @@ describe("MangaReader", () => {
   it("should return manga chapter pages successfully", async () => {
     const testsList: Array<{
       chapterTitle: string;
-      id: number;
+      id: string;
       chapterNumber: number;
       language: (typeof MangaReaderFilterLanguage)[number];
       type: MangaReaderChapterType;
     }> = [
       {
         chapterTitle: "Chapter 3: 第 3 話",
-        id: 65953,
+        id: "65953",
         chapterNumber: 3,
         language: "ja",
         type: "chapter",
       },
       {
         chapterTitle: "VOL 2",
-        id: 65781,
+        id: "65781",
         chapterNumber: 2,
         language: "en",
         type: "volume",
@@ -256,9 +256,9 @@ describe("MangaReader", () => {
       );
 
       expect(mangaChapters?.images.length).toBeGreaterThanOrEqual(1);
-      expect(mangaChapters?.title).toStrictEqual(chapterTitle);
+      expect(mangaChapters?.name).toStrictEqual(chapterTitle);
       expect(mangaChapters?.id).toStrictEqual(id);
-      expect(mangaChapters?.number).toStrictEqual(chapterNumber);
+      expect(mangaChapters?.num).toStrictEqual(chapterNumber);
     });
   }, 5000);
 });
