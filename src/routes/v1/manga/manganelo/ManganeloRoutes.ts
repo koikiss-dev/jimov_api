@@ -6,7 +6,7 @@ const router = Router();
 const manganelo = new Manganelo();
 
 router.get(`/manga/${manganelo.name}/title/:id`, async (req, res) => {
-  const result = await manganelo.GetMangaInfo(
+  const result = await manganelo.GetItemInfo(
     req.params.id as unknown as string,
   );
 
@@ -14,7 +14,7 @@ router.get(`/manga/${manganelo.name}/title/:id`, async (req, res) => {
 });
 
 router.get(`/manga/${manganelo.name}/filter`, async (req, res) => {
-  const result = await manganelo.Filter({
+  const result = await manganelo.GetItemByFilter({
     sts: req.query.status as unknown as "ongoing" | "completed",
     genres: req.query.genres as unknown as string,
     orby: req.query
