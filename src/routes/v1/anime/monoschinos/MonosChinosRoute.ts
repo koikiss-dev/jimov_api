@@ -40,10 +40,9 @@ r.get("/anime/monoschinos/filter", async (req, res) => {
     const cat = req.query.category as string;
     const gen = req.query.gen as string;
     const year = req.query.year as string;
-    const letter = req.query.letter as string;
 
     const monos = new Monoschinos();
-    const animeInfo = await monos.filter(title, cat, gen, year, letter);
+    const animeInfo = await monos.filter(title, cat, gen, year);
     res.send(animeInfo);
   } catch (error) {
     console.log(error);
