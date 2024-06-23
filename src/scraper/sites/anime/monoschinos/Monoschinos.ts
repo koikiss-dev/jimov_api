@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from "axios";
 import * as cheerio from "cheerio";
 import { api, utils } from "../../../../types/utils";
 import * as types from "../../../../types/.";
-import { ResultSearch, IResultSearch, IAnimeSearch } from "../../../../types/search";
+import { ResultSearch, IResultSearch, AnimeResult } from "../../../../types/search";
 
 const PageInfo = {
     name: 'monoschinos',
@@ -44,11 +44,11 @@ async function getEpisodeServers(url: string): Promise<types.EpisodeServer[]> {
  * @returns 
  */
 function getEpisodeByElement($: cheerio.Root, element: cheerio.Element): types.Episode {
-	const episode  = new types.Episode();
-    episode.number = parseInt($(element).find('span.episode').text().trim());
-    episode.image  = $(element).find('img').attr('data-src');
-    episode.name   = $(element).find('h2').text();
-    episode.url    = api.getEpisodeURL(PageInfo, $(element).find('a').attr('href'));
+	const episode     = new types.Episode();
+    episode.num       = parseInt($(element).find('span.episode').text().trim());
+    episode.thumbnail = new types.Image($(element).find('img').attr('data-src'));
+    episode.name      = $(element).find('h2').text();
+    episode.url       = api.getEpisodeURL(PageInfo, $(element).find('a').attr('href'));
 	return episode;
 }
 
@@ -102,11 +102,11 @@ async function getAnimeEpisodes($: cheerio.Root, animeName: string, pageData: Ax
     const length = (await response.json()).eps.length
     const image = $('div img.lazy.w-100').attr('data-src')
     for (let i = 1; i <= length; i++) {
-        const episode  = new types.Episode();
-        episode.number = i;
-        episode.image  = image;
-        episode.name   = `${animeName} Episodio ${i}`;
-        episode.url    = api.getEpisodeURL(PageInfo, `https://monoschinos2.com/ver/${animePath}-episodio-${i}`);
+        const episode     = new types.Episode();
+        episode.num       = i;
+        episode.thumbnail = new types.Image(image);
+        episode.name      = `${animeName} Episodio ${i}`;
+        episode.url       = api.getEpisodeURL(PageInfo, `https://monoschinos2.com/ver/${animePath}-episodio-${i}`);
         episodes.push(episode);
     }
 	return episodes;
@@ -149,25 +149,25 @@ function getAnimeCalendar(strDate: string): ClimaticCalendar {
  * @param url 
  * @returns 
  */
-async function getAnime(url: string): Promise<types.Anime> {
+async function getAnime(url: string): Promise<types.AnimeMedia> {
 	// The anime page in monoschinos does not define the chronology and type
-    const pageData = await axios.get(url);
-    const $        = cheerio.load(pageData.data);
+    const pageData  = await axios.get(url);
+    const $         = cheerio.load(pageData.data);
 
-    const info     = $('div.tab-content div.bg-transparent dl').children();
+    const info      = $('div.tab-content div.bg-transparent dl').children();
 
-    const calendar = getAnimeCalendar($(info[3]).text().trim());
-    const anime    = new types.Anime();
-    anime.name     = $(info[5]).text()
-    anime.alt_name = $(info[7]).text()
-    anime.url      = api.getAnimeURL(PageInfo, url);
-    anime.synopsis = $('section.d-sm-none div.mt-3 p').text()
-    anime.image    = new types.Image($('div img.bg-secondary').attr('data-src')) 
-    anime.status   = $($('div.tab-content div.col-12.col-md-9 div.ms-2').children()[1]).text();
-    anime.genres   = getGenres($);
-    anime.date     = new types.Calendar(calendar.year);
-    anime.station  = calendar.station;
-    anime.episodes = await getAnimeEpisodes($, anime.name, pageData, url.split('/').pop());
+    const calendar  = getAnimeCalendar($(info[3]).text().trim());
+    const anime     = new types.AnimeMedia();
+    anime.name      = $(info[5]).text()
+    anime.alt_names = $(info[7]).text()
+    anime.url       = api.getAnimeURL(PageInfo, url);
+    anime.synopsis  = $('section.d-sm-none div.mt-3 p').text()
+    anime.image     = new types.Image($('div img.bg-secondary').attr('data-src')) 
+    anime.status    = $($('div.tab-content div.col-12.col-md-9 div.ms-2').children()[1]).text();
+    anime.genres    = getGenres($);
+    anime.date      = new types.Calendar(calendar.year);
+    anime.station   = calendar.station;
+    anime.episodes  = await getAnimeEpisodes($, anime.name, pageData, url.split('/').pop());
     return anime;
 }
 
@@ -180,12 +180,12 @@ async function getAnime(url: string): Promise<types.Anime> {
  * @param url web address with results filtering
  * @returns anime list
  */
-async function getLastAnimes(url?: string): Promise<types.Anime[]> {
-    let animes: types.Anime[] = [];
+async function getLastAnimes(url?: string): Promise<types.AnimeMedia[]> {
+    let animes: types.AnimeMedia[] = [];
     const $ = cheerio.load((await axios.get(url ?? PageInfo.url)).data);
 
     const addElement = (element: cheerio.Element) => {
-        let anime   = new types.Anime();
+        let anime   = new types.AnimeMedia();
         anime.url   = api.getAnimeURL(PageInfo, $(element).find('a').attr('href'))
         anime.image = new types.Image($(element).find('img').attr('data-src'));
         anime.name  = $(element).find('h3').text().trim();
@@ -214,8 +214,8 @@ export class Monoschinos
     getEpisodeServers = getEpisodeServers;
     getAnime          = getAnime;
 
-    async filter(name: (string | null), category?: string, genre?: string, year?: string): Promise<IResultSearch<IAnimeSearch>> {
-        const animes = new ResultSearch<IAnimeSearch>();
+    async filter(name: (string | null), category?: string, genre?: string, year?: string): Promise<IResultSearch<AnimeResult>> {
+        const animes = new ResultSearch<AnimeResult>();
         const link = utils.isUsableValue(name) ? `${PageInfo.url}/buscar?q=${name}` : 
             `${PageInfo.url}/animes?categoria=${category ?? false}&genero=${genre ?? false}&fecha=${year ?? false}`;
         (await getLastAnimes(link))
