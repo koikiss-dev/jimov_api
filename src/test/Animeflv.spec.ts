@@ -11,7 +11,7 @@ describe("AnimeFlv", () => {
   });
 
   it("should get anime info successfully", async () => {
-    const animeInfo = await animeFlv.GetAnimeInfo("wonder-egg-priority");
+    const animeInfo = await animeFlv.GetItemInfo("wonder-egg-priority");
     expect(animeInfo.name).toBe("Wonder Egg Priority");
     expect(animeInfo.alt_name).toContain("ワンダーエッグ・プライオリティ");
     expect(animeInfo.image.url).toContain(".jpg");
@@ -23,7 +23,7 @@ describe("AnimeFlv", () => {
   });
 
   it("should filter anime successfully", async () => {
-    const result = await animeFlv.GetAnimeByFilter(
+    const result = await animeFlv.GetItemByFilter(
       Genres.Action,
       "all",
       "all",

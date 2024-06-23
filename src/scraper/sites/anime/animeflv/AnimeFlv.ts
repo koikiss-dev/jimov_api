@@ -14,12 +14,12 @@ import {
   type IResultSearch,
   type IAnimeSearch,
 } from "../../../../types/search";
-import { AnimeProviderModel } from "../../../ScraperAnimeModel";
+import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 
-export class AnimeFlv extends AnimeProviderModel {
+export class AnimeFlv extends AnimeScraperModel {
   readonly url = "https://animeflv.ws";
 
-  async GetAnimeInfo(anime: string): Promise<Anime> {
+  async GetItemInfo(anime: string): Promise<Anime> {
     try {
       const { data } = await axios.get(`${this.url}/anime/${anime}`);
       const $ = load(data);
@@ -76,7 +76,7 @@ export class AnimeFlv extends AnimeProviderModel {
     }
   }
 
-  async GetAnimeByFilter(
+  async GetItemByFilter(
     gen?: Genres | string,
     date?: string,
     type?: TypeAnimeflv,

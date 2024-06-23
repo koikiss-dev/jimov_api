@@ -7,7 +7,7 @@ describe("Zoro", () => {
     zoro = new Zoro();
   });
   it("should get anime info successfully", async () => {
-    const animeInfo = await zoro.GetAnimeInfo("tokyo-ghoul-790");
+    const animeInfo = await zoro.GetItemInfo("tokyo-ghoul-790");
     expect(animeInfo.name).toBe("Tokyo Ghoul");
     expect(animeInfo.alt_name).toContain("東京喰種-トーキョーグール-");
     expect(animeInfo.image.url).toContain(".jpg");
@@ -16,7 +16,7 @@ describe("Zoro", () => {
     expect(animeInfo.genres.length).toBeGreaterThan(0);
   });
   it("should filter anime successfully", async () => {
-    const result = await zoro.GetAnimeByFilter("2");
+    const result = await zoro.GetItemByFilter("2");
     expect(result.results.length).toBeGreaterThan(0);
   });
 });
