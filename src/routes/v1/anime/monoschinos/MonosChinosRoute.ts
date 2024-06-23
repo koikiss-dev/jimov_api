@@ -50,4 +50,23 @@ r.get("/anime/monoschinos/filter", async (req, res) => {
   }
 });
 
+//last episodes
+r.get("/anime/monoschinos/last/:option", async (req, res) => {
+  try {
+    const { option } = req.params;
+
+    const monos = new Monoschinos();
+    if ("episodes" === option) {
+      res.send(await monos.getLastEpisodes());
+    } else if ("animes" === option) {
+      res.send(await monos.getLastAnimes());
+    } else {
+      throw "Invalid option in the URL";
+    }
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
+
 export default r;
