@@ -231,9 +231,9 @@ export class Monoschinos
 };
 
 /****************************** Test API ******************************/
-new Monoschinos().filter(null, null, null, '2022').then(data => {
+/*new Monoschinos().filter(null, null, null, '2022').then(data => {
     console.log(data)
-}).catch(error => console.log(error))
+}).catch(error => console.log(error))*/
 /*getAnime("https://monoschinos2.com/anime/one-room-hiatari-futsuu-tenshi-tsuki-sub-espanol").then(data => {
     console.log(data)
 }).catch(error => console.log(error))*/
