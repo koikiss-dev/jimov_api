@@ -188,8 +188,7 @@ async function getAnime(url) {
   return anime;
 }
 
-async function getLastAnimes(url: string) {
-  console.log(url);
+async function getLastAnimes(url: string | null) {
   try {
     let animes: types.AnimeMedia[] = [];
     const $ = cheerio.load((await axios.get(url ?? PageInfo.url)).data);
