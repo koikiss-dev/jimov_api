@@ -59,17 +59,17 @@ describe("Manganelo", () => {
     ];
 
     testsSuites.forEach(async (options) => {
-      const mangaInfo = await manganelo.GetMangaInfo(options.id);
-      expect(mangaInfo.title).toStrictEqual(options.title);
+      const mangaInfo = await manganelo.GetItemInfo(options.id);
+      expect(mangaInfo.name).toStrictEqual(options.title);
 
-      if (mangaInfo.altTitles)
-        expect(mangaInfo.altTitles.length).toBeGreaterThanOrEqual(1);
+      if (mangaInfo.alt_names)
+        expect(mangaInfo.alt_names.length).toBeGreaterThanOrEqual(1);
 
       if (mangaInfo.thumbnail && mangaInfo.thumbnail.url)
         expect(mangaInfo.thumbnail.url).toContain(".jpg");
 
       expect(mangaInfo.status).toStrictEqual(options.status);
-      expect(mangaInfo.isNSFW).toStrictEqual(options.nsfw);
+      expect(mangaInfo.nsfw).toStrictEqual(options.nsfw);
 
       if (mangaInfo.genres)
         expect(mangaInfo.genres.length).toBeGreaterThanOrEqual(1);
@@ -96,7 +96,7 @@ describe("Manganelo", () => {
     ];
 
     filterTestsSuites.forEach(async (options) => {
-      const result = await manganelo.Filter({
+      const result = await manganelo.GetItemByFilter({
         genres: options.genres.join(" "),
         orby: options.orby,
         page: options.page,

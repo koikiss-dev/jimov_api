@@ -1,13 +1,14 @@
-import { IMangaResult, Manga, MangaChapter } from "../../../../types/manga";
+import { IMangaResult, MangaMedia, MangaChapter } from "../../../../types/manga";
 import axios from "axios";
 import { load } from "cheerio";
 import { Image } from "../../../../types/image";
 import { ManganatoManagerUtils } from "./ManganatoManagerUtils";
 import { type IManganatoFilterParams } from "./ManganatoTypes";
 import { ResultSearch } from "../../../../types/search";
+import { MangaScraperModel } from "../../../../models/MangaScraperModel";
 
-export class Manganelo {
-  private readonly url = "https://manganelo.tv"; //chapmanganelo.com //mangakakalot.tv;
+export class Manganelo extends MangaScraperModel {
+  readonly url = "https://manganelo.tv"; //chapmanganelo.com //mangakakalot.tv;
   readonly name = "manganelo";
   private readonly manager = ManganatoManagerUtils.Instance;
 
@@ -102,7 +103,7 @@ export class Manganelo {
 
         const mangaInfoResults: IMangaResult = {
           id: mangaResultId,
-          title: name,
+          name: name,
           url: `/manga/${this.name}/title/${mangaResultId}`,
         };
 
@@ -111,11 +112,11 @@ export class Manganelo {
       .get();
   }
 
-  async GetMangaInfo(mangaId: string) {
+  async GetItemInfo(mangaId: string) {
     const { data } = await axios.get(`${this.url}/manga/manga-${mangaId}`);
     const $ = load(data);
 
-    const manga = new Manga();
+    const manga = new MangaMedia();
 
     const title = $("div.panel-story-info > div.story-info-right > h1")
       .text()
@@ -141,9 +142,9 @@ export class Manganelo {
         const chapterId = url.substring(url.lastIndexOf("-") + 1);
 
         chapter.id = Number(chapterId);
-        chapter.title = $(element).find("a.chapter-name").text().trim();
+        chapter.name = $(element).find("a.chapter-name").text().trim();
         chapter.url = `/manga/${this.name}/chapter/${mangaId}?num=${chapterId}`;
-        chapter.number = Number(chapterId);
+        chapter.num = Number(chapterId);
         chapter.images = null;
 
         return chapter;
@@ -152,22 +153,22 @@ export class Manganelo {
 
     manga.id = mangaId;
     manga.url = `/manga/${this.name}/title/${mangaId}`;
-    manga.title = title;
-    manga.altTitles = Array.of(altTitle);
+    manga.name = title;
+    manga.alt_names = Array.of(altTitle);
     manga.thumbnail = new Image(thumbnail);
-    manga.description = description;
+    manga.synopsis = description;
     manga.status = status;
     manga.authors = authors;
     manga.genres = genres;
     manga.characters = null;
     manga.chapters = chapters;
     manga.volumes = null;
-    manga.isNSFW = this.isNsfw(genres);
+    manga.nsfw = this.isNsfw(genres);
 
     return manga;
   }
 
-  async Filter(params: IManganatoFilterParams) {
+  async GetItemByFilter(params: IManganatoFilterParams) {
     const url = this.manager.url.generate(params);
 
     const { data } = await axios.get(url);
@@ -193,9 +194,9 @@ export class Manganelo {
     const chapter = new MangaChapter();
 
     chapter.id = Number(chapterNumber);
-    chapter.title = name;
+    chapter.name = name;
     chapter.url = `/manga/${this.name}/chapter/${mangaId}?num=${chapterNumber}`;
-    chapter.number = Number(chapterNumber);
+    chapter.num = Number(chapterNumber);
     chapter.images = images;
 
     return chapter;

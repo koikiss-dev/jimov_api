@@ -14,9 +14,9 @@ const router = Router();
 
 router.get("/manga/mangareader/title/:id", async (req, res) => {
   try {
-    const id = req.params.id as unknown as number;
+    const id = req.params.id as unknown as string;
 
-    const data = await mangaReader.GetMangaInfo(id);
+    const data = await mangaReader.GetItemInfo(id);
 
     return res.status(200).send(data);
   } catch (e) {
@@ -42,7 +42,7 @@ router.get("/manga/mangareader/filter", async (req, res) => {
     const sort = req.query.sort as MangaReaderFilterSort;
     const numPage = req.query.page as unknown as number;
 
-    const data = await mangaReader.Filter({
+    const data = await mangaReader.GetItemByFilter({
       type,
       status,
       ratingType,
@@ -67,7 +67,7 @@ router.get("/manga/mangareader/filter", async (req, res) => {
 
 router.get("/manga/mangareader/chapter/:id", async (req, res) => {
   try {
-    const id = req.params.id as unknown as number;
+    const id = req.params.id as unknown as string;
     const chapterNumber = req.query.number as unknown as number;
     const language = req.query
       .lang as (typeof MangaReaderFilterLanguage)[number];
@@ -88,7 +88,7 @@ router.get("/manga/mangareader/chapter/:id", async (req, res) => {
 
 router.get("/manga/mangareader/volume/:id", async (req, res) => {
   try {
-    const id = req.params.id as unknown as number;
+    const id = req.params.id as unknown as string;
     const chapterNumber = req.query.number as unknown as number;
     const language = req.query
       .lang as (typeof MangaReaderFilterLanguage)[number];
