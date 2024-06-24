@@ -1,15 +1,12 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Anime } from "../../../../types/anime";
+import { AnimeMedia } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
-  AnimeSearch,
   ResultSearch,
-  type IResultSearch,
-  type IAnimeSearch,
+  AnimeResult,
 } from "../../../../types/search";
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
-//import { Calendar } from "@animetypes/date";
 
 /** List of Domains
  *
@@ -19,9 +16,8 @@ import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 
 export class Animevostfr extends AnimeScraperModel {
   readonly url = "https://animevostfr.tv";
-  readonly api = "https://api.animelatinohd.com";
 
-  async GetItemInfo(anime: string): Promise<Anime> {
+  async GetItemInfo(anime: string): Promise<AnimeMedia> {
     try {
       const { data } = await axios.get(`${this.url}/${anime}`);
       const $ = cheerio.load(data);
@@ -39,17 +35,17 @@ export class Animevostfr extends AnimeScraperModel {
         .text();
       const AnimeDescription = $(".mvi-content .mvic-desc .desc p").html();
 
-      const AnimeInfo: Anime = {
+      const AnimeInfo: AnimeMedia = {
         name: $(".mvi-content .mvic-desc h1").text(),
         url: `/anime/animevostfr/name/${anime}`,
         synopsis: AnimeDescription.slice(
           AnimeDescription.indexOf("Synopsis:") + "Synopsis:".length,
           -1
         ).trim(),
-        alt_name: [
+        alt_names: [
           ...AnimeDescription.slice(
             AnimeDescription.indexOf("Titre alternatif:") +
-              "Titre alternatif:".length,
+            "Titre alternatif:".length,
             AnimeDescription.indexOf("Synopsis:")
           )
             .replace("<br>\n", "")
@@ -71,8 +67,8 @@ export class Animevostfr extends AnimeScraperModel {
           AnimeTypes == "Anime"
             ? "Anime"
             : AnimeTypes == "MOVIE"
-            ? "Movie"
-            : "Null", //tv,pelicula,especial,ova
+              ? "Movie"
+              : "Null", //tv,pelicula,especial,ova
         status: AnimeStatus == "En cours" ? true : false,
         date: AnimeDate ? { year: AnimeDate } : null,
         episodes: [],
@@ -86,8 +82,7 @@ export class Animevostfr extends AnimeScraperModel {
           .replace("/", "");
         const AnimeEpisode: Episode = {
           name: "Episode " + number,
-          number: number,
-          image: "",
+          num: Number(number),
           url: `/anime/animevostfr/episode/${anime + "-" + number}`,
         };
 
@@ -109,105 +104,88 @@ export class Animevostfr extends AnimeScraperModel {
       );
       const $ = cheerio.load(data);
       const s = $(".form-group.list-server select option");
-      const e = $(".list-episodes select option");
-      const ListFilmId = [];
+      const e = $(`.list-episodes select option[value='${number}']`);
+      const ListFilmId = $(e).attr("episodeid");
       const ListServer = [];
-
       s.map((_i, e) => ListServer.push($(e).val()));
-      e.map((_i, e) => ListFilmId.push($(e).attr("episodeid")));
-
       /*
-                "SERVER_VIP"
-                "SERVER_HYDRAX"
-                "SERVER_PHOTOSS"
-                "SERVER_DOWNLOAD"
-                "SERVER_PHOTOS"
-                "SERVER_OPEN_LOAD"
-                "SERVER_OPEN_LOADS"
-                "SERVER_OPEN_CDN"
-                "SERVER_OPEN_CDNO"
-                "SERVER_PHOTO"
-                "SERVER_STREAM_MANGO"
-                "SERVER_RAPID_VIDEO"
-            */
-
+      "SERVER_VIP"
+      "SERVER_HYDRAX"
+      "SERVER_PHOTOSS"
+      "SERVER_DOWNLOAD"
+      "SERVER_PHOTOS"
+      "SERVER_OPEN_LOAD"
+      "SERVER_OPEN_LOADS"
+      "SERVER_OPEN_CDN"
+      "SERVER_OPEN_CDNO"
+      "SERVER_PHOTO"
+      "SERVER_STREAM_MANGO"
+      "SERVER_RAPID_VIDEO"
+      */
       const AnimeEpisodeInfo: Episode = {
         name: "Episode " + number,
         url: `/anime/animevostfr/episode/${episode}`,
-        number: number,
-        image: "",
+        num: Number(number),
         servers: [],
       };
-
       await Promise.all(
-        ListServer.map(async (n) => {
-          const servers = await axios.get(
-            `${this.url}/ajax-get-link-stream/?server=${n}&filmId=${ListFilmId[0]}`
-          );
-          let currentData = servers.data;
-          if (n == "opencdn" || n == "photo") {
+        ListServer.map(async (n: string) => {
+          if (n == "opencdn" || n == "photo" || n == "vip") {
+            const sservers = await axios.get(
+              `${this.url}/ajax-get-link-stream/?server=${n}&filmId=${ListFilmId}`
+            );
+            let currentData = sservers.data;
             currentData = currentData
-              .replace("?logo=https://animevostfr.tv/1234.png", "")
+              .replace(`?logo=${this.url}/1234.png`, "")
+              .replace("hydrax.net/watch", "abysscdn.com/")
               .replace("short.ink/", "abysscdn.com/?v=");
+            const Servers: EpisodeServer = {
+              name: n,
+              url: currentData,
+            };
+            AnimeEpisodeInfo.servers.push(Servers);
           }
-          const Servers: EpisodeServer = {
-            name: n,
-            url: currentData,
-          };
-          AnimeEpisodeInfo.servers.push(Servers);
+          return AnimeEpisodeInfo
         })
-      );
-
-      AnimeEpisodeInfo.servers.sort(
-        (a: EpisodeServer, b: EpisodeServer) => a.name.length - b.name.length
-      );
+      )
       return AnimeEpisodeInfo;
     } catch (error) {
-      console.log(error);
+      console.log(error)
     }
   }
 
   async GetItemByFilter(
     search?: string,
-    type?: number,
-    page?: number,
-    year?: string,
-    genre?: string
-  ): Promise<IResultSearch<IAnimeSearch>> {
+    page?: number
+  ): Promise<ResultSearch<AnimeResult>> {
     try {
-      const { data } = await axios.get(`${this.api}/api/anime/list`, {
+      const { data } = await axios.get(`${this.url}/page/${page ? page : 1}`, {
         params: {
-          search: search,
-          type: type,
-          year: year,
-          genre: genre,
-          page: page,
+          s: search
         },
       });
 
-      const animeSearchParseObj = data;
+      const $ = cheerio.load(data);
 
-      const animeSearch: ResultSearch<IAnimeSearch> = {
+      const animeSearch: ResultSearch<AnimeResult> = {
         nav: {
-          count: animeSearchParseObj.data.length,
-          current: animeSearchParseObj.current_page,
+          count: $(".movies-list .ml-item").length,
+          current: page ? Number(page) : 1,
           next:
-            animeSearchParseObj.data.length < 28
+            $(".movies-list .ml-item").length < 32
               ? 0
-              : animeSearchParseObj.current_page + 1,
-          hasNext: animeSearchParseObj.data.length < 28 ? false : true,
+              : Number(page) + 1,
+          hasNext: $(".movies-list .ml-item").length < 32 ? false : true,
         },
         results: [],
       };
-      animeSearchParseObj.data.map((e) => {
-        const animeSearchData: AnimeSearch = {
-          name: e.name,
-          image:
-            "https://www.themoviedb.org/t/p/original" +
-            e.poster +
-            "?&w=53&q=95",
-          url: `/anime/animelatinohd/name/${e.slug}`,
-          type: "",
+
+      $(".movies-list .ml-item").each((_i, e) => {
+        const animeSearchData: AnimeResult = {
+          name: $(e).find(".mli-info").text(),
+          image: $(e).find(".mli-thumb").attr("data-original"),
+          url: `/anime/animevostfr/name/${$(e).find(".ml-mask").attr("href").replace(this.url, "").replace("/", "").replace("/", "")}`,
+          type: $(e).find(".mli-quality").text().includes("Movie") ? "movie" : "anime",
         };
         animeSearch.results.push(animeSearchData);
       });

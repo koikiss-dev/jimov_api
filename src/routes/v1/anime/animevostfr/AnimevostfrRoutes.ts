@@ -5,14 +5,11 @@ const router = Router();
 
 // Filter
 router.get("/anime/animevostfr/filter", async (req, res) => {
-  const { search, type, page, year, genre } = req.query;
+  const { search, page } = req.query;
 
   const data = await Anime.GetItemByFilter(
     search as string,
-    type as unknown as number,
-    page as unknown as number,
-    year as string,
-    genre as string,
+    page as unknown as number
   );
   res.send(data);
 });
