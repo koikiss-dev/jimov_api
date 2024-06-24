@@ -11,7 +11,7 @@ describe('Monoschinos', () => {
       'https://monoschinos2.com/anime/one-room-hiatari-futsuu-tenshi-tsuki-sub-espanol',
     );
 
-    expect(animeInfo.name).toBe('Date A Live');
+    expect(animeInfo.name).toBe('One Room, Hiatari Futsuu, Tenshi-tsuki.');
     expect(animeInfo.image.url).toContain('.jpg');
     expect(animeInfo.synopsis?.length).toBeGreaterThan(0);
     // The chronology function does not exist in Monoschinos
