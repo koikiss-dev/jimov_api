@@ -5,7 +5,7 @@ import * as types from "../../../../types/.";
 import {
   ResultSearch,
   type IResultSearch,
-  type IAnimeSearch,
+  type AnimeResult,
 } from "../../../../types/search";
 
 const PageInfo = {
@@ -72,9 +72,9 @@ async function getAnimeEpisodes(data) {
   data.episodes.forEach((episode_number) => {
     let episode = new types.Episode();
     episode.name = `${data.info[2]} Capitulo ${episode_number}`;
-    episode.image = PageInfo.url + `/uploads/thumbs/${data.info[0]}.jpg`;
+    episode.thumbnail = new types.Image(PageInfo.url + `/uploads/thumbs/${data.info[0]}.jpg`);
     episode.url = `/anime/tioanime/episode/${data.info[1]}-${episode_number}`;
-    episode.number = episode_number;
+    episode.num = episode_number;
     __episodes.push(episode);
   });
   return __episodes;
@@ -83,8 +83,7 @@ async function getAnimeEpisodes(data) {
 function getEpisode($, element) {
   const title = $(element).find("h3.title").text().trim();
   const episode = new types.Episode();
-  episode.image =
-    PageInfo.url + $(element).find("figure.fa-play-circle img").attr("src");
+  episode.thumbnail = new types.Image(PageInfo.url + $(element).find("figure.fa-play-circle img").attr("src"))
   episode.url = $(element)
     .find("article.episode a")
     .attr("href")
@@ -93,7 +92,7 @@ function getEpisode($, element) {
   for (let i = title.length - 1; i >= 0; i--) {
     if (title[i] == " ") {
       episode.name = title.substring(0, i).trim();
-      episode.number = parseInt(title.substring(i + 1, title.length));
+      episode.num = parseInt(title.substring(i + 1, title.length));
       break;
     }
   }
@@ -144,7 +143,7 @@ async function getAnime(url) {
   // It is possible that the object returned by the getScriptAnimeInfo function is null.
   if (data == null)
     throw new Error("The getScriptAnimeInfo() function returns a null value.");
-  const anime = new types.Anime();
+  const anime = new types.AnimeMedia();
   anime.name = $("div.container h1.title").text();
   //anime.url        = url;
   anime.url = url.replace(
@@ -189,10 +188,9 @@ async function getAnime(url) {
   return anime;
 }
 
-async function getLastAnimes(url: string) {
-  console.log(url);
+async function getLastAnimes(url: string | null) {
   try {
-    let animes: types.IAnime[] = [];
+    let animes: types.AnimeMedia[] = [];
     const $ = cheerio.load((await axios.get(url ?? PageInfo.url)).data);
     const elements = $(
       utils.isUsableValue(url)
@@ -213,7 +211,7 @@ async function getLastAnimes(url: string) {
 }
 
 async function getSectionContents(section: number) {
-  let animes: types.IAnime[] = [];
+  let animes: types.AnimeMedia[] = [];
   try {
     const $ = cheerio.load(
       (await axios.get(`${PageInfo.url}/directorio?type%5B%5D=${section}`)).data
@@ -284,8 +282,8 @@ export class TioAnime {
     year_range?: IYearRange,
     status?: number,
     sort?: string
-  ): Promise<IResultSearch<IAnimeSearch>> {
-    const animes = new ResultSearch<IAnimeSearch>();
+  ): Promise<IResultSearch<AnimeResult>> {
+    const animes = new ResultSearch<AnimeResult>();
     let usable;
     if (!(usable = utils.isUsableValue(name) && name.trim().length != 0))
       year_range ??
