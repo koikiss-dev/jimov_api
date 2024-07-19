@@ -162,7 +162,7 @@ export class AnimeFlv extends AnimeScraperModel {
         }
 
         const scriptContent = $(e).html();
-        const regexVideoObject = /var videos = (\{.*?\});/s;
+        const regexVideoObject = /var videos = (\{.*?\});/;
 
         const matchObject = scriptContent.match(regexVideoObject);
 
