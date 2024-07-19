@@ -1,7 +1,7 @@
 import axios from "axios";
 import { load } from "cheerio";
 import { AnimeMedia, Chronology } from "../../../../types/anime";
-import { Episode, EpisodeServer } from "../../../../types/episode";
+import { Episode } from "../../../../types/episode";
 import {
   Genres,
   OrderAnimeflv,
@@ -17,18 +17,26 @@ import {
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 
 export class AnimeFlv extends AnimeScraperModel {
-  readonly url = "https://animeflv.ws";
+  readonly url = "https://m.animeflv.net";
 
   async GetItemInfo(anime: string): Promise<AnimeMedia> {
     try {
       const { data } = await axios.get(`${this.url}/anime/${anime}`);
       const $ = load(data);
-      const title = $("h2.Title").text().trim();
-      const title_alt = $("span.TxtAlt").text().trim();
-      const img = $("div.AnimeCover .Image figure img").attr("src");
-      const status = $("p.AnmStts span").text().trim();
-      const synopsis = $("div.Description").text().trim();
-      const episodes = $(".ListCaps li a");
+
+      //relevant information
+      const title = $("h1.Title").text().trim();
+      const title_alt = title;
+      const img = $("meta[property='og:image']").attr("content");
+      const status = $("p strong.Anm-On").text();
+      const synopsis = $("header p:contains(Sinopsis)")
+        .text()
+        .replace("Sinopsis:", "")
+        .trim();
+
+      //container of episodes
+      const episodesContainer = $("div.List-Episodes div.AACrdn");
+
       const AnimeReturn = new AnimeMedia();
       AnimeReturn.name = title;
       AnimeReturn.alt_names = [...title_alt.split(",")];
@@ -38,6 +46,8 @@ export class AnimeFlv extends AnimeScraperModel {
       AnimeReturn.status = status;
       AnimeReturn.synopsis = synopsis;
       AnimeReturn.chronology = [];
+      AnimeReturn.genres = [];
+      AnimeReturn.episodes = [];
 
       //getRelated
       $("ul.ListAnmRel li a").each((_i, e) => {
@@ -46,26 +56,32 @@ export class AnimeFlv extends AnimeScraperModel {
         cro.url = `/anime/flv/name/${$(e).attr("href").replace("/anime/", "")}`;
         AnimeReturn.chronology.push(cro);
       });
+
       //get genres
-      $("nav.Nvgnrs a").each((_i, e) => {
-        const gen = $(e).text().trim();
+      $("footer a").each((_i, e) => {
+        const gen = $(e).text().trim() as string;
+
         AnimeReturn.genres.push(gen);
       });
+
       //get episodes
-      episodes.each((_i_, e) => {
-        const l = $(e).attr("href").replace("/", "");
-        const episode = new Episode();
-        episode.name = $(e).children(".Title").text().trim();
-        episode.url = `/anime/flv/episode/${`${l}`.replace(
-          "/anime",
-          "/anime/flv"
-        )}`;
-        episode.num = Number($(e).children("p").last().text().trim());
-        episode.thumbnail.url = $(e)
-          .children("figure")
-          .find(".lazy")
-          .attr("src");
-        AnimeReturn.episodes.push(episode);
+      episodesContainer.each((_i_, e) => {
+        $(e)
+          .find("ul li")
+          .each((_i, e) => {
+            const link = $(e).find("a");
+            const name = link.text().trim();
+            const numberEpisode = Number(name.split(" ").slice(-1));
+            console.log(numberEpisode);
+            const episode = new Episode();
+            episode.name = name;
+            episode.url = `/anime/flv/episode/${link
+              .attr("href")
+              .replace("/ver/", "")}`;
+            episode.num = numberEpisode;
+
+            AnimeReturn.episodes.push(episode);
+          });
       });
       return AnimeReturn;
     } catch (error) {
@@ -128,10 +144,10 @@ export class AnimeFlv extends AnimeScraperModel {
 
   async GetEpisodeServers(episode: string): Promise<Episode> {
     try {
-      const { data } = await axios.get(`${this.url}/${episode}`);
+      const { data } = await axios.get(`${this.url}/ver/${episode}`);
       const $ = load(data);
-      const title = $(".CapiTop").children("h1").text().trim();
-      const getLinks = $(".CpCnA .anime_muti_link li");
+      const title = $("h1").text().trim();
+      const getLinks = $("script");
       const numberEpisode = episode.substring(episode.lastIndexOf("-") + 1);
       const episodeReturn = new Episode();
       episodeReturn.name = title;
@@ -139,13 +155,39 @@ export class AnimeFlv extends AnimeScraperModel {
       episodeReturn.num = Number(numberEpisode);
       episodeReturn.servers = [];
 
-      const promises = getLinks.map(async (_i, e) => {
-        const servers = new EpisodeServer();
-        const title = $(e).attr("title");
+      getLinks.each((_i, e) => {
+        interface VideoObject {
+          title: string;
+          code: string;
+        }
+
+        const scriptContent = $(e).html();
+        const regexVideoObject = /var videos = (\{.*?\});/s;
+
+        const matchObject = scriptContent.match(regexVideoObject);
+
+        if (matchObject) {
+          const videoObject: VideoObject[] = JSON.parse(matchObject[1]).SUB;
+
+          for (let index = 0; index < videoObject.length; index++) {
+            const element = videoObject[index];
+
+            episodeReturn.servers.push({
+              name: element.title,
+              url: element.code,
+            });
+          }
+        }
+      });
+      /*const promises = getLinks.map(async (_i, e) => {
+        /* const servers = new EpisodeServer();
+        const title = $(e).find("a").text().trim();
         const videoData = $(e).attr("data-video");
         servers.name = title;
         servers.url = videoData;
-        if (videoData.includes("streaming.php")) {
+        console.log(title); */
+
+      /* if (videoData.includes("streaming.php")) {
           await this.getM3U(
             `${videoData.replace("streaming.php", "ajax.php")}&refer=none`
           ).then((g) => {
@@ -175,9 +217,9 @@ export class AnimeFlv extends AnimeScraperModel {
           default:
             break;
         }
-        episodeReturn.servers.push(servers);
-      });
-      await Promise.all(promises);
+        episodeReturn.servers.push(servers); 
+      })*/
+      //await Promise.all(promises);
       return episodeReturn;
     } catch (error) {
       console.log("An error occurred while getting the episode servers", error);
@@ -185,7 +227,7 @@ export class AnimeFlv extends AnimeScraperModel {
     }
   }
 
-  private async getM3U(vidurl: string) {
+  /* private async getM3U(vidurl: string) {
     try {
       const res = await axios.get(vidurl);
 
@@ -193,5 +235,5 @@ export class AnimeFlv extends AnimeScraperModel {
     } catch (error) {
       console.log(error);
     }
-  }
+  } */
 }
