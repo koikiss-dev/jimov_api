@@ -40,11 +40,29 @@ r.get("/anime/monoschinos/filter", async (req, res) => {
     const cat = req.query.category as string;
     const gen = req.query.gen as string;
     const year = req.query.year as string;
-    const letter = req.query.letter as string;
 
     const monos = new Monoschinos();
-    const animeInfo = await monos.filter(title, cat, gen, year, letter);
+    const animeInfo = await monos.filter(title, cat, gen, year);
     res.send(animeInfo);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
+
+//last episodes
+r.get("/anime/monoschinos/last/:option", async (req, res) => {
+  try {
+    const { option } = req.params;
+
+    const monos = new Monoschinos();
+    if ("episodes" === option) {
+      res.send(await monos.getLastEpisodes());
+    } else if ("animes" === option) {
+      res.send(await monos.getLastAnimes());
+    } else {
+      throw "Invalid option in the URL";
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send(error);
