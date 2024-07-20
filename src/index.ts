@@ -15,7 +15,7 @@ import tioanime from "../src/routes/v1/anime/tioanime/TioAnimeRoute";
 import WcoStream from "../src/routes/v1/anime/wcostream/wcostreamRoutes";
 import AnimeBlix from "../src/routes/v1/anime/animeblix/AnimeBlixRoutes";
 import Animevostfr from "../src/routes/v1/anime/animevostfr/AnimevostfrRoutes";
-import hentaila from "../src/routes/v1/anime/hentaila/HentailaRoutes";
+import hentaila from "../src/routes/v1/anime/hentaila/HentaiLaRoutes";
 
 /* Manga */
 import comick from "../src/routes/v1/manga/comick/ComickRoutes";
