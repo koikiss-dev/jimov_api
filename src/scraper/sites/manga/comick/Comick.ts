@@ -78,7 +78,6 @@ export class Comick {
 
       return ResultList;
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -154,7 +153,6 @@ export class Comick {
       }
       return MangaInfo;
     } catch (error) {
-      console.log(error);
     }
   }
 
@@ -245,7 +243,6 @@ export class Comick {
         return MangaChapterInfoChapter;
       }
     } catch (error) {
-      console.log(error);
     }
   }
 }
