@@ -14,6 +14,7 @@ import WcoStream from "../src/routes/v1/anime/wcostream/wcostreamRoutes";
 import AnimeBlix from "../src/routes/v1/anime/animeblix/AnimeBlixRoutes";
 import Animevostfr from "../src/routes/v1/anime/animevostfr/AnimevostfrRoutes";
 import hentaila from "../src/routes/v1/anime/hentaila/HentaiLaRoutes";
+import HentaiHaven from "../src/routes/v1/anime/hentaihaven/HentaiHavenRoutes";
 
 /* Manga */
 import comick from "../src/routes/v1/manga/comick/ComickRoutes";
@@ -44,6 +45,8 @@ app.use(WcoStream);
 app.use(AnimeBlix);
 app.use(Animevostfr);
 app.use(hentaila);
+app.use(HentaiHaven);
+
 /* anime */
 
 /*Manga*/
