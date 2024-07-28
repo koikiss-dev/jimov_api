@@ -70,7 +70,7 @@ export class Comick {
             thumbnail: {
               url: "https://meo.comick.pictures/" + e.md_covers[0].b2key,
             },
-            url: `/manga/comick/title/${e.slug}`,
+            url: `/manga/comick/name/${e.slug}`,
           };
           ResultList.results.push(ListMangaResult);
         }
@@ -103,7 +103,7 @@ export class Comick {
         alt_names: mangaInfoParseObj.comic.md_titles.map(
           (e: { title: string }) => e.title
         ),
-        url: `/manga/comick/title/${mangaInfoParseObj.comic.slug}`,
+        url: `/manga/comick/name/${mangaInfoParseObj.comic.slug}`,
         synopsis: mangaInfoParseObj.comic.desc,
         nsfw: mangaInfoParseObj.comic.hentai,
         langlist: mangaInfoParseObj.langList,
