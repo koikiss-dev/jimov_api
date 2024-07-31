@@ -14,7 +14,7 @@ router.get("/manga/inmanga/filter", async (req, res) => {
   res.send(data);
 });
 
-router.get("/manga/inmanga/title/:manga", async (req, res) => {
+router.get("/manga/inmanga/name/:manga", async (req, res) => {
   const { manga } = req.params;
   const { cid } = req.query;
 

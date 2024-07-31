@@ -104,7 +104,7 @@ export class Manganelo extends MangaScraperModel {
         const mangaInfoResults: IMangaResult = {
           id: mangaResultId,
           name: name,
-          url: `/manga/${this.name}/title/${mangaResultId}`,
+          url: `/manga/${this.name}/name/${mangaResultId}`,
         };
 
         return mangaInfoResults;
@@ -152,7 +152,7 @@ export class Manganelo extends MangaScraperModel {
       .get();
 
     manga.id = mangaId;
-    manga.url = `/manga/${this.name}/title/${mangaId}`;
+    manga.url = `/manga/${this.name}/name/${mangaId}`;
     manga.name = title;
     manga.alt_names = Array.of(altTitle);
     manga.thumbnail = new Image(thumbnail);
