@@ -116,9 +116,8 @@ export class HentaiHaven extends AnimeScraperModel {
         const animeSearchData: AnimeResult = {
           name: $(e).find(".title").text(),
           image: $(e).find(".cover img").attr("src"),
-          url: `/anime/hentaiheven/name/${$(e)
-            .find(".title")
-            .text()
+          url: `/anime/hentaihaven/name/${$(e).find("a")
+            .attr("href")
             .replace(this.url + "/video", "")}`,
         };
         animeSearch.results.push(animeSearchData);
