@@ -12,7 +12,7 @@ import {
 const mangaReader = new MangaReader();
 const router = Router();
 
-router.get("/manga/mangareader/title/:id", async (req, res) => {
+router.get("/manga/mangareader/name/:id", async (req, res) => {
   try {
     const id = req.params.id as unknown as string;
 

@@ -5,7 +5,7 @@ import { Manganelo } from "../../../../scraper/sites/manga/manganelo/Manganelo";
 const router = Router();
 const manganelo = new Manganelo();
 
-router.get(`/manga/${manganelo.name}/title/:id`, async (req, res) => {
+router.get(`/manga/${manganelo.name}/name/:id`, async (req, res) => {
   const result = await manganelo.GetItemInfo(
     req.params.id as unknown as string,
   );

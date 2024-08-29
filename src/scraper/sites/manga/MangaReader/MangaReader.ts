@@ -327,7 +327,7 @@ export class MangaReader extends MangaScraperModel {
         id: mangaResultsID,
         name: mangaResultsTitle,
         thumbnail: new Image(mangaResultsThumbnail),
-        url: `/manga/mangareader/title/${mangaResultsID}`,
+        url: `/manga/mangareader/name/${mangaResultsID}`,
       });
     });
 

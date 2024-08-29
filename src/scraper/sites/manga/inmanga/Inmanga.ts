@@ -123,7 +123,7 @@ export class Inmanga {
           },
 
           // old version `/manga/inmanga/title/${title.replace(/[^a-zA-Z:]/g, "-")}`
-          url: `/manga/inmanga/title/${name}?cid=${cid}`,
+          url: `/manga/inmanga/name/${name}?cid=${cid}`,
         };
         ResultList.results.push(ListMangaResult);
       });
@@ -144,7 +144,7 @@ export class Inmanga {
         id: cid,
         name: $_("div.col-md-3.col-sm-4 div.panel-heading.visible-xs").text(),
         alt_names: AltNames,
-        url: `/manga/inmanga/title/${manga}`,
+        url: `/manga/inmanga/name/${manga}`,
         synopsis: $_(
           "body > div > section > div > div > div:nth-child(6) > div > div.panel-body"
         )
@@ -168,7 +168,7 @@ export class Inmanga {
       ).each((_i, e) =>
         AltNames.push($_(e).text().replace(";", ""))
       );
-      
+
       $_(
         ".col-md-9.col-sm-8.col-xs-12 .panel.widget .panel-heading .label.ml-sm"
       ).each((_i, e) => MangaInfo.genres.push($_(e).text().trim()));
