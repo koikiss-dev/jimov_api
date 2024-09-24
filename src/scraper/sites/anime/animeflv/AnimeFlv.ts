@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, { AxiosResponse } from "axios";
 import { load } from "cheerio";
 import { AnimeMedia, Chronology } from "../../../../types/anime";
 import { Episode } from "../../../../types/episode";
@@ -72,7 +72,6 @@ export class AnimeFlv extends AnimeScraperModel {
             const link = $(e).find("a");
             const name = link.text().trim();
             const numberEpisode = Number(name.split(" ").slice(-1));
-            console.log(numberEpisode);
             const episode = new Episode();
             episode.name = name;
             episode.url = `/anime/flv/episode/${link
@@ -97,7 +96,7 @@ export class AnimeFlv extends AnimeScraperModel {
 
   async GetItemByFilter(
     gen?: Genres | string,
-    date?: string,
+    year?: string,
     type?: TypeAnimeflv,
     status?: StatusAnimeflv,
     ord?: OrderAnimeflv,
@@ -105,29 +104,35 @@ export class AnimeFlv extends AnimeScraperModel {
     title?: string
   ): Promise<IResultSearch<IAnimeResult>> {
     try {
-      const { data } = await axios.get(`${this.url}/browse`, {
-        params: {
-          genres: gen || "all",
-          year: date || "all",
-          status: status || "all",
-          Tipo: type || "all",
-          order: ord || 1,
-          page: page || 1,
-          q: title,
-        },
-      });
+      const { data, request }: AxiosResponse = await axios.get(
+        `${this.url}/browse`,
+        {
+          params: {
+            page: page,
+            genre: gen,
+            year: year,
+            status: status,
+            type: type,
+            order: ord,
+            q: title,
+          },
+        }
+      );
+      console.log(request);
       const $ = load(data);
-      const infoList = $("ul.ListAnimes li");
+      const infoList = $("ul.List-Animes li");
       const data_filter = new ResultSearch<IAnimeResult>();
       data_filter.results = [];
       infoList.each((_i, e) => {
         const info = new AnimeResult();
-        info.name = $(e).find("h3").text().trim();
-        info.image =
-          $(e)
-            .find("a")
-            .attr("href")
-            .replace("/anime/", "https://img.animeflv.ws/cover/") + ".jpg";
+        info.name = $(e).find("h2").text().trim();
+        info.image = $(e)
+          .find("img")
+          .attr("src")
+          .replace(
+            "/uploads/animes/",
+            "https://m.animeflv.net/uploads/animes/"
+          );
         info.url = `/anime/flv/name/${$(e)
           .find("a")
           .attr("href")
@@ -145,6 +150,10 @@ export class AnimeFlv extends AnimeScraperModel {
   async GetEpisodeServers(episode: string): Promise<Episode> {
     try {
       const { data } = await axios.get(`${this.url}/ver/${episode}`);
+      /* const test: AxiosResponse = await axios.get(
+        "https://streamtape.com/e/ybVywBZRXMheQ2/"
+      );
+      const $t = load(test.data); */
       const $ = load(data);
       const title = $("h1").text().trim();
       const getLinks = $("script");
@@ -154,6 +163,10 @@ export class AnimeFlv extends AnimeScraperModel {
       episodeReturn.url = `/anime/flv/episode/${episode}`;
       episodeReturn.num = Number(numberEpisode);
       episodeReturn.servers = [];
+
+      /* const player = $t("div.plyr__video-wrapper").html();
+
+      console.log(player); */
 
       getLinks.each((_i, e) => {
         interface VideoObject {

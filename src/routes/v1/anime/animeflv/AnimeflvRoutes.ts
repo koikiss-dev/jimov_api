@@ -38,7 +38,7 @@ r.get("/anime/flv/episode/:episode", async (req, res) => {
 r.get("/anime/flv/filter", async (req, res) => {
   try {
     const gen = req.query.gen as Genres;
-    const date = req.query.date as string;
+    const year = req.query.year as string;
     const type = req.query.type as TypeAnimeflv;
     const status = req.query.status as StatusAnimeflv;
     const ord = req.query.ord as OrderAnimeflv;
@@ -48,12 +48,12 @@ r.get("/anime/flv/filter", async (req, res) => {
     const flv = new AnimeFlv();
     const animeInfo = await flv.GetItemByFilter(
       gen,
-      date,
+      year,
       type,
       status,
       ord,
       page,
-      title,
+      title
     );
     res.send(animeInfo);
   } catch (error) {
