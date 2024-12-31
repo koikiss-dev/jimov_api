@@ -6,6 +6,7 @@ import {
   StatusAnimeflv,
   OrderAnimeflv,
 } from "../../../../scraper/sites/anime/animeflv/animeflv_helper";
+import { ScraperErrorResponse } from "utils/ScraperError";
 const r = Router();
 
 //anime info
@@ -16,8 +17,9 @@ r.get("/anime/flv/name/:name", async (req, res) => {
     const animeInfo = await flv.GetItemInfo(name);
     res.send(animeInfo);
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
+    if (error instanceof ScraperErrorResponse) {
+      res.status(404).send(error);
+    }
   }
 });
 
@@ -29,8 +31,9 @@ r.get("/anime/flv/episode/:episode", async (req, res) => {
     const animeInfo = await flv.GetEpisodeServers(episode);
     res.send(animeInfo);
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
+    if (error instanceof ScraperErrorResponse) {
+      res.status(404).send(error);
+    }
   }
 });
 
@@ -57,8 +60,9 @@ r.get("/anime/flv/filter", async (req, res) => {
     );
     res.send(animeInfo);
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
+    if (error instanceof ScraperErrorResponse) {
+      res.status(404).send(error);
+    }
   }
 });
 
