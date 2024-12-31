@@ -90,8 +90,7 @@ export class AnimeFlv extends AnimeScraperModel {
         error
       );
       throw new ScraperErrorResponse(
-        "An error occurred while getting the anime info: invalid name",
-        404
+        "An error occurred while getting the anime info: invalid name"
       );
     }
   }
@@ -145,7 +144,7 @@ export class AnimeFlv extends AnimeScraperModel {
       return data_filter;
     } catch (error) {
       console.log("An error occurred while getting the filter values", error);
-      throw new ScraperErrorResponse("An error occurred while getting the filter values", 404);
+      throw new ScraperErrorResponse("An error occurred while getting the filter values");
     }
   }
 
@@ -238,7 +237,7 @@ export class AnimeFlv extends AnimeScraperModel {
       return episodeReturn;
     } catch (error) {
       console.log("An error occurred while getting the episode servers", error);
-      throw new ScraperErrorResponse("An error occurred while getting the episode servers",404);
+      throw new ScraperErrorResponse("An error occurred while getting the episode servers");
     }
   }
 
