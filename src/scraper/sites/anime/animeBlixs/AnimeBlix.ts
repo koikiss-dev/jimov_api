@@ -12,15 +12,12 @@ import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 /** List of Domains
  * https://vwv.animeblix.org
  *
- * https://animeblix.xyz
- *
- * https://animeblix.com
+ * https://wwa.animeblix.org
  *
  */
 
 export class AnimeBlix extends AnimeScraperModel {
   readonly url = "https://vwv.animeblix.org";
-  readonly api = "https://api.animelatinohd.com";
 
   async GetItemInfo(anime: string): Promise<AnimeMedia> {
     try {
@@ -169,7 +166,7 @@ export class AnimeBlix extends AnimeScraperModel {
     genre?: string
   ): Promise<ResultSearch<AnimeResult>> {
     try {
-      const { data } = await axios.get(`${this.api}/api/anime/list`, {
+      const { data } = await axios.get(`${this.url}/api/anime/list`, {
         params: {
           search: search,
           type: type,
