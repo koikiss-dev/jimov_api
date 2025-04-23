@@ -7,7 +7,6 @@ import {
   AnimeResult
 } from "../../../../types/search";
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
-//import { Calendar } from "@animetypes/date";
 
 /** List of Domains
  * https://vwv.animeblix.org
