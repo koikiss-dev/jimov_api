@@ -46,6 +46,9 @@ export class Comick {
           page: page,
           genre: genre,
         },
+        headers:{
+          "User-Agent":"Mozilla/5.0s (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+        }
       });
       const ResultList: IResultSearch<IMangaResult> = {
         nav: { count: data.length,
@@ -72,6 +75,7 @@ export class Comick {
             },
             url: `/manga/comick/name/${e.slug}`,
           };
+          console.log(e)
           ResultList.results.push(ListMangaResult);
         }
       );
@@ -84,8 +88,13 @@ export class Comick {
   async GetMangaInfo(manga: string, lang: string): Promise<MangaMedia> {
     try {
       const { data } = await axios.get(
-        `${this.url}/comic/${manga}`
+        `${this.url}/comic/${manga}`,{
+          headers:{
+            "User-Agent":"Mozilla/5.0s (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+          }
+        }
       );
+      console.log(data)
       const $ = cheerio.load(data);
       const mangaInfoParseObj = JSON.parse($("#__NEXT_DATA__").html())
         .props.pageProps;
@@ -94,7 +103,11 @@ export class Comick {
       let dataApi = null
       if (mangaInfoParseObj.firstChap) {
         dataApi = await axios.get(
-          `${this.url}/_next/data/${buildId}/comic/${manga}/${mangaInfoParseObj.firstChap.hid + "-chapter-" + mangaInfoParseObj.firstChap.chap + "-" + mangaInfoParseObj.firstChap.lang}.json`
+          `${this.url}/_next/data/${buildId}/comic/${manga}/${mangaInfoParseObj.firstChap.hid + "-chapter-" + mangaInfoParseObj.firstChap.chap + "-" + mangaInfoParseObj.firstChap.lang}.json`,{
+            headers:{
+              "User-Agent":"Mozilla/5.0s (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+            }
+          }
         );
       }
       const MangaInfo: MangaMedia = {
@@ -153,6 +166,7 @@ export class Comick {
       }
       return MangaInfo;
     } catch (error) {
+      console.log(error)
     }
   }
 
@@ -173,7 +187,11 @@ export class Comick {
       }
 
       const { data } = await axios.get(
-        `${this.url}/comic/${title}/${urlchange}`
+        `${this.url}/comic/${title}/${urlchange}`,{
+          headers:{
+            "User-Agent":"Mozilla/5.0s (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.0.0 Safari/537.36"
+          }
+        }
       );
       const $ = cheerio.load(data);
 
