@@ -6,6 +6,13 @@ import { Episode, EpisodeServer } from "../../../../types/episode";
 import { ResultSearch, AnimeResult } from "../../../../types/search";
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 
+/** List of Domains
+ * https://hentaihaven.com/
+ *
+ * https://hentaihaven.xxx
+ *
+ */
+
 export class HentaiHaven extends AnimeScraperModel {
   readonly url = "https://hentaihaven.com";
 
@@ -19,7 +26,7 @@ export class HentaiHaven extends AnimeScraperModel {
         .first()
         .find("a")
         .each((_i, e) => genres.push($(e).text()));
-
+      
       const AnimeInfo: AnimeMedia = {
         name: $("h1.htitle").text().trim(),
         url: `/anime/hentaihaven/name/${anime}`,
@@ -112,14 +119,17 @@ export class HentaiHaven extends AnimeScraperModel {
         },
         results: [],
       };
+
+    
       $(".row_items .item").each((_i, e) => {
+       
         const animeSearchData: AnimeResult = {
           name: $(e).find(".title").text(),
           image: $(e).find(".cover img").attr("src"),
-          url: `/anime/hentaiheven/name/${$(e)
-            .find(".title")
-            .text()
-            .replace(this.url + "/video", "")}`,
+          url: `/anime/hentaihaven/name/${$(e)
+            .find("a")
+            .attr("href")
+            .replace(this.url + "/video/", "")}`,
         };
         animeSearch.results.push(animeSearchData);
       });
