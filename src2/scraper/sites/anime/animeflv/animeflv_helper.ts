@@ -1,0 +1,63 @@
+//genres animeflf
+export enum Genres {
+  Action = "accion",
+  MartialArts = "artes-marciales",
+  Adventure = "aventura",
+  Racing = "carreras",
+  ScienceFiction = "ciencia-ficcion",
+  Comedy = "comedia",
+  Dementia = "demencia",
+  Demons = "demonios",
+  Sports = "deportes",
+  Drama = "drama",
+  Ecchi = "ecchi",
+  School = "escolares",
+  Space = "espacial",
+  Fantasy = "fantasia",
+  Harem = "harem",
+  Historical = "historico",
+  Kids = "infantil",
+  Josei = "josei",
+  Games = "juegos",
+  Magic = "magia",
+  Mecha = "mecha",
+  Military = "militar",
+  Mystery = "misterio",
+  Music = "musica",
+  Parody = "parodia",
+  Police = "policia",
+  Psychological = "psicologico",
+  SliceOfLife = "recuentos-de-la-vida",
+  Romance = "romance",
+  Samurai = "samurai",
+  Seinen = "seinen",
+  Shoujo = "shoujo",
+  Shounen = "shounen",
+  Supernatural = "sobrenatural",
+  Superpowers = "superpoderes",
+  Suspense = "suspenso",
+  Horror = "terror",
+  Vampires = "vampiros",
+  Yaoi = "yaoi",
+  Yuri = "yuri",
+}
+
+export enum StatusAnimeflv {
+  OnGoing = "1",
+  Finished = "2",
+  Upcoming = "3",
+}
+
+export enum TypeAnimeflv {
+  TV = "tv",
+  MOVIE = "movie",
+  SPECIAL = "special",
+  OVA = "ova",
+}
+export enum OrderAnimeflv {
+  DEFAULT = "default",
+  UPDATED = "updated",
+  ADDED = "added",
+  TITLE = "title",
+  RATING = "rating",
+}
