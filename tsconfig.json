@@ -1,40 +1,21 @@
 {
-  "extends": "@tsconfig/recommended/tsconfig.json",
-  "ts-node": {
-    "require": ["tsconfig-paths/register"]
-  },
   "compilerOptions": {
-    "target": "es6",
     "module": "commonjs",
-    "moduleResolution": "node",
-    "esModuleInterop": true,
+    "declaration": true,
+    "removeComments": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "allowSyntheticDefaultImports": true,
-    "allowJs": true,
-    "importHelpers": false,
-    "jsx": "react",
-    "alwaysStrict": true,
+    "target": "ES2023",
     "sourceMap": true,
+    "outDir": "./dist",
+    "baseUrl": "./",
+    "incremental": true,
+    "skipLibCheck": true,
+    "strictNullChecks": true,
     "forceConsistentCasingInFileNames": true,
-    "noFallthroughCasesInSwitch": true,
-    "noImplicitReturns": false,
-    "noUnusedLocals": true,
-    "noUnusedParameters": true,
     "noImplicitAny": false,
-    "noImplicitThis": false,
-    "strictNullChecks": false,
-    "outDir": "./build",
-    "baseUrl": "./src",
-    "paths": {
-      "@animetypes/*": ["./types/*"],
-      "@providers/*": [
-        "./scraper/sites/anime/*",
-        "./scraper/sites/manga/*",
-        "./scraper/sites/doramas/*"
-      ],
-      "@routes/manga/*": ["./routes/v1/manga/*"],
-      "@routes/anime/*": ["./routes/v1/anime/*"],
-      "@routes/doramas/*": ["./routes/v1/doramas/*"]
-    }
-  },
-  "exclude": ["node_modules", "build", "**/*.spec.ts"]
+    "strictBindCallApply": false,
+    "noFallthroughCasesInSwitch": false
+  }
 }
