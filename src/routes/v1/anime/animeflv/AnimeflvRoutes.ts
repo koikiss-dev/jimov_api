@@ -6,7 +6,8 @@ import {
   StatusAnimeflv,
   OrderAnimeflv,
 } from "../../../../scraper/sites/anime/animeflv/animeflv_helper";
-import { ScraperErrorResponse } from "utils/ScraperError";
+import { ScraperErrorResponse } from "../../../../utils/ScraperError";
+
 const r = Router();
 
 //anime info

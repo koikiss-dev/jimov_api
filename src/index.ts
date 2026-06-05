@@ -65,7 +65,7 @@ interface ErrorResponse {
   };
 }
 
-app.use((err, res, _next) => {
+app.use((err, res) => {
   //console.log(err.statusCode);
   let response: ErrorResponse;
   switch (err.statusCode) {

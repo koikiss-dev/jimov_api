@@ -1,8 +1,11 @@
-import type { AnimeMedia } from "@animetypes/anime";
-import type { Episode } from "@animetypes/episode";
-import type { IAnimeResult } from "@animetypes/search";
+import { AnimeMedia } from "../types/anime";
+import { Episode } from "../types/episode";
+import { IAnimeResult } from "../types/search";
 import { BaseScraperModel } from "./BaseScraperModel";
 
-export abstract class AnimeScraperModel extends BaseScraperModel<AnimeMedia, IAnimeResult> {
+export abstract class AnimeScraperModel extends BaseScraperModel<
+  AnimeMedia,
+  IAnimeResult
+> {
   public abstract GetEpisodeServers(...args: unknown[]): Promise<Episode>;
 }

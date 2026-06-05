@@ -1,6 +1,7 @@
-import { manganatoOrderByOptionsList } from "@providers/manganelo/ManganatoTypes";
+
 import { Router } from "express";
 import { Manganelo } from "../../../../scraper/sites/manga/manganelo/Manganelo";
+import { manganatoOrderByOptionsList } from "../../../../scraper/sites/manga/manganelo/ManganatoTypes";
 
 const router = Router();
 const manganelo = new Manganelo();

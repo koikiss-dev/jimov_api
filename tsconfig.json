@@ -1,12 +1,10 @@
 {
-  "extends": "@tsconfig/recommended/tsconfig.json",
   "ts-node": {
     "require": ["tsconfig-paths/register"]
   },
   "compilerOptions": {
     "target": "es6",
     "module": "commonjs",
-    "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "allowJs": true,
@@ -23,7 +21,6 @@
     "noImplicitThis": false,
     "strictNullChecks": false,
     "outDir": "./build",
-    "baseUrl": "./src",
     "paths": {
       "@animetypes/*": ["./types/*"],
       "@providers/*": [

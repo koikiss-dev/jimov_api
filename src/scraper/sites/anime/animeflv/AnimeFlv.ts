@@ -15,7 +15,7 @@ import {
   AnimeResult,
 } from "../../../../types/search";
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
-import { ScraperErrorResponse } from "utils/ScraperError";
+import { ScraperErrorResponse } from "../../../../utils/ScraperError";
 
 export class AnimeFlv extends AnimeScraperModel {
   readonly url = "https://m.animeflv.net";
@@ -87,10 +87,10 @@ export class AnimeFlv extends AnimeScraperModel {
     } catch (error) {
       console.log(
         "An error occurred while getting the anime info: invalid name",
-        error
+        error,
       );
       throw new ScraperErrorResponse(
-        "An error occurred while getting the anime info: invalid name"
+        "An error occurred while getting the anime info: invalid name",
       );
     }
   }
@@ -102,7 +102,7 @@ export class AnimeFlv extends AnimeScraperModel {
     status?: StatusAnimeflv,
     ord?: OrderAnimeflv,
     page?: number,
-    title?: string
+    title?: string,
   ): Promise<IResultSearch<IAnimeResult>> {
     try {
       const { data, request }: AxiosResponse = await axios.get(
@@ -117,7 +117,7 @@ export class AnimeFlv extends AnimeScraperModel {
             order: ord,
             q: title,
           },
-        }
+        },
       );
       console.log(request);
       const $ = load(data);
@@ -132,7 +132,7 @@ export class AnimeFlv extends AnimeScraperModel {
           .attr("src")
           .replace(
             "/uploads/animes/",
-            "https://m.animeflv.net/uploads/animes/"
+            "https://m.animeflv.net/uploads/animes/",
           );
         info.url = `/anime/flv/name/${$(e)
           .find("a")
@@ -144,7 +144,9 @@ export class AnimeFlv extends AnimeScraperModel {
       return data_filter;
     } catch (error) {
       console.log("An error occurred while getting the filter values", error);
-      throw new ScraperErrorResponse("An error occurred while getting the filter values");
+      throw new ScraperErrorResponse(
+        "An error occurred while getting the filter values",
+      );
     }
   }
 
@@ -169,6 +171,31 @@ export class AnimeFlv extends AnimeScraperModel {
 
       console.log(player); */
 
+      const g = (title: string, url: string) => {
+        let file: string;
+        switch (title) {
+          case "MEGA":
+            file = url.replace("embed#!", "file/").replace("!", "#");
+            break;
+          case "Stape":
+            file = url.replace("/e/", "/v/");
+            break;
+          case "YourUpload":
+            file = url.replace("/embed/", "/watch/");
+            break;
+          case "SW":
+          case "Doodstream":
+          case "Streamsb":
+          case "Filemoon":
+            file = url.replace("/e/", "/d/");
+            break;
+          default:
+            break;
+        }
+        console.log(file);
+        return file;
+      };
+
       getLinks.each((_i, e) => {
         interface VideoObject {
           title: string;
@@ -189,27 +216,20 @@ export class AnimeFlv extends AnimeScraperModel {
             episodeReturn.servers.push({
               name: element.title,
               url: element.code,
+              file_url: g(element.title, element.code),
             });
           }
         }
       });
-      /*const promises = getLinks.map(async (_i, e) => {
-        /* const servers = new EpisodeServer();
+      /* const promises = getLinks.map(async (_i, e) => {
+        const servers = new EpisodeServer();
         const title = $(e).find("a").text().trim();
         const videoData = $(e).attr("data-video");
         servers.name = title;
         servers.url = videoData;
-        console.log(title); */
+        console.log(title);
 
-      /* if (videoData.includes("streaming.php")) {
-          await this.getM3U(
-            `${videoData.replace("streaming.php", "ajax.php")}&refer=none`
-          ).then((g) => {
-            if (g.source.length) {
-              servers.file_url = g.source[0].file;
-            }
-          });
-        }
+       
         switch (title) {
           case "Mega":
             servers.file_url = videoData
@@ -231,13 +251,15 @@ export class AnimeFlv extends AnimeScraperModel {
           default:
             break;
         }
-        episodeReturn.servers.push(servers); 
-      })*/
-      //await Promise.all(promises);
+        episodeReturn.servers.push(servers);
+      });
+      await Promise.all(promises); */
       return episodeReturn;
     } catch (error) {
       console.log("An error occurred while getting the episode servers", error);
-      throw new ScraperErrorResponse("An error occurred while getting the episode servers");
+      throw new ScraperErrorResponse(
+        "An error occurred while getting the episode servers",
+      );
     }
   }
 
@@ -251,3 +273,13 @@ export class AnimeFlv extends AnimeScraperModel {
     }
   } */
 }
+
+/* if (videoData.includes("streaming.php")) {
+          await this.getM3U(
+            `${videoData.replace("streaming.php", "ajax.php")}&refer=none`,
+          ).then((g) => {
+            if (g.source.length) {
+              servers.file_url = g.source[0].file;
+            }
+          });
+        } */
