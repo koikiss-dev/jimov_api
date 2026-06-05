@@ -1,6 +1,6 @@
 import { URLSearchParams } from "url";
 import {
-  IManganatoFilterParams,
+  type IManganatoFilterParams,
   ManganatoFilterURLParams,
   manganatoGenreList,
   manganatoOrderByOptions,
@@ -43,7 +43,7 @@ export class ManganatoAdvancedSearchURLManager extends ManganatoManager {
   private processOrderBy(order: unknown) {
     return typeof order === "string" &&
       manganatoOrderByOptionsList.includes(
-        order.toLowerCase() as manganatoOrderByOptions,
+        order.toLowerCase() as manganatoOrderByOptions
       )
       ? order
       : "";

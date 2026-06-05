@@ -6,7 +6,7 @@ import {
   MangaReaderFilterScore,
   MangaReaderFilterStatus,
   MangaReaderFilterLanguage,
-  MangaReaderFilterRatingType
+  MangaReaderFilterRatingType,
 } from "../scraper/sites/manga/MangaReader/MangaReaderTypes";
 
 describe("MangaReader", () => {
@@ -18,7 +18,7 @@ describe("MangaReader", () => {
 
   it("should return manga info successfully", async () => {
     const testsList: Array<{
-      id: number;
+      id: string;
       mangaName: string;
       altName: string[];
       mangaGenres: string[];
@@ -27,60 +27,60 @@ describe("MangaReader", () => {
       hasVolumes: boolean;
       hasChapters: boolean;
     }> = [
-        {
-          id: 65961,
-          mangaName: "Zashisu",
-          altName: ["ザシス"],
-          mangaGenres: ["Horror", "Mystery", "Psychological", "School", "Seinen"],
-          isNsfw: false,
-          status: "ongoing",
-          hasVolumes: false,
-          hasChapters: true
-        },
-        {
-          id: 65941,
-          mangaName: "Mitsuba no Monogatari",
-          altName: ["みつばものがたり 呪いの少女と死の輪舞《ロンド》"],
-          mangaGenres: ["Fantasy"],
-          isNsfw: false,
-          status: "ongoing",
-          hasVolumes: false,
-          hasChapters: true
-        },
-        {
-          id: 65795,
-          mangaName:
-            "Akuyaku Reijou ni Tensei suru no Mahou ni Muchuu de Itara Ouji ni Dekiaisaremashita",
-          altName: ["悪役令嬢に転生するも魔法に夢中でいたら王子に溺愛されました"],
-          mangaGenres: ["Fantasy", "Romance", "School", "Shoujo"],
-          isNsfw: false,
-          status: "ongoing",
-          hasVolumes: false,
-          hasChapters: true
-        },
-        {
-          id: 65879,
-          mangaName: "My Star Is the Lewdest",
-          altName: ["俺の女優が一番淫ら"],
-          mangaGenres: ["Comedy", "Ecchi"],
-          isNsfw: true,
-          status: "ongoing",
-          hasVolumes: false,
-          hasChapters: true
-        },
-        {
-          id: 65789,
-          mangaName: "Hoop Days",
-          altName: ["ディアボーイズ"],
-          mangaGenres: ["Drama", "Slice of Life", "Sports"],
-          isNsfw: false,
-          status: "completed",
-          hasVolumes: false,
-          hasChapters: true
-        }
-      ];
+      {
+        id: "65961",
+        mangaName: "Zashisu",
+        altName: ["ザシス"],
+        mangaGenres: ["Horror", "Mystery", "Psychological", "School", "Seinen"],
+        isNsfw: false,
+        status: "ongoing",
+        hasVolumes: false,
+        hasChapters: true,
+      },
+      {
+        id: "65941",
+        mangaName: "Mitsuba no Monogatari",
+        altName: ["みつばものがたり 呪いの少女と死の輪舞《ロンド》"],
+        mangaGenres: ["Fantasy"],
+        isNsfw: false,
+        status: "ongoing",
+        hasVolumes: false,
+        hasChapters: true,
+      },
+      {
+        id: "65795",
+        mangaName:
+          "Akuyaku Reijou ni Tensei suru no Mahou ni Muchuu de Itara Ouji ni Dekiaisaremashita",
+        altName: ["悪役令嬢に転生するも魔法に夢中でいたら王子に溺愛されました"],
+        mangaGenres: ["Fantasy", "Romance", "School", "Shoujo"],
+        isNsfw: false,
+        status: "ongoing",
+        hasVolumes: false,
+        hasChapters: true,
+      },
+      {
+        id: "65879",
+        mangaName: "My Star Is the Lewdest",
+        altName: ["俺の女優が一番淫ら"],
+        mangaGenres: ["Comedy", "Ecchi"],
+        isNsfw: true,
+        status: "ongoing",
+        hasVolumes: false,
+        hasChapters: true,
+      },
+      {
+        id: "65789",
+        mangaName: "Hoop Days",
+        altName: ["ディアボーイズ"],
+        mangaGenres: ["Drama", "Slice of Life", "Sports"],
+        isNsfw: false,
+        status: "completed",
+        hasVolumes: false,
+        hasChapters: true,
+      },
+    ];
 
-    testsList.forEach(async fields => {
+    testsList.forEach(async (fields) => {
       const {
         id,
         mangaName,
@@ -89,13 +89,13 @@ describe("MangaReader", () => {
         isNsfw,
         status,
         hasVolumes,
-        hasChapters
+        hasChapters,
       } = fields;
-      const mangaInfo = await mangareader.GetMangaInfo(id);
+      const mangaInfo = await mangareader.GetItemInfo(id);
 
-      expect(mangaInfo.title).toStrictEqual(mangaName);
-      expect(mangaInfo.altTitles).toStrictEqual(altName);
-      expect(mangaInfo.isNSFW).toStrictEqual(isNsfw);
+      expect(mangaInfo.name).toStrictEqual(mangaName);
+      expect(mangaInfo.alt_names).toStrictEqual(altName);
+      expect(mangaInfo.nsfw).toStrictEqual(isNsfw);
       expect(mangaInfo.genres).toStrictEqual(mangaGenres);
       expect(mangaInfo.status).toStrictEqual(status);
 
@@ -116,7 +116,7 @@ describe("MangaReader", () => {
       status?: MangaReaderFilterStatus;
       ratingType?: MangaReaderFilterRatingType;
       score?: MangaReaderFilterScore;
-      language?: typeof MangaReaderFilterLanguage[number];
+      language?: (typeof MangaReaderFilterLanguage)[number];
       startYear?: number;
       startMonth?: number;
       startDay?: number;
@@ -126,63 +126,63 @@ describe("MangaReader", () => {
       sort?: MangaReaderFilterSort;
       numPage?: number;
     }> = [
-        {
-          hasResults: true,
-          type: MangaReaderFilterType.Manhwa,
-          status: MangaReaderFilterStatus.Finished,
-          ratingType: MangaReaderFilterRatingType.MildNudity,
-          numPage: 1
-        },
-        {
-          hasResults: true,
-          type: MangaReaderFilterType.Doujinshi,
-          status: MangaReaderFilterStatus.All,
-          ratingType: MangaReaderFilterRatingType.Teens,
-          score: MangaReaderFilterScore.Horrible,
-          language: "ja"
-        },
-        {
-          hasResults: true,
-          type: MangaReaderFilterType.Manga,
-          status: MangaReaderFilterStatus.Finished,
-          ratingType: MangaReaderFilterRatingType.Teens,
-          score: MangaReaderFilterScore.All,
-          language: "ja",
-          startYear: 2021,
-          startMonth: 3,
-          startDay: 5,
-          endYear: 2023,
-          endMonth: 3,
-          endDay: 6
-        },
-        {
-          hasResults: true,
-          type: MangaReaderFilterType.OneShot,
-          status: MangaReaderFilterStatus.All,
-          ratingType: MangaReaderFilterRatingType.Teens,
-          numPage: 2
-        },
-        {
-          hasResults: false,
-          type: MangaReaderFilterType.LightNovel,
-          status: MangaReaderFilterStatus.Finished,
-          ratingType: MangaReaderFilterRatingType.Children,
-          score: MangaReaderFilterScore.All,
-          language: "en",
-          numPage: 3
-        },
-        {
-          hasResults: false,
-          type: MangaReaderFilterType.OneShot,
-          status: MangaReaderFilterStatus.All,
-          ratingType: MangaReaderFilterRatingType.Teens,
-          score: MangaReaderFilterScore.VeryGood,
-          language: "en",
-          numPage: 1
-        }
-      ];
+      {
+        hasResults: true,
+        type: MangaReaderFilterType.Manhwa,
+        status: MangaReaderFilterStatus.Finished,
+        ratingType: MangaReaderFilterRatingType.MildNudity,
+        numPage: 1,
+      },
+      {
+        hasResults: true,
+        type: MangaReaderFilterType.Doujinshi,
+        status: MangaReaderFilterStatus.All,
+        ratingType: MangaReaderFilterRatingType.Teens,
+        score: MangaReaderFilterScore.Horrible,
+        language: "ja",
+      },
+      {
+        hasResults: true,
+        type: MangaReaderFilterType.Manga,
+        status: MangaReaderFilterStatus.Finished,
+        ratingType: MangaReaderFilterRatingType.Teens,
+        score: MangaReaderFilterScore.All,
+        language: "ja",
+        startYear: 2021,
+        startMonth: 3,
+        startDay: 5,
+        endYear: 2023,
+        endMonth: 3,
+        endDay: 6,
+      },
+      {
+        hasResults: true,
+        type: MangaReaderFilterType.OneShot,
+        status: MangaReaderFilterStatus.All,
+        ratingType: MangaReaderFilterRatingType.Teens,
+        numPage: 2,
+      },
+      {
+        hasResults: false,
+        type: MangaReaderFilterType.LightNovel,
+        status: MangaReaderFilterStatus.Finished,
+        ratingType: MangaReaderFilterRatingType.Children,
+        score: MangaReaderFilterScore.All,
+        language: "en",
+        numPage: 3,
+      },
+      {
+        hasResults: false,
+        type: MangaReaderFilterType.OneShot,
+        status: MangaReaderFilterStatus.All,
+        ratingType: MangaReaderFilterRatingType.Teens,
+        score: MangaReaderFilterScore.VeryGood,
+        language: "en",
+        numPage: 1,
+      },
+    ];
 
-    testsList.forEach(async fields => {
+    testsList.forEach(async (fields) => {
       const {
         hasResults,
         type,
@@ -197,10 +197,10 @@ describe("MangaReader", () => {
         endMonth,
         endDay,
         sort,
-        numPage
+        numPage,
       } = fields;
 
-      const filter = await mangareader.Filter({
+      const filter = await mangareader.GetItemByFilter({
         type: type,
         status: status,
         ratingType: ratingType,
@@ -213,7 +213,7 @@ describe("MangaReader", () => {
         endMonth: endMonth,
         endDay: endDay,
         sort: sort,
-        numPage: numPage
+        numPage: numPage,
       });
 
       if (hasResults === true)
@@ -225,40 +225,40 @@ describe("MangaReader", () => {
   it("should return manga chapter pages successfully", async () => {
     const testsList: Array<{
       chapterTitle: string;
-      id: number;
+      id: string;
       chapterNumber: number;
-      language: typeof MangaReaderFilterLanguage[number];
+      language: (typeof MangaReaderFilterLanguage)[number];
       type: MangaReaderChapterType;
     }> = [
-        {
-          chapterTitle: "Chapter 3: 第 3 話",
-          id: 65953,
-          chapterNumber: 3,
-          language: "ja",
-          type: "chapter"
-        },
-        {
-          chapterTitle: "VOL 2",
-          id: 65781,
-          chapterNumber: 2,
-          language: "en",
-          type: "volume"
-        }
-      ];
+      {
+        chapterTitle: "Chapter 3: 第 3 話",
+        id: "65953",
+        chapterNumber: 3,
+        language: "ja",
+        type: "chapter",
+      },
+      {
+        chapterTitle: "VOL 2",
+        id: "65781",
+        chapterNumber: 2,
+        language: "en",
+        type: "volume",
+      },
+    ];
 
-    testsList.forEach(async fields => {
+    testsList.forEach(async (fields) => {
       const { chapterTitle, id, chapterNumber, language, type } = fields;
       const mangaChapters = await mangareader.GetMangaChapters(
         id,
         chapterNumber,
         language,
-        type
+        type,
       );
 
       expect(mangaChapters?.images.length).toBeGreaterThanOrEqual(1);
-      expect(mangaChapters?.title).toStrictEqual(chapterTitle);
+      expect(mangaChapters?.name).toStrictEqual(chapterTitle);
       expect(mangaChapters?.id).toStrictEqual(id);
-      expect(mangaChapters?.number).toStrictEqual(chapterNumber);
+      expect(mangaChapters?.num).toStrictEqual(chapterNumber);
     });
   }, 5000);
 });

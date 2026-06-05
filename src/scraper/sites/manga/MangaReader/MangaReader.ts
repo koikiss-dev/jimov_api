@@ -1,27 +1,30 @@
 import { Image } from "../../../../types/image";
 import {
-  IMangaResult,
-  Manga,
+  type IMangaResult,
+  MangaMedia,
   MangaChapter,
-  MangaVolume
+  MangaVolume,
 } from "../../../../types/manga";
 import axios from "axios";
 import { load } from "cheerio";
 import {
   MangaReaderFilterLanguage,
   MangaReaderChapterType,
-  MangaReaderFilterData
+  MangaReaderFilterData,
 } from "./MangaReaderTypes";
-import { IResultSearch, ResultSearch } from "../../../../types/search";
+import { type IResultSearch, ResultSearch } from "../../../../types/search";
+import { MangaScraperModel } from "../../../../models/MangaScraperModel";
 
-export class MangaReader {
+export class MangaReader extends MangaScraperModel {
   readonly url = "https://mangareader.to";
 
-  private async GetMangaVolumeRange(mangaId: number) {
+  private async GetMangaVolumeRange(mangaId: string) {
     const { data } = await axios.get(`${this.url}/a-${mangaId}`);
     const $ = load(data);
 
-    const rangeResult: number[] = $("div.volume-list-ul div.manga_list div.manga_list-wrap")
+    const rangeResult: number[] = $(
+      "div.volume-list-ul div.manga_list div.manga_list-wrap"
+    )
       .find("div.item")
       .map((_, element) => {
         const mangaVolumeTitle = $(element)
@@ -29,21 +32,24 @@ export class MangaReader {
           .text()
           .trim();
         return Number(mangaVolumeTitle.split(" ").at(-1));
-      }).get();
+      })
+      .get();
 
     return rangeResult;
   }
 
   private async GetSpecificMangaChapterName(
-    mangaId: number,
+    mangaId: string,
     chapterNumber: number,
-    language: typeof MangaReaderFilterLanguage[number],
+    language: (typeof MangaReaderFilterLanguage)[number],
     type: MangaReaderChapterType
   ): Promise<string> {
     const { data } = await axios.get(`${this.url}/a-${mangaId}`);
     const $ = load(data);
 
-    let langCode: typeof MangaReaderFilterLanguage[number] = MangaReaderFilterLanguage[MangaReaderFilterLanguage.indexOf(language)] || "";
+    let langCode: (typeof MangaReaderFilterLanguage)[number] =
+      MangaReaderFilterLanguage[MangaReaderFilterLanguage.indexOf(language)] ||
+      "";
 
     let result = ``;
     let chapterItemHtmlTag = ``;
@@ -64,7 +70,10 @@ export class MangaReader {
 
     if (!chapters.length) throw new Error("Chapters doesn't found.");
 
-    const chaptersTitle: string[] = chapters.find(chapterTitleHtmlTag).map((_, element) => $(element).text().trim()).get();
+    const chaptersTitle: string[] = chapters
+      .find(chapterTitleHtmlTag)
+      .map((_, element) => $(element).text().trim())
+      .get();
 
     for (let title of chaptersTitle) {
       if (title.includes(chapterTitleMatch)) {
@@ -82,27 +91,39 @@ export class MangaReader {
     if (type === "chapter") idType = "chap";
     else if (type === "volume") idType = "vol";
 
-    const { data: pagesAjaxData } = await axios.get(`${this.url}/ajax/image/list/${idType}/${chapterId}?mode=horizontal&quality=high`);
+    const { data: pagesAjaxData } = await axios.get(
+      `${this.url}/ajax/image/list/${idType}/${chapterId}?mode=horizontal&quality=high`
+    );
     const $pagesAjaxData = load(pagesAjaxData.html);
-    const pagesSection = $pagesAjaxData("div#main-wrapper div.container-reader-hoz div#divslide div.divslide-wrapper div.ds-item").find("div.ds-image")
+    const pagesSection = $pagesAjaxData(
+      "div#main-wrapper div.container-reader-hoz div#divslide div.divslide-wrapper div.ds-item"
+    ).find("div.ds-image");
 
-    let pages = pagesSection.map((_, element) => $pagesAjaxData(element).attr("data-url")).get();
+    let pages = pagesSection
+      .map((_, element) => $pagesAjaxData(element).attr("data-url"))
+      .get();
 
     return pages;
   }
 
-  async GetMangaInfo(mangaId: number): Promise<Manga> {
+  async GetItemInfo(mangaId: string): Promise<MangaMedia> {
     try {
       const { data } = await axios.get(`${this.url}/a-${mangaId}`);
-      const { data: charactersAjaxList } = await axios.get(`${this.url}/ajax/character/list/${mangaId}`);
+      const { data: charactersAjaxList } = await axios.get(
+        `${this.url}/ajax/character/list/${mangaId}`
+      );
 
       const $ = load(data);
       const $characterListAjaxResult = load(charactersAjaxList.html);
 
-      const charactersSection = $characterListAjaxResult("div.character-list div.cl-item div.cli-info");
+      const charactersSection = $characterListAjaxResult(
+        "div.character-list div.cl-item div.cli-info"
+      );
 
       const title = $("h2.manga-name").text().trim();
-      const altTitle = $("div.manga-name-or").text().trim() ? Array.of($("div.manga-name-or").text().trim()) : null;
+      const altTitle = $("div.manga-name-or").text().trim()
+        ? Array.of($("div.manga-name-or").text().trim())
+        : null;
       const thumbnailUrl = $("div.manga-poster img.manga-poster-img").attr(
         "src"
       );
@@ -114,15 +135,18 @@ export class MangaReader {
         .trim();
 
       // Manga genres
-      const mangaGenres: Array<string> = $("div.genres").find("a").map((_, element) => $(element).text().trim()).get();
+      const mangaGenres: Array<string> = $("div.genres")
+        .find("a")
+        .map((_, element) => $(element).text().trim())
+        .get();
 
-      const manga = new Manga();
+      const manga = new MangaMedia();
 
       manga.id = mangaId.toString();
-      manga.title = title;
-      manga.altTitles = altTitle;
+      manga.name = title;
+      manga.alt_names = altTitle;
       manga.thumbnail = new Image(thumbnailUrl);
-      manga.description = description || null;
+      manga.synopsis = description || null;
 
       if (status === "Finished") manga.status = "completed";
       else manga.status = "ongoing";
@@ -130,36 +154,43 @@ export class MangaReader {
       manga.genres = mangaGenres;
 
       if (charactersSection.html()) {
-        const characters = charactersSection.find("h4.cl-name a").map((_, element) => $characterListAjaxResult(element).text().trim()).get();
+        const characters = charactersSection
+          .find("h4.cl-name a")
+          .map((_, element) => $characterListAjaxResult(element).text().trim())
+          .get();
         manga.characters = characters;
       } else manga.characters = null;
 
       // Get manga chapters
       manga.chapters = [];
-      const mangaChapterItemSection = $(
-        "div.chapters-list-ul ul.ulclear"
-      );
+      const mangaChapterItemSection = $("div.chapters-list-ul ul.ulclear");
       let langCode: string = ``;
 
       if (mangaChapterItemSection?.first().attr("id"))
         langCode = mangaChapterItemSection.first().attr("id").split("-")[0];
 
-      mangaChapterItemSection.first().find("li.chapter-item").each((_, element) => {
-        const mangaChapter = new MangaChapter();
+      mangaChapterItemSection
+        .first()
+        .find("li.chapter-item")
+        .each((_, element) => {
+          const mangaChapter = new MangaChapter();
 
-        const mangaTitle = $(element)
-          .find("a.item-link span.name")
-          .text()
-          .trim();
-        const mangaChapterNumber = mangaTitle.split(" ").at(1).replace(":", "");
+          const mangaTitle = $(element)
+            .find("a.item-link span.name")
+            .text()
+            .trim();
+          const mangaChapterNumber = mangaTitle
+            .split(" ")
+            .at(1)
+            .replace(":", "");
 
-        mangaChapter.title = mangaTitle;
-        mangaChapter.id = mangaId.toString();
-        mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${mangaChapterNumber}&lang=${langCode}`;
-        mangaChapter.images = null;
+          mangaChapter.name = mangaTitle;
+          mangaChapter.id = mangaId.toString();
+          mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${mangaChapterNumber}&lang=${langCode}`;
+          mangaChapter.images = null;
 
-        manga.chapters.push(mangaChapter);
-      });
+          manga.chapters.push(mangaChapter);
+        });
 
       // Get manga volumes
       const mangaVolumeRange = await this.GetMangaVolumeRange(mangaId);
@@ -177,34 +208,37 @@ export class MangaReader {
           .attr("id")
           .split("-")[0];
 
-      mangaVolumeItemSection.first().find("div.item").each((_, element) => {
-        const mangaVolume = new MangaVolume();
+      mangaVolumeItemSection
+        .first()
+        .find("div.item")
+        .each((_, element) => {
+          const mangaVolume = new MangaVolume();
 
-        const mangaVolumeTitle = $(element)
-          .find("div.manga-poster span.tick-item")
-          .text()
-          .trim();
-        const mangaVolumeNumber = mangaVolumeTitle.split(" ").at(-1);
-        const mangaVolumeThumbnail = $(element)
-          .find("div.manga-poster img.manga-poster-img")
-          .attr("src");
+          const mangaVolumeTitle = $(element)
+            .find("div.manga-poster span.tick-item")
+            .text()
+            .trim();
+          const mangaVolumeNumber = mangaVolumeTitle.split(" ").at(-1);
+          const mangaVolumeThumbnail = $(element)
+            .find("div.manga-poster img.manga-poster-img")
+            .attr("src");
 
-        mangaVolume.range = [mangaVolumeRange.at(-1), mangaVolumeRange.at(0)];
-        mangaVolume.id = mangaId.toString();
-        mangaVolume.title = mangaVolumeTitle;
-        mangaVolume.number = Number(mangaVolumeNumber);
-        mangaVolume.thumbnail = mangaVolumeThumbnail;
-        mangaVolume.url = `/manga/mangareader/volume/${mangaId.toString()}?number=${mangaVolumeNumber}&lang=${langVolumeCode}`;
+          mangaVolume.range = [mangaVolumeRange.at(-1), mangaVolumeRange.at(0)];
+          mangaVolume.id = mangaId.toString();
+          mangaVolume.name = mangaVolumeTitle;
+          mangaVolume.num = Number(mangaVolumeNumber);
+          mangaVolume.thumbnail = new Image(mangaVolumeThumbnail);
+          mangaVolume.url = `/manga/mangareader/volume/${mangaId.toString()}?number=${mangaVolumeNumber}&lang=${langVolumeCode}`;
 
-        manga.volumes.push(mangaVolume);
-      });
+          manga.volumes.push(mangaVolume);
+        });
 
       if (
-        mangaGenres.some(genre => genre === "Hentai" || genre === "Ecchi") ===
+        mangaGenres.some((genre) => genre === "Hentai" || genre === "Ecchi") ===
         true
       )
-        manga.isNSFW = true;
-      else manga.isNSFW = false;
+        manga.nsfw = true;
+      else manga.nsfw = false;
 
       return manga;
     } catch (error) {
@@ -215,7 +249,7 @@ export class MangaReader {
     }
   }
 
-  async Filter(
+  async GetItemByFilter(
     options: MangaReaderFilterData
   ): Promise<IResultSearch<IMangaResult>> {
     const {
@@ -231,7 +265,7 @@ export class MangaReader {
       endMonth,
       endDay,
       sort,
-      numPage
+      numPage,
     } = options;
     if (
       startYear <= 0 ||
@@ -258,8 +292,8 @@ export class MangaReader {
         em: endMonth ?? "",
         ed: endDay ?? "",
         sort: sort ?? "",
-        page: numPage ?? 1
-      }
+        page: numPage ?? 1,
+      },
     });
 
     const $ = load(data);
@@ -291,9 +325,9 @@ export class MangaReader {
 
       mangaFilterResults.results.push({
         id: mangaResultsID,
-        title: mangaResultsTitle,
+        name: mangaResultsTitle,
         thumbnail: new Image(mangaResultsThumbnail),
-        url: `/manga/mangareader/title/${mangaResultsID}`
+        url: `/manga/mangareader/name/${mangaResultsID}`,
       });
     });
 
@@ -301,16 +335,18 @@ export class MangaReader {
   }
 
   async GetMangaChapters(
-    mangaId: number,
+    mangaId: string,
     chapterNumber: number,
-    language: typeof MangaReaderFilterLanguage[number],
+    language: (typeof MangaReaderFilterLanguage)[number],
     type: MangaReaderChapterType
   ) {
     try {
-      const { data } = await axios.get(`${this.url}/read/a-${mangaId}/${language}/${type}-${chapterNumber}`);
+      const { data } = await axios.get(
+        `${this.url}/read/a-${mangaId}/${language}/${type}-${chapterNumber}`
+      );
       const $ = load(data);
 
-      const chapterId = $('div#wrapper').attr('data-reading-id');
+      const chapterId = $("div#wrapper").attr("data-reading-id");
 
       if (!chapterId) throw new Error("Chapter pages doesn't found.");
 
@@ -325,10 +361,10 @@ export class MangaReader {
         const mangaChapter = new MangaChapter();
         const chapterPages = await this.GetMangaPages(chapterId, "chapter");
 
-        mangaChapter.title = mangaChapterName;
+        mangaChapter.name = mangaChapterName;
         mangaChapter.id = mangaId;
         mangaChapter.images = chapterPages;
-        mangaChapter.number = chapterNumber;
+        mangaChapter.num = chapterNumber;
         mangaChapter.url = `/manga/mangareader/chapter/${mangaId.toString()}?number=${chapterNumber}&lang=${language}`;
 
         return mangaChapter;
@@ -337,11 +373,11 @@ export class MangaReader {
         const mangaVolumeRange = await this.GetMangaVolumeRange(mangaId);
         const volumePages = await this.GetMangaPages(chapterId, "volume");
 
-        mangaVolume.title = mangaChapterName;
+        mangaVolume.name = mangaChapterName;
         mangaVolume.id = mangaId;
         mangaVolume.range = [mangaVolumeRange.at(-1), mangaVolumeRange.at(0)];
         mangaVolume.images = volumePages;
-        mangaVolume.number = chapterNumber;
+        mangaVolume.num = chapterNumber;
         mangaVolume.url = `/manga/mangareader/volume/${mangaId.toString()}?number=${chapterNumber}&lang=${language}`;
 
         return mangaVolume;

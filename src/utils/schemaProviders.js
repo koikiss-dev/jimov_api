@@ -56,7 +56,7 @@ export class EpisodeServer {
    */
   url;
   /**
-   * 
+   *
    * @param {string} name server name
    * @param {string} url server url
    */
@@ -108,9 +108,9 @@ export class Episode {
    * @returns Episode number
    */
   static getEpisodeNumber(name) {
-    if (typeof name === 'string') {
+    if (typeof name === "string") {
       for (let i = name.length - 1; i >= 0; i--) {
-        if (name[i] === ' ') {
+        if (name[i] === " ") {
           return parseInt(name.substring(i, name.length).trim());
         }
       }
@@ -129,11 +129,11 @@ export class Episode {
  * @enum {String}
  */
 export const ClimaticStation = {
-  Summer: Symbol('summer'),
-  Autumn: Symbol('autumn'),
-  Winter: Symbol('winter'),
-  Spring: Symbol('spring'),
-}
+  Summer: Symbol("summer"),
+  Autumn: Symbol("autumn"),
+  Winter: Symbol("winter"),
+  Spring: Symbol("spring"),
+};
 
 /**
  * Anime chronology
@@ -224,7 +224,7 @@ export class Anime {
    * Spanish depending on the location
    * @type {string[]}
    */
-  genres = []
+  genres = [];
   /**
    * Climatic station from the anime. If the station is not defined then
    * the default value is null
@@ -286,10 +286,10 @@ export class AnimeSearch {
    * @param {string} type anime type
    */
   constructor(name, image, url, type = null) {
-      this.name = name;
-      this.image = image;
-      this.url = url;
-      this.type = type;
+    this.name = name;
+    this.image = image;
+    this.url = url;
+    this.type = type;
   }
 }
 
@@ -314,7 +314,7 @@ export class SearchArray {
    * @type {(string | number)} page the search page number
    */
   constructor(page) {
-      this.data = new Array();
-      this.page = page
+    this.data = new Array();
+    this.page = page;
   }
 }

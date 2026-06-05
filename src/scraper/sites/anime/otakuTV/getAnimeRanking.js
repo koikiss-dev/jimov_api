@@ -9,12 +9,15 @@ async function getAnimeRanking() {
     const animeRanking = [];
 
     const title = $(
-      "div.ranking div.base-carusel div.carusel_ranking div.item "
+      "div.ranking div.base-carusel div.carusel_ranking div.item ",
     ).each((i, j) => {
       animeRanking.push({
         title: $(j).find("a").find("h2").text(),
         coverImg: $(j).find("a").find("img").attr("src"),
-        linkTo: $(j).find("a").attr("href").replace("https://www1.otakustv.com/anime/", "/anime/otakuTV/"),
+        linkTo: $(j)
+          .find("a")
+          .attr("href")
+          .replace("https://www1.otakustv.com/anime/", "/anime/otakuTV/"),
       });
     });
 

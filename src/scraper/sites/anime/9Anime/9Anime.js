@@ -45,7 +45,7 @@ async function NineAnimeInfo(animeName) {
   $("div.binfo div.info div.bmeta").each((i, e) => {
     const info = parseAnimeInfo(
       $(e).find("div.meta:first").text().trim(),
-      $(e).find("div.meta").next().text().trim()
+      $(e).find("div.meta").next().text().trim(),
     );
     animeData.year = info.dateAired.trim();
     animeData.genres = info.genre;

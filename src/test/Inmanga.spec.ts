@@ -8,13 +8,12 @@ describe("Inmanga", () => {
   });
 
   it("should get anime info successfully", async () => {
-    const mangaInfo = await inmanga.GetMangaInfo("Kimetsu-no-Yaiba");
-    
-    expect(mangaInfo.title).toBe("Kimetsu no Yaiba");
-    expect(mangaInfo.altTitles).toContain("Blade of Demon Destruction");
+    const mangaInfo = await inmanga.GetMangaInfo("Kimetsu-no-Yaiba","78352626-0e2c-4b10-9610-28abf57c6881");
+
+    expect(mangaInfo.name).toBe("Kimetsu no Yaiba");
+    expect(mangaInfo.alt_names).toContain("Blade of Demon Destruction");
 
     expect(mangaInfo.status).toBe("ongoing");
-
   });
 
   it("should filter anime successfully", async () => {

@@ -23,7 +23,7 @@ async function getAnimeNew() {
             .replace("video(s)", "")
             .trim(),
         });
-      }
+      },
     );
 
     return animes;

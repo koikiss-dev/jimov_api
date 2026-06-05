@@ -9,7 +9,7 @@ r.get("/anime/monoschinos/name/:name", async (req, res) => {
     const { name } = req.params;
     const monos = new Monoschinos();
     const animeInfo = await monos.getAnime(
-      `https://monoschinos2.com/anime/${name}`
+      `https://monoschinos2.com/anime/${name}`,
     );
     res.send(animeInfo);
   } catch (error) {
@@ -24,7 +24,7 @@ r.get("/anime/monoschinos/episode/:episode", async (req, res) => {
     const { episode } = req.params;
     const monos = new Monoschinos();
     const animeInfo = await monos.getEpisodeServers(
-      `https://monoschinos2.com/ver/${episode}`
+      `https://monoschinos2.com/ver/${episode}`,
     );
     res.send(animeInfo);
   } catch (error) {
@@ -36,15 +36,33 @@ r.get("/anime/monoschinos/episode/:episode", async (req, res) => {
 //filter
 r.get("/anime/monoschinos/filter", async (req, res) => {
   try {
-    const title = req.query.title as string
+    const title = req.query.title as string;
     const cat = req.query.category as string;
     const gen = req.query.gen as string;
     const year = req.query.year as string;
-    const letter = req.query.letter as string;
 
     const monos = new Monoschinos();
-    const animeInfo = await monos.filter(title, cat, gen, year, letter);
+    const animeInfo = await monos.filter(title, cat, gen, year);
     res.send(animeInfo);
+  } catch (error) {
+    console.log(error);
+    res.status(500).send(error);
+  }
+});
+
+//last episodes
+r.get("/anime/monoschinos/last/:option", async (req, res) => {
+  try {
+    const { option } = req.params;
+
+    const monos = new Monoschinos();
+    if ("episodes" === option) {
+      res.send(await monos.getLastEpisodes());
+    } else if ("animes" === option) {
+      res.send(await monos.getLastAnimes());
+    } else {
+      throw "Invalid option in the URL";
+    }
   } catch (error) {
     console.log(error);
     res.status(500).send(error);

@@ -10,4 +10,4 @@ r.get("/anime/9anime/name/:name", (req, res) => {
   });
 });
 
-export default r
+export default r;

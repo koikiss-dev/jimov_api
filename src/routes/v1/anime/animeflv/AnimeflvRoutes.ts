@@ -6,19 +6,21 @@ import {
   StatusAnimeflv,
   OrderAnimeflv,
 } from "../../../../scraper/sites/anime/animeflv/animeflv_helper";
-const r = Router();
+import { ScraperErrorResponse } from "../../../../utils/ScraperError";
 
+const r = Router();
 
 //anime info
 r.get("/anime/flv/name/:name", async (req, res) => {
   try {
     const { name } = req.params;
     const flv = new AnimeFlv();
-    const animeInfo = await flv.GetAnimeInfo(name);
+    const animeInfo = await flv.GetItemInfo(name);
     res.send(animeInfo);
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
+    if (error instanceof ScraperErrorResponse) {
+      res.status(404).send(error);
+    }
   }
 });
 
@@ -30,16 +32,17 @@ r.get("/anime/flv/episode/:episode", async (req, res) => {
     const animeInfo = await flv.GetEpisodeServers(episode);
     res.send(animeInfo);
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
+    if (error instanceof ScraperErrorResponse) {
+      res.status(404).send(error);
+    }
   }
 });
- 
+
 //filter
 r.get("/anime/flv/filter", async (req, res) => {
   try {
     const gen = req.query.gen as Genres;
-    const date = req.query.date as string;
+    const year = req.query.year as string;
     const type = req.query.type as TypeAnimeflv;
     const status = req.query.status as StatusAnimeflv;
     const ord = req.query.ord as OrderAnimeflv;
@@ -47,11 +50,20 @@ r.get("/anime/flv/filter", async (req, res) => {
     const title = req.query.title as string;
 
     const flv = new AnimeFlv();
-    const animeInfo = await flv.Filter(gen, date, type, status, ord, page, title);
+    const animeInfo = await flv.GetItemByFilter(
+      gen,
+      year,
+      type,
+      status,
+      ord,
+      page,
+      title
+    );
     res.send(animeInfo);
   } catch (error) {
-    console.log(error);
-    res.status(500).send(error);
+    if (error instanceof ScraperErrorResponse) {
+      res.status(404).send(error);
+    }
   }
 });
 

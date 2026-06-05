@@ -1,2 +1,2 @@
 import axios from "axios";
-import * as ch from 'cheerio'  
+import * as ch from "cheerio";

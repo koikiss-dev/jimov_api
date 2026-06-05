@@ -9,7 +9,7 @@ export async function getComingSoon() {
     const animes = [];
 
     const getAnimes = $(
-      "div.pronto div.base-carusel div.carusel_pronto div.item "
+      "div.pronto div.base-carusel div.carusel_pronto div.item ",
     ).each((i, element) => {
       animes.push({
         name: $(element).find("h2").text().trim(),

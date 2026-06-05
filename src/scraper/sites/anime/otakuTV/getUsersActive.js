@@ -18,7 +18,7 @@ async function getUsersActive() {
           .attr("href")
           .replace(
             "https://www1.otakustv.com/perfil/",
-            "/anime/otakuTV/profile/"
+            "/anime/otakuTV/profile/",
           ),
         name: $(j).find("h2").text(),
         ranking: $(j).find("p").text(),
