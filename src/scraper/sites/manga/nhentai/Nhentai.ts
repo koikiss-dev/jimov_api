@@ -5,6 +5,10 @@ import {
   getFilterNumPages,
 } from "./assets/getFilterByPage";
 import {
+  extractGalleryJson,
+  getPageImages,
+} from "./assets/galleryJson";
+import {
   type IMangaChapter,
   type IMangaResult,
   MangaChapter,
@@ -12,81 +16,6 @@ import {
 } from "../../../../types/manga";
 
 const REQUEST_TIMEOUT = 15000;
-
-/**
- * Extension of the images hosted on the CDN according to the type
- * reported for each page of the gallery.
- */
-const IMAGE_EXTENSIONS: Record<string, string> = {
-  j: "jpg",
-  p: "png",
-  g: "gif",
-  w: "webp",
-};
-
-interface GalleryJson {
-  media_id: string;
-  title: {
-    english?: string;
-    japanese?: string;
-    pretty?: string;
-  };
-  images: {
-    pages: Record<string, { t: string }>;
-  };
-  upload_date?: number;
-  tags?: { type: string; name: string }[];
-}
-
-/**
- * The gallery page embeds the complete gallery information inside a
- * script as 'new N.gallery({...})'. This function extracts and parses
- * that object; the raw json is not strictly standard (it may contain
- * trailing commas), so it is cleaned up before parsing.
- */
-function extractGalleryJson(html: string): GalleryJson | null {
-  const marker = "new N.gallery(";
-  const start = html.indexOf(marker);
-
-  if (start === -1) return null;
-
-  let open = start + marker.length;
-
-  while (open < html.length && /\s/.test(html[open])) open++;
-
-  if (html[open] !== "{") return null;
-
-  let depth = 0;
-  let inString = false;
-  let escaped = false;
-
-  for (let index = open; index < html.length; index++) {
-    const char = html[index];
-
-    if (inString) {
-      if (escaped) escaped = false;
-      else if (char === "\\") escaped = true;
-      else if (char === '"') inString = false;
-    } else if (char === '"') {
-      inString = true;
-    } else if (char === "{") {
-      depth++;
-    } else if (char === "}") {
-      depth--;
-
-      if (depth === 0) {
-        try {
-          const raw = html.slice(open, index + 1);
-          return JSON.parse(raw.replace(/,\s*([}\]])/g, "$1"));
-        } catch {
-          return null;
-        }
-      }
-    }
-  }
-
-  return null;
-}
 
 export class Nhentai {
   async filter(
@@ -215,32 +144,6 @@ class NhentaiMangaInfo {
 }
 
 class NhentaiGetMangaChapters {
-  /**
-   * The gallery page shows the thumbnail of each page (e.g. '1t.webp').
-   * The embedded gallery object reports the real type of every page of
-   * the gallery in ascending order, allowing the exact url of each
-   * image in its original size to be built.
-   */
-  private getPageImages(
-    thumbnails: string[],
-    gallery: GalleryJson | null
-  ): string[] {
-    const extensions = gallery
-      ? Object.keys(gallery.images.pages)
-          .map(Number)
-          .sort((a, b) => a - b)
-          .map((key) => IMAGE_EXTENSIONS[gallery.images.pages[key].t])
-      : [];
-
-    return thumbnails.map((thumbnail, index) => {
-      const image = thumbnail.replace(/\/(\d+)t\.\w+$/, "/$1");
-
-      return index < extensions.length && extensions[index]
-        ? `${image}.${extensions[index]}`
-        : `${image}.${thumbnail.match(/t\.(\w+)$/)?.[1] ?? "jpg"}`;
-    });
-  }
-
   async getMangaChapters(mangaId: string): Promise<IMangaChapter[]> {
     const { data } = await axios.get(`https://nhentai.to/g/${mangaId}`, {
       timeout: REQUEST_TIMEOUT,
@@ -268,7 +171,7 @@ class NhentaiGetMangaChapters {
       gallery?.title.pretty ||
       $("div#info h1").text().trim();
     chapter.url = "/manga/nhentai/chapter/1";
-    chapter.images = this.getPageImages(thumbnails, gallery);
+    chapter.images = getPageImages(thumbnails, gallery?.images.pages);
 
     if (gallery?.upload_date) {
       const date = new Date(gallery.upload_date * 1000);

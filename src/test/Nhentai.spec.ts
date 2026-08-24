@@ -56,6 +56,41 @@ describe("Nhentai", () => {
     expect(results.length).toBeGreaterThanOrEqual(1);
   }, 60000);
 
+  it("should return an empty list when the query has no results", async () => {
+    const results = await nhentai.filter("zzzqqqxxx111");
+
+    expect(results).toEqual([]);
+
+    const pagedResults = await nhentai.filter("zzzqqqxxx111", 3);
+
+    expect(pagedResults).toEqual([]);
+  }, 30000);
+
+  it("should return an empty list when the page is out of range", async () => {
+    const results = await nhentai.filter("test", 99999);
+
+    expect(results).toEqual([]);
+  }, 30000);
+
+  it("should reject when the gallery does not exist", async () => {
+    await expect(nhentai.getMangaInfo("999999999")).rejects.toThrow();
+    await expect(nhentai.getMangaChapters("999999999")).rejects.toThrow();
+  }, 30000);
+
+  it("should build jpg urls for galleries stored as jpg", async () => {
+    // Gallery 589612 stores its pages as jpg (not webp)
+    const chapters = await nhentai.getMangaChapters("589612");
+
+    expect(chapters.length).toBe(1);
+    expect(chapters[0].images.length).toBeGreaterThan(0);
+
+    for (const image of chapters[0].images) {
+      expect(image).toMatch(
+        /^https:\/\/zrocdn\.xyz\/galleries\/\d+\/\d+\.jpg$/
+      );
+    }
+  }, 15000);
+
   it("should return full-size chapter images successfully", async () => {
     const chapters = await nhentai.getMangaChapters("650873");
 
