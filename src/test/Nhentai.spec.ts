@@ -17,8 +17,9 @@ describe("Nhentai", () => {
     expect(mangaInfo.thumbnail).toBeDefined();
     expect(mangaInfo.thumbnail.url).toContain("zrocdn.xyz/galleries/");
 
-    expect(mangaInfo.authors.length).toBeGreaterThanOrEqual(1);
-    expect(mangaInfo.characters.length).toBeGreaterThanOrEqual(1);
+    expect(mangaInfo.authors).toContain("testa");
+    expect(mangaInfo.characters).toContain("kaoru ryuzaki");
+    expect(mangaInfo.characters).toContain("mary cochran");
     expect(mangaInfo.genres.length).toBeGreaterThanOrEqual(1);
 
     expect(mangaInfo.nsfw).toBe(true);
@@ -27,14 +28,33 @@ describe("Nhentai", () => {
   it("should filter manga successfully", async () => {
     const results = await nhentai.filter("test");
 
-    expect(results.length).toBeGreaterThanOrEqual(1);
+    // 'test' has more than the 16 pages the old pagination logic
+    // detected, so a complete search must return well past that cap
+    // (25 results per page).
+    expect(results.length).toBeGreaterThan(400);
 
     const first = results[0];
     expect(first.id).toBeDefined();
     expect(first.name).toBeTruthy();
     expect(first.url).toMatch(/^\/manga\/nhentai\/title\/\d+$/);
     expect(first.thumbnail.url).toContain("http");
+  }, 60000);
+
+  it("should filter a single page of results successfully", async () => {
+    const results = await nhentai.filter("test", 2);
+
+    expect(results.length).toBeGreaterThanOrEqual(1);
+    expect(results.length).toBeLessThanOrEqual(25);
+
+    const ids = new Set(results.map((result) => result.id));
+    expect(ids.size).toBe(results.length);
   }, 30000);
+
+  it("should filter manga with special characters successfully", async () => {
+    const results = await nhentai.filter("testa kitchen");
+
+    expect(results.length).toBeGreaterThanOrEqual(1);
+  }, 60000);
 
   it("should return full-size chapter images successfully", async () => {
     const chapters = await nhentai.getMangaChapters("650873");
@@ -45,6 +65,10 @@ describe("Nhentai", () => {
     expect(chapter.num).toBe(1);
     expect(chapter.url).toBe("/manga/nhentai/chapter/1");
     expect(chapter.images.length).toBeGreaterThan(0);
+    expect(chapter.name).toContain("Idol Nakayoshi Time P52");
+
+    expect(chapter.date).toBeDefined();
+    expect(typeof chapter.date.year).toBe("number");
 
     for (const image of chapter.images) {
       expect(image).toMatch(/^https:\/\/zrocdn\.xyz\/galleries\/\d+\/\d+\.\w+$/);

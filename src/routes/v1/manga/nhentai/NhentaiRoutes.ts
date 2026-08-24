@@ -6,7 +6,13 @@ const router = Router();
 router.get("/manga/nhentai/filter/:mangaName", async (request, response) => {
   try {
     const { mangaName } = request.params;
-    const nhentai = await new Nhentai().filter(mangaName);
+    const rawPage = request.query.page;
+    const page =
+      typeof rawPage === "string" && /^\d+$/.test(rawPage)
+        ? parseInt(rawPage, 10)
+        : undefined;
+
+    const nhentai = await new Nhentai().filter(mangaName, page);
     response.send(nhentai);
   } catch (error) {
     response.status(500).send(error);
