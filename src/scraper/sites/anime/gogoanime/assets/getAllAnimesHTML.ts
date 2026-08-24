@@ -1,28 +1,28 @@
-import { IAnime } from "@animetypes/anime";
+import { type IAnimeMedia } from "@animetypes/anime";
 import { getHTML } from "./getHTML";
 
 export async function getAllAnimes(url: string, numPage: number) {
   try {
-    let animes: IAnime[] = [];
+    const animes: IAnimeMedia[] = [];
 
-    let $ = await getHTML(`${url}?page=${numPage}`);
+    const $ = await getHTML(`${url}?page=${numPage}`);
 
-    let pageState = $(".anime_name h2")
+    const pageState = $(".anime_name h2")
       .text()
       .replace("ADVERTISEMENTSRECENT RELEASESeason", "")
       .trim();
 
     if (pageState != "404 Not found") {
       $(".last_episodes ul li").each((_, element) => {
-        let animeName = $(element).find("p.name").find("a").text().trim();
+        const animeName = $(element).find("p.name").find("a").text().trim();
 
-        let animeImage = $(element)
+        const animeImage = $(element)
           .find(".img")
           .find("a")
           .find("img")
           .attr("src");
 
-        let animeNameUrl = $(element)
+        const animeNameUrl = $(element)
           .find(".img")
           .find("a")
           .attr("href")

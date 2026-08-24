@@ -20,6 +20,8 @@
     "noImplicitAny": false,
     "noImplicitThis": false,
     "strictNullChecks": false,
+    "skipLibCheck": true,
+    "moduleResolution": "node",
     "outDir": "./build",
     "baseUrl": "./src",
     "paths": {

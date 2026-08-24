@@ -1,7 +1,7 @@
 import axios from "axios";
 import { load } from "cheerio";
 import {
-  Manga,
+  MangaMedia,
   type IMangaChapter,
   type IMangaResult,
 } from "../../../../types/manga";
@@ -24,12 +24,12 @@ export class MangaBuddy {
         .text()
         .trim()
         .split(";");
-      const mangaReturn = new Manga();
+      const mangaReturn = new MangaMedia();
 
       //details
-      mangaReturn.title = titleManga;
+      mangaReturn.name = titleManga;
       mangaReturn.url = `/manga/mangabuddy/title/${title}`;
-      mangaReturn.altTitles = [...altTitles];
+      mangaReturn.alt_names = [...altTitles];
       mangaReturn.thumbnail = {
         url: `https://thumb.youmadcdn.xyz/thumb/${title}.png`, //acces denied
       };
@@ -64,10 +64,10 @@ export class MangaBuddy {
 
         const dateText = $(e).find("time.chapter-update").text().trim(); //date string
         const yearMangaVerification = Number.isNaN(
-          Number(dateText.split(" ")[2])
+          Number(dateText.split(" ")[2]),
         );
         const dayMangaVerification = Number.isNaN(
-          Number(dateText.split(" ")[0])
+          Number(dateText.split(" ")[0]),
         );
 
         let monthAbbr;
@@ -88,12 +88,11 @@ export class MangaBuddy {
           .trim()
           .replace(" ", "-");
         const chapterList: IMangaChapter = {
-          title: title.toUpperCase(),
+          name: titleManga,
           id: titleChapter,
           url: `/manga/mangabuddy/chapter/${title}-${titleChapter}`,
-          number: Number($(e).find("strong").text().trim().split(" ")[1]),
+          num: Number($(e).find("strong").text().trim().split(" ")[1]),
           images: ["No images"],
-          cover: "No cover",
           date: {
             year: yearMangaVerification
               ? new Date().getFullYear()
@@ -133,7 +132,7 @@ export class MangaBuddy {
 
       $("div.manga-list div.book-item").each((_i, e) => {
         const ItemCard: IMangaResult = {
-          title: $(e).find("h3 > a").attr("title"),
+          name: $(e).find("h3 > a").attr("title"),
           url: `/manga/mangabuddy/title/${$(e)
             .find("h3 > a")
             .attr("href")
@@ -153,6 +152,3 @@ export class MangaBuddy {
 
   async GetMangaChapters() {}
 }
-
-const m = new MangaBuddy();
-m.Filter("", "", "", "one piece").then((f) => console.log(f));

@@ -1,5 +1,5 @@
 import { getHTML } from "./assets/getHTML";
-import { Anime } from "../../../../types/anime";
+import { AnimeMedia } from "../../../../types/anime";
 import { getAllAnimes } from "./assets/getAllAnimesHTML";
 import { Episode } from "../../../../types/episode";
 
@@ -8,12 +8,13 @@ export class GogoanimeInfo {
   async getAnimeInfo(animeName: string) {
     try {
       const $ = await getHTML(
-        `https://www3.gogoanimes.fi/category/${animeName}`
+        `https://www3.gogoanimes.fi/category/${animeName}`,
       );
 
-      const anime = new Anime();
+      const anime = new AnimeMedia();
 
       anime.genres = [];
+      anime.episodes = [];
 
       anime.name = $("div.anime_info_body_bg  h1").text();
 
@@ -21,7 +22,7 @@ export class GogoanimeInfo {
         url: $("div.anime_info_body_bg ").find("img").attr("src"),
       };
 
-      anime.alt_name = $("div.anime_info_body_bg")
+      anime.alt_names = $("div.anime_info_body_bg")
         .find("p")
         .last()
         .text()
@@ -47,7 +48,7 @@ export class GogoanimeInfo {
         }
 
         if (index == 5) {
-          anime.alt_name = $(element)
+          anime.alt_names = $(element)
             .text()
             .trim()
             .replace("Other name:", "")
@@ -55,19 +56,15 @@ export class GogoanimeInfo {
         }
       });
 
-      let getNumberEpisodes: any = $("#episode_page li")
-        .last()
-        .text()
-        .trim()
-        .split("-")[1];
-      getNumberEpisodes = parseInt(getNumberEpisodes);
+      const getNumberEpisodes: number = parseInt(
+        $("#episode_page li").last().text().trim().split("-")[1],
+      );
 
       for (let index = 1; index <= getNumberEpisodes; index++) {
         anime.episodes.push({
           name: `${animeName}-cap-${index}`,
           url: `/anime/gogoanime/episode/${animeName}/${index}`, //sorry for the change
-          number: `${index}`,
-          image: "That isn't image",
+          num: index,
         });
       }
 
@@ -80,18 +77,18 @@ export class GogoanimeInfo {
 
 export class GogoanimeFilter {
   async getAnimesfilterByGenre(genre: string, numPage: number) {
-    let animesByGenre = await getAllAnimes(
+    const animesByGenre = await getAllAnimes(
       `https://www3.gogoanimes.fi/genre/${genre}`,
-      numPage
+      numPage,
     );
 
     return animesByGenre;
   }
 
   async filterBySeasons(season: string, year: string, numPage: number) {
-    let animes = await getAllAnimes(
+    const animes = await getAllAnimes(
       `https://www3.gogoanimes.fi/sub-category/${season}-${year}-anime`,
-      numPage
+      numPage,
     );
 
     return animes;
@@ -104,7 +101,7 @@ export class GogoanimeServer {
     let serverName: string;
 
     const $ = await getHTML(
-      `https://www3.gogoanimes.fi/${animeName}-episode-${episodeNumber}`
+      `https://www3.gogoanimes.fi/${animeName}-episode-${episodeNumber}`,
     );
 
     const episode = new Episode();
