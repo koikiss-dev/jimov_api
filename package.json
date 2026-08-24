@@ -42,7 +42,7 @@
   "homepage": "https://github.com/koikiss-dev/jimov_api",
   "dependencies": {
     "@types/cheerio": "^0.22.35",
-    "axios": "^1.17.0",
+    "axios": "^1.19.0",
     "cheerio": "^1.2.0",
     "cors": "^2.8.6",
     "crypto-js": "^4.2.0",
