@@ -1,11 +1,30 @@
+import axios from "axios";
 import { Nhentai } from "../scraper/sites/manga/nhentai/Nhentai";
+import { clearGalleryCache } from "../scraper/sites/manga/nhentai/assets/galleryClient";
 
 describe("Nhentai", () => {
   let nhentai: Nhentai;
 
   beforeEach(() => {
+    clearGalleryCache();
     nhentai = new Nhentai();
   });
+
+  it("should download a gallery only once between info and chapters", async () => {
+    const spy = jest.spyOn(axios, "get");
+    try {
+      await new Nhentai().getMangaInfo("650873");
+      await new Nhentai().getMangaChapters("650873");
+
+      const galleryCalls = spy.mock.calls.filter(([url]) =>
+        String(url).includes("/g/650873")
+      );
+
+      expect(galleryCalls.length).toBe(1);
+    } finally {
+      spy.mockRestore();
+    }
+  }, 20000);
 
   it("should get manga info successfully", async () => {
     const mangaInfo = await nhentai.getMangaInfo("650873");

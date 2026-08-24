@@ -1,9 +1,10 @@
 import { Router } from "express";
 import { Nhentai } from "../../../../scraper/sites/manga/nhentai/Nhentai";
+import { PROVIDER_ID } from "../../../../scraper/sites/manga/nhentai/assets/site";
 
 const router = Router();
 
-router.get("/manga/nhentai/filter/:mangaName", async (request, response) => {
+router.get(`/manga/${PROVIDER_ID}/filter/:mangaName`, async (request, response) => {
   try {
     const { mangaName } = request.params;
     const rawPage = request.query.page;
@@ -19,7 +20,7 @@ router.get("/manga/nhentai/filter/:mangaName", async (request, response) => {
   }
 });
 
-router.get("/manga/nhentai/info/:mangaId", async (request, response) => {
+router.get(`/manga/${PROVIDER_ID}/info/:mangaId`, async (request, response) => {
   try {
     const { mangaId } = request.params;
     const nhentai = await new Nhentai().getMangaInfo(mangaId);
@@ -29,7 +30,7 @@ router.get("/manga/nhentai/info/:mangaId", async (request, response) => {
   }
 });
 
-router.get("/manga/nhentai/chapters/:mangaId", async (request, response) => {
+router.get(`/manga/${PROVIDER_ID}/chapters/:mangaId`, async (request, response) => {
   try {
     const { mangaId } = request.params;
     const nhentai = await new Nhentai().getMangaChapters(mangaId);

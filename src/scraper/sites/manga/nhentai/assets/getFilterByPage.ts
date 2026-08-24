@@ -1,4 +1,5 @@
 import { type IMangaResult } from "@animetypes/manga";
+import { PROVIDER_ID } from "./site";
 
 /**
  * Extracts the search results of an already downloaded search page.
@@ -15,7 +16,7 @@ export function getFilterByPages($: cheerio.Root): IMangaResult[] {
     searchResults.push({
       id: id,
       name: $(elementCheerio).find(".caption").text(),
-      url: `/manga/nhentai/title/${id}`,
+      url: `/manga/${PROVIDER_ID}/title/${id}`,
       thumbnail: {
         url: $(elementCheerio).find("img").attr("src"),
       },

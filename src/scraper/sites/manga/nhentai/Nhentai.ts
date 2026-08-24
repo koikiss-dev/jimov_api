@@ -9,13 +9,16 @@ import {
   getPageImages,
 } from "./assets/galleryJson";
 import {
+  fetchGalleryPage,
+  REQUEST_TIMEOUT,
+} from "./assets/galleryClient";
+import { PROVIDER_ID, SITE_URL } from "./assets/site";
+import {
   type IMangaChapter,
   type IMangaResult,
   MangaChapter,
   MangaMedia,
 } from "../../../../types/manga";
-
-const REQUEST_TIMEOUT = 15000;
 
 export class Nhentai {
   async filter(
@@ -35,7 +38,7 @@ export class Nhentai {
 }
 
 class NhentaiFilter {
-  url = "https://nhentai.to/search?q=";
+  url = `${SITE_URL}/search?q=`;
 
   private async fetchSearchPage(
     mangaName: string,
@@ -89,9 +92,7 @@ class NhentaiMangaInfo {
   }
 
   async getMangaInfoById(mangaId: string): Promise<MangaMedia> {
-    const { data } = await axios.get(`https://nhentai.to/g/${mangaId}`, {
-      timeout: REQUEST_TIMEOUT,
-    });
+    const data = await fetchGalleryPage(mangaId);
 
     const $ = load(data);
     const gallery = extractGalleryJson(data);
@@ -99,7 +100,7 @@ class NhentaiMangaInfo {
     const manga = new MangaMedia();
 
     manga.id = mangaId;
-    manga.url = `/manga/nhentai/name/${mangaId}`;
+    manga.url = `/manga/${PROVIDER_ID}/name/${mangaId}`;
     manga.thumbnail = {
       url: $("div#cover a img").attr("src"),
     };
@@ -145,9 +146,7 @@ class NhentaiMangaInfo {
 
 class NhentaiGetMangaChapters {
   async getMangaChapters(mangaId: string): Promise<IMangaChapter[]> {
-    const { data } = await axios.get(`https://nhentai.to/g/${mangaId}`, {
-      timeout: REQUEST_TIMEOUT,
-    });
+    const data = await fetchGalleryPage(mangaId);
 
     const $ = load(data);
     const gallery = extractGalleryJson(data);
@@ -170,7 +169,7 @@ class NhentaiGetMangaChapters {
       gallery?.title.english ||
       gallery?.title.pretty ||
       $("div#info h1").text().trim();
-    chapter.url = "/manga/nhentai/chapter/1";
+    chapter.url = `/manga/${PROVIDER_ID}/chapter/1`;
     chapter.images = getPageImages(thumbnails, gallery?.images.pages);
 
     if (gallery?.upload_date) {
