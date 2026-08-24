@@ -60,9 +60,6 @@ jobs:
 
   test:
     runs-on: ubuntu-latest
-    # Several suites scrape live websites and are flaky by nature;
-    # failures here are informative, not blocking.
-    continue-on-error: true
 
     steps:
       - name: Checkout repository
@@ -81,4 +78,7 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Run tests
+        # Several suites scrape live websites and are flaky by nature;
+        # failures here are informative, not blocking.
+        continue-on-error: true
         run: pnpm run test
