@@ -22,10 +22,15 @@ describe("TioAnime", () => {
     expect((await tioanime.getLastMovies()).length).toBeGreaterThan(0);
     expect((await tioanime.getLastOnas()).length).toBeGreaterThan(0);
     expect((await tioanime.getLastOvas()).length).toBeGreaterThan(0);
-    expect((await tioanime.getEpisodeServers('https://tioanime.com/ver/date-a-live-1')).length).toBeGreaterThan(0);
+    expect(
+      (
+        await tioanime.getEpisodeServers(
+          "https://tioanime.com/ver/date-a-live-1",
+        )
+      ).length,
+    ).toBeGreaterThan(0);
   }, 40000 /*ms*/);
 });
-
 
 /*async function test() {
   let tioanime: TioAnime;

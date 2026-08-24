@@ -1,4 +1,3 @@
-
 import { Router } from "express";
 import { Manganelo } from "../../../../scraper/sites/manga/manganelo/Manganelo";
 import { manganatoOrderByOptionsList } from "../../../../scraper/sites/manga/manganelo/ManganatoTypes";

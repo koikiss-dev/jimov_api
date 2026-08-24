@@ -17,7 +17,7 @@ describe("Nhentai", () => {
       await new Nhentai().getMangaChapters("650873");
 
       const galleryCalls = spy.mock.calls.filter(([url]) =>
-        String(url).includes("/g/650873")
+        String(url).includes("/g/650873"),
       );
 
       expect(galleryCalls.length).toBe(1);
@@ -105,7 +105,7 @@ describe("Nhentai", () => {
 
     for (const image of chapters[0].images) {
       expect(image).toMatch(
-        /^https:\/\/zrocdn\.xyz\/galleries\/\d+\/\d+\.jpg$/
+        /^https:\/\/zrocdn\.xyz\/galleries\/\d+\/\d+\.jpg$/,
       );
     }
   }, 15000);
@@ -125,7 +125,9 @@ describe("Nhentai", () => {
     expect(typeof chapter.date.year).toBe("number");
 
     for (const image of chapter.images) {
-      expect(image).toMatch(/^https:\/\/zrocdn\.xyz\/galleries\/\d+\/\d+\.\w+$/);
+      expect(image).toMatch(
+        /^https:\/\/zrocdn\.xyz\/galleries\/\d+\/\d+\.\w+$/,
+      );
       expect(image).not.toMatch(/t\.\w+$/);
     }
   }, 15000);

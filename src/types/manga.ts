@@ -1,7 +1,13 @@
 import { IImage } from "./image";
 import { ICalendar } from "./date";
 import { IResultSearch } from "./search";
-import { BaseChapter, BaseMedia, type IBaseChapter, type IBaseMedia, type IBaseResult } from "./base";
+import {
+  BaseChapter,
+  BaseMedia,
+  type IBaseChapter,
+  type IBaseMedia,
+  type IBaseResult,
+} from "./base";
 
 /**
  * The chapter is part of the manga and is also part of a volume. It is made

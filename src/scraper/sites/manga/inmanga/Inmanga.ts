@@ -15,7 +15,11 @@ axios.defaults.headers.common["User-Agent"] =
 export class Inmanga {
   readonly url = "https://inmanga.com";
 
-  async GetMangaByFilter(search?: string, type?: number, genre?: string[]): Promise<IResultSearch<IMangaResult>> {
+  async GetMangaByFilter(
+    search?: string,
+    type?: number,
+    genre?: string[],
+  ): Promise<IResultSearch<IMangaResult>> {
     try {
       const formdata = new FormData();
       formdata.append("filter[queryString]", search);
@@ -87,7 +91,7 @@ export class Inmanga {
           if (genreList.includes(e)) {
             formdata.append(
               "filter[generes][]",
-              genreList[genreList.indexOf(e)]
+              genreList[genreList.indexOf(e)],
             );
           }
         });
@@ -98,7 +102,7 @@ export class Inmanga {
       const bodyContent = formdata;
       const { data } = await axios.post(
         `${this.url}/manga/getMangasConsultResult`,
-        bodyContent
+        bodyContent,
       );
       const $ = cheerio.load(data);
 
@@ -138,7 +142,7 @@ export class Inmanga {
     try {
       const dataPost = await axios.get(`${this.url}/ver/manga/${manga}/${cid}`);
       const $_ = cheerio.load(dataPost.data);
-      const AltNames = []
+      const AltNames = [];
 
       const MangaInfo: MangaMedia = {
         id: cid,
@@ -146,7 +150,7 @@ export class Inmanga {
         alt_names: AltNames,
         url: `/manga/inmanga/name/${manga}`,
         synopsis: $_(
-          "body > div > section > div > div > div:nth-child(6) > div > div.panel-body"
+          "body > div > section > div > div > div:nth-child(6) > div > div.panel-body",
         )
           .text()
           .trim(),
@@ -164,20 +168,18 @@ export class Inmanga {
         },
       };
       $_(
-        ".col-md-9.col-sm-8.col-xs-12 .panel.widget .panel-heading .text-muted span"
-      ).each((_i, e) =>
-        AltNames.push($_(e).text().replace(";", ""))
-      );
+        ".col-md-9.col-sm-8.col-xs-12 .panel.widget .panel-heading .text-muted span",
+      ).each((_i, e) => AltNames.push($_(e).text().replace(";", "")));
 
       $_(
-        ".col-md-9.col-sm-8.col-xs-12 .panel.widget .panel-heading .label.ml-sm"
+        ".col-md-9.col-sm-8.col-xs-12 .panel.widget .panel-heading .label.ml-sm",
       ).each((_i, e) => MangaInfo.genres.push($_(e).text().trim()));
 
       MangaInfo.alt_names.slice(MangaInfo.alt_names.indexOf('""'), 0);
       MangaInfo.genres.slice(MangaInfo.genres.indexOf('""'), 0);
 
       const dataChPost = await axios.get(
-        `${this.url}/chapter/getall?mangaIdentification=${cid}`
+        `${this.url}/chapter/getall?mangaIdentification=${cid}`,
       );
       const dataCh = JSON.parse(dataChPost.data.data);
       dataCh.result.map(
@@ -200,7 +202,7 @@ export class Inmanga {
             },
           };
           MangaInfo.chapters.push(MangaInfoChapter);
-        }
+        },
       );
 
       return MangaInfo;
@@ -215,7 +217,7 @@ export class Inmanga {
       const idNumber = Number(manga.substring(manga.lastIndexOf("-") + 1));
 
       const { data } = await axios.get(
-        `${this.url}/chapter/chapterIndexControls?identification=${cid}`
+        `${this.url}/chapter/chapterIndexControls?identification=${cid}`,
       );
       const $ = cheerio.load(data);
 

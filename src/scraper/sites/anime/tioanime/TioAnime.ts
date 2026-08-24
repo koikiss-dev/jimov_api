@@ -13,7 +13,7 @@ const PageInfo = {
 };
 
 function getAnimeChronology($) {
-  let chrono_list: types.IChronology[] = [];
+  const chrono_list: types.IChronology[] = [];
   $("section.w-history ul.list-unstyled li").each((_i, element) => {
     // The chronological anime has to access its year and type as extra
     // information that is not included in the Chronology class
@@ -21,8 +21,8 @@ function getAnimeChronology($) {
       new types.Chronology(
         $(element).find("h3.title").text(),
         PageInfo.url + $(element).find("div.media-body a").attr("href"),
-        PageInfo.url + $(element).find("figure.fa-play-circle img").attr("src")
-      )
+        PageInfo.url + $(element).find("figure.fa-play-circle img").attr("src"),
+      ),
     );
   });
   return chrono_list;
@@ -30,18 +30,18 @@ function getAnimeChronology($) {
 
 async function getEpisodeServers(url) {
   "use strict";
-  let servers: types.IEpisodeServer[] = [];
+  const servers: types.IEpisodeServer[] = [];
   const $ = cheerio.load((await axios.get(url)).data);
   const script = $($("script").get().pop()).text().trim();
   try {
     const videos = new Function(
       script
         .substring(0, script.indexOf("$(document)"))
-        .replace("var videos =", "return")
+        .replace("var videos =", "return"),
     )();
     for (let i = 0; i < videos.length; i++) {
       servers.push(
-        new types.EpisodeServer(videos[i][0], videos[i][1].replace("\\", ""))
+        new types.EpisodeServer(videos[i][0], videos[i][1].replace("\\", "")),
       );
     }
 
@@ -68,11 +68,13 @@ async function getEpisodeServers(url) {
 }
 
 async function getAnimeEpisodes(data) {
-  let __episodes: types.IEpisode[] = [];
+  const __episodes: types.IEpisode[] = [];
   data.episodes.forEach((episode_number) => {
-    let episode = new types.Episode();
+    const episode = new types.Episode();
     episode.name = `${data.info[2]} Capitulo ${episode_number}`;
-    episode.thumbnail = new types.Image(PageInfo.url + `/uploads/thumbs/${data.info[0]}.jpg`);
+    episode.thumbnail = new types.Image(
+      PageInfo.url + `/uploads/thumbs/${data.info[0]}.jpg`,
+    );
     episode.url = `/anime/tioanime/episode/${data.info[1]}-${episode_number}`;
     episode.num = episode_number;
     __episodes.push(episode);
@@ -83,7 +85,9 @@ async function getAnimeEpisodes(data) {
 function getEpisode($, element) {
   const title = $(element).find("h3.title").text().trim();
   const episode = new types.Episode();
-  episode.thumbnail = new types.Image(PageInfo.url + $(element).find("figure.fa-play-circle img").attr("src"))
+  episode.thumbnail = new types.Image(
+    PageInfo.url + $(element).find("figure.fa-play-circle img").attr("src"),
+  );
   episode.url = $(element)
     .find("article.episode a")
     .attr("href")
@@ -100,7 +104,7 @@ function getEpisode($, element) {
 }
 
 async function getLastEpisodes() {
-  let episodes: types.IEpisode[] = [];
+  const episodes: types.IEpisode[] = [];
   try {
     const $ = cheerio.load((await axios.get(PageInfo.url)).data);
     const elements = $("div.container section ul.episodes li").children();
@@ -114,7 +118,7 @@ async function getLastEpisodes() {
 }
 
 function getGenres($, elements) {
-  let genres: string[] = [];
+  const genres: string[] = [];
   elements.each((_i, element) => {
     genres.push($(element).find("a").text().trim());
   });
@@ -148,7 +152,7 @@ async function getAnime(url) {
   //anime.url        = url;
   anime.url = url.replace(
     "https://tioanime.com/anime/",
-    "/anime/tioanime/name/"
+    "/anime/tioanime/name/",
   );
   //anime.type       = $('div.meta span.anime-type-peli').text();
   anime.type = (() => {
@@ -170,8 +174,8 @@ async function getAnime(url) {
     new types.Calendar(
       data.info.length < 4
         ? parseInt($("div.meta span.year").text().trim().substring(0, 4))
-        : new Date(data.info[3]).getFullYear()
-    )
+        : new Date(data.info[3]).getFullYear(),
+    ),
   );
   anime.synopsis = $("p.sinopsis").text().trim();
   anime.genres = getGenres($, $("div.container p.genres span"));
@@ -179,7 +183,7 @@ async function getAnime(url) {
     PageInfo.url + $("div.container div.thumb figure img").attr("src"),
     $("figure.backdrop img").attr("src") == undefined
       ? ""
-      : PageInfo.url + $("figure.backdrop img").attr("src")
+      : PageInfo.url + $("figure.backdrop img").attr("src"),
   );
   anime.status = $("div.thumb a.status").text().trim() === "En emision";
   anime.station = $("div.meta span.fa-snowflake").text().trim().split("\n")[0];
@@ -190,12 +194,12 @@ async function getAnime(url) {
 
 async function getLastAnimes(url: string | null) {
   try {
-    let animes: types.AnimeMedia[] = [];
+    const animes: types.AnimeMedia[] = [];
     const $ = cheerio.load((await axios.get(url ?? PageInfo.url)).data);
     const elements = $(
       utils.isUsableValue(url)
         ? "ul.animes"
-        : "div.container section ul.list-unstyled.row li"
+        : "div.container section ul.list-unstyled.row li",
     ).children();
     for (let i = 0; i < elements.length; i++) {
       const anime_url = $(elements[i]).find("article.anime a").attr("href");
@@ -211,17 +215,18 @@ async function getLastAnimes(url: string | null) {
 }
 
 async function getSectionContents(section: number) {
-  let animes: types.AnimeMedia[] = [];
+  const animes: types.AnimeMedia[] = [];
   try {
     const $ = cheerio.load(
-      (await axios.get(`${PageInfo.url}/directorio?type%5B%5D=${section}`)).data
+      (await axios.get(`${PageInfo.url}/directorio?type%5B%5D=${section}`))
+        .data,
     );
     const elements = $(`ul.animes`).children();
     for (let i = 0; i < elements.length; i++) {
       animes.push(
         await getAnime(
-          PageInfo.url + $(elements[i]).find("article.anime a").attr("href")
-        )
+          PageInfo.url + $(elements[i]).find("article.anime a").attr("href"),
+        ),
       );
     }
   } catch (error) {
@@ -281,7 +286,7 @@ export class TioAnime {
     genres?: string[],
     year_range?: IYearRange,
     status?: number,
-    sort?: string
+    sort?: string,
   ): Promise<IResultSearch<AnimeResult>> {
     const animes = new ResultSearch<AnimeResult>();
     let usable;
@@ -295,11 +300,11 @@ export class TioAnime {
             ? `q=${name}`
             : `${this.arrayToURLParams("type", types)}${this.arrayToURLParams(
                 "genero",
-                genres
+                genres,
               )}year=${year_range.begin}%2C${year_range.end}&status=${
                 status ?? 2
               }&sort=${sort ?? "recent"}`
-        }`
+        }`,
       )
     ).forEach((element) => {
       if (utils.isUsableValue(element)) {

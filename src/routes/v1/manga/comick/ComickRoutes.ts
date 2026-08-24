@@ -4,7 +4,7 @@ const Manga = new Comick();
 const router = Router();
 
 router.get("/manga/comick/filter", async (req, res) => {
-  const { search, type, year, genre, page,status } = req.query;
+  const { search, type, year, genre, page, status } = req.query;
 
   const data = await Manga.GetMangaByFilter(
     search as string,
@@ -12,7 +12,7 @@ router.get("/manga/comick/filter", async (req, res) => {
     year as unknown as number,
     status as unknown as number,
     genre as string,
-    page as unknown as number
+    page as unknown as number,
   );
 
   res.send(data);

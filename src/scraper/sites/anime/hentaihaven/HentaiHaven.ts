@@ -43,7 +43,7 @@ export class HentaiHaven extends AnimeScraperModel {
 
       $(".hentai__episodes ul li").each((_i, e) => {
         const number = Number(
-          $(e).find("a .chapter_info .title").text().replace("Episode ", "")
+          $(e).find("a .chapter_info .title").text().replace("Episode ", ""),
         );
         const AnimeEpisode: Episode = {
           name: $(e).find("a .chapter_info .title").text(),
@@ -68,7 +68,7 @@ export class HentaiHaven extends AnimeScraperModel {
       const anime = episode.substring(0, episode.lastIndexOf("-"));
 
       const { data } = await axios.get(
-        `${this.url}/video/${anime}/episode-${number}`
+        `${this.url}/video/${anime}/episode-${number}`,
       );
       const $ = cheerio.load(data);
 
@@ -93,7 +93,7 @@ export class HentaiHaven extends AnimeScraperModel {
 
   async GetItemByFilter(
     search?: string,
-    page: number = 1
+    page: number = 1,
   ): Promise<ResultSearch<AnimeResult>> {
     try {
       const { data } = await axios.get(`${this.url}/page/${page}`, {

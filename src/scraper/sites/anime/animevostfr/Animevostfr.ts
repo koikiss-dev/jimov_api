@@ -2,10 +2,7 @@ import * as cheerio from "cheerio";
 import axios from "axios";
 import { AnimeMedia } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
-import {
-  ResultSearch,
-  AnimeResult,
-} from "../../../../types/search";
+import { ResultSearch, AnimeResult } from "../../../../types/search";
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 
 /** List of Domains
@@ -23,7 +20,7 @@ export class Animevostfr extends AnimeScraperModel {
       const $ = cheerio.load(data);
 
       const AnimeTypes = $(
-        ".mvic-info .mvici-right p strong:contains(' Type:')"
+        ".mvic-info .mvici-right p strong:contains(' Type:')",
       )
         .nextAll()
         .text();
@@ -40,13 +37,13 @@ export class Animevostfr extends AnimeScraperModel {
         url: `/anime/animevostfr/name/${anime}`,
         synopsis: AnimeDescription.slice(
           AnimeDescription.indexOf("Synopsis:") + "Synopsis:".length,
-          -1
+          -1,
         ).trim(),
         alt_names: [
           ...AnimeDescription.slice(
             AnimeDescription.indexOf("Titre alternatif:") +
-            "Titre alternatif:".length,
-            AnimeDescription.indexOf("Synopsis:")
+              "Titre alternatif:".length,
+            AnimeDescription.indexOf("Synopsis:"),
           )
             .replace("<br>\n", "")
             .split("/")
@@ -100,7 +97,7 @@ export class Animevostfr extends AnimeScraperModel {
       const anime = episode.substring(0, episode.lastIndexOf("-"));
 
       const { data } = await axios.get(
-        `${this.url}/episode/${anime}-episode-${number}`
+        `${this.url}/episode/${anime}-episode-${number}`,
       );
       const $ = cheerio.load(data);
       const s = $(".form-group.list-server select option");
@@ -132,7 +129,7 @@ export class Animevostfr extends AnimeScraperModel {
         ListServer.map(async (n: string) => {
           if (n == "opencdn" || n == "photo" || n == "vip") {
             const sservers = await axios.get(
-              `${this.url}/ajax-get-link-stream/?server=${n}&filmId=${ListFilmId}`
+              `${this.url}/ajax-get-link-stream/?server=${n}&filmId=${ListFilmId}`,
             );
             let currentData = sservers.data;
             currentData = currentData
@@ -145,23 +142,23 @@ export class Animevostfr extends AnimeScraperModel {
             };
             AnimeEpisodeInfo.servers.push(Servers);
           }
-          return AnimeEpisodeInfo
-        })
-      )
+          return AnimeEpisodeInfo;
+        }),
+      );
       return AnimeEpisodeInfo;
     } catch (error) {
-      console.log(error)
+      console.log(error);
     }
   }
 
   async GetItemByFilter(
     search?: string,
-    page?: number
+    page?: number,
   ): Promise<ResultSearch<AnimeResult>> {
     try {
       const { data } = await axios.get(`${this.url}/page/${page ? page : 1}`, {
         params: {
-          s: search
+          s: search,
         },
       });
 
@@ -171,10 +168,7 @@ export class Animevostfr extends AnimeScraperModel {
         nav: {
           count: $(".movies-list .ml-item").length,
           current: page ? Number(page) : 1,
-          next:
-            $(".movies-list .ml-item").length < 32
-              ? 0
-              : Number(page) + 1,
+          next: $(".movies-list .ml-item").length < 32 ? 0 : Number(page) + 1,
           hasNext: $(".movies-list .ml-item").length < 32 ? false : true,
         },
         results: [],
@@ -185,7 +179,9 @@ export class Animevostfr extends AnimeScraperModel {
           name: $(e).find(".mli-info").text(),
           image: $(e).find(".mli-thumb").attr("data-original"),
           url: `/anime/animevostfr/name/${$(e).find(".ml-mask").attr("href").replace(this.url, "").replace("/", "").replace("/", "")}`,
-          type: $(e).find(".mli-quality").text().includes("Movie") ? "movie" : "anime",
+          type: $(e).find(".mli-quality").text().includes("Movie")
+            ? "movie"
+            : "anime",
         };
         animeSearch.results.push(animeSearchData);
       });

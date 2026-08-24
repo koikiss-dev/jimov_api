@@ -2,10 +2,7 @@ import * as cheerio from "cheerio";
 import axios from "axios";
 import { AnimeMedia } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
-import {
-  ResultSearch,
-  AnimeResult
-} from "../../../../types/search";
+import { ResultSearch, AnimeResult } from "../../../../types/search";
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 //import { Calendar } from "@animetypes/date";
 
@@ -25,7 +22,7 @@ export class AnimeBlix extends AnimeScraperModel {
   async GetItemInfo(anime: string): Promise<AnimeMedia> {
     try {
       const { data } = await axios.get(
-        `${this.url}/animes/${anime.includes("ver-") ? anime : "ver-" + anime}`
+        `${this.url}/animes/${anime.includes("ver-") ? anime : "ver-" + anime}`,
       );
       const $ = cheerio.load(data);
 
@@ -33,10 +30,10 @@ export class AnimeBlix extends AnimeScraperModel {
       const AnimeStatus = $(".cn .info .r .u li span[class='em']").length
         ? $(".cn .info .r .u li span[class='em']").text()
         : $(".cn .info .r .u li span[class='fi']").length
-        ? $(".cn .info .r .u li span[class='fi']").text()
-        : $(".cn .info .r .u li span[class='es']").text();
+          ? $(".cn .info .r .u li span[class='fi']").text()
+          : $(".cn .info .r .u li span[class='es']").text();
       const AnimeDate = $(
-        ".cn .info .r .u li span:contains('Fecha de emisión:')"
+        ".cn .info .r .u li span:contains('Fecha de emisión:')",
       )
         .next()
         .text()
@@ -87,10 +84,10 @@ export class AnimeBlix extends AnimeScraperModel {
           ? AnimeTypes.text() == "TV"
             ? "Anime"
             : AnimeTypes.text() == "Pelicula"
-            ? "Movie"
-            : AnimeTypes.text() == "Ova"
-            ? "OVA"
-            : "Null"
+              ? "Movie"
+              : AnimeTypes.text() == "Ova"
+                ? "OVA"
+                : "Null"
           : "Null", //tv,pelicula,especial,ova
         status: AnimeStatus,
         date: AnimeDate[0]
@@ -104,7 +101,7 @@ export class AnimeBlix extends AnimeScraperModel {
       const ReplaceSymbols: RegExp = /(,)+/g;
       const ListEpisode = ListEpisodeIndex.slice(
         ListEpisodeIndex.indexOf("var eps = "),
-        ListEpisodeIndex.indexOf(";</") - 1
+        ListEpisodeIndex.indexOf(";</") - 1,
       )
         .replace(RemoveSymbols, "")
         .replace(ReplaceSymbols, ",")
@@ -132,7 +129,7 @@ export class AnimeBlix extends AnimeScraperModel {
       const anime = episode.substring(0, episode.lastIndexOf("-"));
 
       const { data } = await axios.get(
-        `${this.url}/${anime.replace("ver-", "")}-${number}`
+        `${this.url}/${anime.replace("ver-", "")}-${number}`,
       );
       const $ = cheerio.load(data);
 
@@ -166,7 +163,7 @@ export class AnimeBlix extends AnimeScraperModel {
     type?: number,
     page?: number,
     year?: string,
-    genre?: string
+    genre?: string,
   ): Promise<ResultSearch<AnimeResult>> {
     try {
       const { data } = await axios.get(`${this.api}/api/anime/list`, {

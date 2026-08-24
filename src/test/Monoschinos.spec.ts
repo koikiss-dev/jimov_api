@@ -1,6 +1,6 @@
 import { Monoschinos } from "../scraper/sites/anime/monoschinos/Monoschinos";
 
-describe('Monoschinos', () => {
+describe("Monoschinos", () => {
   let monos: Monoschinos;
 
   beforeEach(() => {
@@ -8,11 +8,11 @@ describe('Monoschinos', () => {
   });
   it("should get anime info successfully", async () => {
     const animeInfo = await monos.getAnime(
-      'https://monoschinos2.com/anime/one-room-hiatari-futsuu-tenshi-tsuki-sub-espanol',
+      "https://monoschinos2.com/anime/one-room-hiatari-futsuu-tenshi-tsuki-sub-espanol",
     );
 
-    expect(animeInfo.name).toBe('One Room, Hiatari Futsuu, Tenshi-tsuki.');
-    expect(animeInfo.image.url).toContain('.jpg');
+    expect(animeInfo.name).toBe("One Room, Hiatari Futsuu, Tenshi-tsuki.");
+    expect(animeInfo.image.url).toContain(".jpg");
     expect(animeInfo.synopsis?.length).toBeGreaterThan(0);
     // The chronology function does not exist in Monoschinos
     //expect(animeInfo.chronology?.length).toBeGreaterThan(0);
@@ -20,10 +20,15 @@ describe('Monoschinos', () => {
     expect(animeInfo.episodes?.length).toBeGreaterThan(0);
     expect((await monos.getLastAnimes()).length).toBeGreaterThan(0);
     expect((await monos.getLastEpisodes()).length).toBeGreaterThan(0);
-    expect((await monos.getEpisodeServers('https://monoschinos2.com/ver/one-room-hiatari-futsuu-tenshi-tsuki-episodio-1')).length).toBeGreaterThan(0);
+    expect(
+      (
+        await monos.getEpisodeServers(
+          "https://monoschinos2.com/ver/one-room-hiatari-futsuu-tenshi-tsuki-episodio-1",
+        )
+      ).length,
+    ).toBeGreaterThan(0);
   });
 });
-
 
 /*async function test() {
   let monos: Monoschinos;
