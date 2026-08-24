@@ -1,18 +1,23 @@
 import axios from "axios";
 import { load } from "cheerio";
 import { getFilterByPages } from "./assets/getFilterByPage";
-import { type IMangaChapter, Manga } from "../../../../types/manga";
+import {
+  type IMangaChapter,
+  type IMangaResult,
+  MangaChapter,
+  MangaMedia,
+} from "../../../../types/manga";
 
 export class Nhentai {
-  async filter(mangaName: string) {
+  async filter(mangaName: string): Promise<IMangaResult[]> {
     return new NhentaiFilter().filter(mangaName);
   }
 
-  async getMangaInfo(mangaId: string) {
+  async getMangaInfo(mangaId: string): Promise<MangaMedia> {
     return new NhentaiMangaInfo().getMangaInfoById(mangaId);
   }
 
-  async getMangaChapters(mangaId: string) {
+  async getMangaChapters(mangaId: string): Promise<IMangaChapter[]> {
     return new NhentaiGetMangaChapters().getMangaChapters(mangaId);
   }
 }
@@ -20,105 +25,93 @@ export class Nhentai {
 class NhentaiFilter {
   url = "https://nhentai.to/search?q=";
 
-  async filter(mangaName: string) {
-    try {
-      const { data } = await axios.get(`${this.url}${mangaName}`);
+  async filter(mangaName: string): Promise<IMangaResult[]> {
+    const { data } = await axios.get(`${this.url}${mangaName}`);
 
-      const $ = load(data);
+    const $ = load(data);
 
-      let numPages = $("section.pagination a").length;
+    let numPages = $("section.pagination a").length;
 
-      if (numPages != 0) {
-        numPages = numPages - 2;
-      } else {
-        numPages = 1;
-      }
-
-      const getResults = await getFilterByPages(mangaName, numPages);
-
-      return getResults;
-    } catch (error) {
-      throw error;
+    if (numPages != 0) {
+      numPages = numPages - 2;
+    } else {
+      numPages = 1;
     }
+
+    return getFilterByPages(mangaName, numPages);
   }
 }
 
 class NhentaiMangaInfo {
-  async getMangaInfoById(mangaId: string) {
-    try {
-      const { data } = await axios.get(`https://nhentai.to/g/${mangaId}`);
+  /**
+   * Get the tag names of a field of the gallery ('Artists',
+   * 'Characters', 'Tags', etc) identified by the prefix of the link of
+   * each tag.
+   */
+  private getTags($: cheerio.Root, hrefPrefix: string): string[] {
+    return $("section#tags")
+      .find(`a[href^="${hrefPrefix}"] span.name`)
+      .map((_, element) => $(element).text())
+      .get();
+  }
 
-      const $ = load(data);
+  async getMangaInfoById(mangaId: string): Promise<MangaMedia> {
+    const { data } = await axios.get(`https://nhentai.to/g/${mangaId}`);
 
-      const manga = new Manga();
+    const $ = load(data);
 
-      manga.characters = [];
-      manga.authors = [];
-      manga.chapters = [];
+    const manga = new MangaMedia();
 
-      manga.title = $("div#info h1").text();
-      manga.thumbnail = {
-        url: $("div#cover a img").attr("src"),
-      };
+    manga.id = mangaId;
+    manga.url = `/manga/nhentai/name/${mangaId}`;
+    const altName = $("div#info h2").text().trim();
 
-      manga.id = mangaId;
-      manga.isNSFW = true;
+    manga.name = $("div#info h1").text().trim();
 
-      const chracters = $("section#tags .tag-container").get(1);
-      const autors = $("section#tags .tag-container").get(3);
-
-      $(autors)
-        .find("span a span.name")
-        .each((_, elementCheerio) => {
-          manga.authors.push($(elementCheerio).text());
-        });
-
-      $(chracters)
-        .find("span a span.name")
-        .each((_, elementCheerio) => {
-          manga.characters.push($(elementCheerio).text());
-        });
-
-      return manga;
-    } catch (error) {
-      throw error;
+    if (altName) {
+      manga.alt_names = [altName];
     }
+    manga.thumbnail = {
+      url: $("div#cover a img").attr("src"),
+    };
+    manga.authors = this.getTags($, "/artist/");
+    manga.characters = this.getTags($, "/character/");
+    manga.genres = this.getTags($, "/tag/");
+    manga.chapters = null;
+    manga.volumes = null;
+    manga.nsfw = true;
+
+    return manga;
   }
 }
 
 class NhentaiGetMangaChapters {
   async getMangaChapters(mangaId: string): Promise<IMangaChapter[]> {
-    try {
-      const { data } = await axios.get(`https://nhentai.to/g/${mangaId}`);
+    const { data } = await axios.get(`https://nhentai.to/g/${mangaId}`);
 
-      const $ = load(data);
+    const $ = load(data);
 
-      const mangaChapters: IMangaChapter[] = [];
+    const mangaImagesPages: string[] = [];
 
-      const mangaImagesPages: string[] = [];
+    $("div#thumbnail-container .thumb-container a img ").each(
+      (_, chapterImage) => {
+        // The gallery page shows the thumbnail of each page (e.g.
+        // '1t.webp'), removing the 't' suffix returns the image in
+        // its original size.
+        mangaImagesPages.push(
+          $(chapterImage).attr("data-src").replace(/t\.(\w+)$/, ".$1")
+        );
+      }
+    );
 
-      $("div#thumbnail-container .thumb-container a img ").each(
-        (_, chapterImage) => {
-          mangaImagesPages.push(
-            $(chapterImage)
-              .attr("data-src")
-              .replace("cdn.dogehls.xyz", "t7.nhentai.net")
-          );
-        }
-      );
+    const chapter = new MangaChapter();
 
-      mangaChapters.push({
-        title: "it doesn't",
-        number: 1,
-        cover: "it doesn't",
-        url: "/manga/nhentai/chapter/1",
-        id: 1,
-        images: mangaImagesPages,
-      });
+    chapter.id = 1;
+    chapter.num = 1;
+    chapter.name = $("div#info h1").text().trim();
+    chapter.url = "/manga/nhentai/chapter/1";
+    chapter.images = mangaImagesPages;
 
-      return mangaChapters;
-    } catch (error) {
-      throw error;
-    }
+    return [chapter];
   }
 }

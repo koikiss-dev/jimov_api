@@ -21,6 +21,7 @@ import comick from "../src/routes/v1/manga/comick/ComickRoutes";
 import inmanga from "../src/routes/v1/manga/inmanga/InmangaRoutes";
 import mangareader from "../src/routes/v1/manga/mangareader/MangaReaderRoutes";
 import manganelo from "../src/routes/v1/manga/manganelo/ManganeloRoutes";
+import nhentai from "../src/routes/v1/manga/nhentai/NhentaiRoutes";
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -54,6 +55,7 @@ app.use(comick);
 app.use(inmanga);
 app.use(mangareader);
 app.use(manganelo);
+app.use(nhentai);
 /*Manga*/
 
 /*error */

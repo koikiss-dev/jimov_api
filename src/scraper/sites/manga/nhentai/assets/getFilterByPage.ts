@@ -22,7 +22,7 @@ export async function getFilterByPages(
 
       searchResults.push({
         id: id,
-        title: title,
+        name: title,
         url: `/manga/nhentai/title/${id}`,
         thumbnail: {
           url: coverImg,
