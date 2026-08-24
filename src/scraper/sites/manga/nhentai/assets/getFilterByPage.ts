@@ -1,35 +1,52 @@
-import { IMangaResult } from "@animetypes/manga";
-import axios from "axios";
-import { load } from "cheerio";
+import { type IMangaResult } from "@animetypes/manga";
+import { PROVIDER_ID } from "./site";
 
-export async function getFilterByPages(
-  mangaName: string,
-  numPage: number,
-): Promise<IMangaResult[]> {
+/**
+ * Extracts the search results of an already downloaded search page.
+ */
+export function getFilterByPages($: cheerio.Root): IMangaResult[] {
   const searchResults: IMangaResult[] = [];
 
-  for (let index = 1; index <= numPage; index++) {
-    const { data } = await axios.get(
-      `https://nhentai.to/search?q=${mangaName}&page=${index}`,
-    );
+  $(".container .gallery a").each((_, elementCheerio) => {
+    const href = $(elementCheerio).attr("href");
+    const id = href?.split("/")[2];
 
-    const $ = load(data);
+    if (!id) return;
 
-    $(".container .gallery a").each((_, elementCheerio) => {
-      const id = $(elementCheerio).attr("href").split("/")[2];
-      const title = $(elementCheerio).find(".caption").text();
-      const coverImg = $(elementCheerio).find("img").attr("src");
-
-      searchResults.push({
-        id: id,
-        title: title,
-        url: `/manga/nhentai/title/${id}`,
-        thumbnail: {
-          url: coverImg,
-        },
-      });
+    searchResults.push({
+      id: id,
+      name: $(elementCheerio).find(".caption").text(),
+      url: `/manga/${PROVIDER_ID}/title/${id}`,
+      thumbnail: {
+        url: $(elementCheerio).find("img").attr("src"),
+      },
     });
-  }
+  });
 
   return searchResults;
+}
+
+/**
+ * Total number of result pages reported by the pagination of the
+ * search page. The link to the last page reports the real total; the
+ * numbered links are only a windowed list.
+ */
+export function getFilterNumPages($: cheerio.Root): number {
+  // The link to the last page ('...&page=N')
+  const lastHref = $("section.pagination a.last").attr("href");
+  const match = lastHref?.match(/page=(\d+)/);
+
+  if (match) return parseInt(match[1], 10);
+
+  let numPages = 0;
+
+  $("section.pagination a").each((_, element) => {
+    const pageNumber = parseInt($(element).text(), 10);
+
+    if (!isNaN(pageNumber) && pageNumber > numPages) {
+      numPages = pageNumber;
+    }
+  });
+
+  return numPages > 0 ? numPages : 1;
 }
