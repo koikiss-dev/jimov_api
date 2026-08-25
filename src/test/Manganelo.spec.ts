@@ -13,8 +13,10 @@ type ManganeloTestTemplate = {
 
 type ManganeloGenresOptions = keyof typeof manganatoGenreList;
 
-interface ManganeloFilterTestTemplate
-  extends Omit<IManganatoFilterParams, "genres"> {
+interface ManganeloFilterTestTemplate extends Omit<
+  IManganatoFilterParams,
+  "genres"
+> {
   genres: ManganeloGenresOptions[];
 }
 

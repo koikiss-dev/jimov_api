@@ -7,9 +7,7 @@ const router = Router();
 router.get("/anime/hentaila/filter", async (req, res) => {
   const { search } = req.query;
 
-  const data = await Anime.GetItemByFilter(
-    search as string
-  );
+  const data = await Anime.GetItemByFilter(search as string);
   res.send(data);
 });
 

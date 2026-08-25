@@ -9,7 +9,7 @@ router.get("/anime/hentaihaven/filter", async (req, res) => {
 
   const data = await Anime.GetItemByFilter(
     search as string,
-    page as unknown as number
+    page as unknown as number,
   );
   res.send(data);
 });

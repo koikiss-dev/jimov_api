@@ -25,11 +25,11 @@ describe("AnimeFlv test", () => {
 
     expect(animeInfo.name).toBe("Horimiya: Piece");
     expect(animeInfo.alt_names).toEqual(
-      expect.arrayContaining(alt_names_expected)
+      expect.arrayContaining(alt_names_expected),
     );
     expect(animeInfo.image.url).toContain(".jp");
     expect(animeInfo.synopsis).toBe(
-      "Historias del manga no adaptadas en el anime principal."
+      "Historias del manga no adaptadas en el anime principal.",
     );
     expect(animeInfo.chronology?.length).toBeGreaterThanOrEqual(0);
     expect(animeInfo.genres).toEqual(expect.arrayContaining(genres_expected));
@@ -43,7 +43,7 @@ describe("AnimeFlv test", () => {
       "all",
       StatusAnimeflv.OnGoing,
       1,
-      1
+      1,
     );
     expect(result.results.length).toBeGreaterThan(0);
   });

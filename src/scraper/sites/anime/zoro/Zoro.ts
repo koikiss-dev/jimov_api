@@ -1,22 +1,22 @@
 import axios from "axios";
 import { load } from "cheerio";
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
-import { Anime, Chronology } from "../../../../types/anime";
+import { AnimeMedia, Chronology } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
-  AnimeSearch,
+  AnimeResult,
   ResultSearch,
-  type IAnimeSearch,
+  type IAnimeResult,
 } from "../../../../types/search";
 
 export class Zoro extends AnimeScraperModel {
   readonly url = "https://aniwatch.to";
 
-  async GetItemInfo(animeName: string): Promise<Anime> {
+  async GetItemInfo(animeName: string): Promise<AnimeMedia> {
     try {
       const response = await axios.get(`${this.url}/${animeName}`);
       const $ = load(response.data);
-      const anime = new Anime();
+      const anime = new AnimeMedia();
       const aniscInfo = [];
 
       // get additional anime info
@@ -31,7 +31,7 @@ export class Zoro extends AnimeScraperModel {
 
       // set anime properties
       anime.name = $("h2.film-name").text().trim();
-      anime.alt_name = [additionalInfo[0]];
+      anime.alt_names = [additionalInfo[0]];
       anime.url = `/anime/zoro/name/${animeName.replace("/", "")}`;
       anime.synopsis = $("div.film-description div.text").text().trim();
       anime.image = { url: $("img.film-poster-img").attr("src") };
@@ -71,7 +71,7 @@ export class Zoro extends AnimeScraperModel {
     language?: string,
     sort?: string,
     genres?: string,
-    page_anime?: string
+    page_anime?: string,
   ) {
     try {
       const { data } = await axios.get(`${this.url}/filter`, {
@@ -90,10 +90,10 @@ export class Zoro extends AnimeScraperModel {
       const $ = load(data);
       const most_cards = $("div.film_list div.film_list-wrap div.flw-item");
       //const page_index = $("div.pre-pagination nav ul li.active");
-      const filter_return = new ResultSearch<IAnimeSearch>();
+      const filter_return = new ResultSearch<IAnimeResult>();
       filter_return.results = [];
       most_cards.each((_i, e) => {
-        const anime = new AnimeSearch();
+        const anime = new AnimeResult();
         anime.name = $(e).find("a.dynamic-name").text().trim();
         anime.image = $(e)
           .find("div.film-poster")
@@ -125,7 +125,7 @@ export class Zoro extends AnimeScraperModel {
             Referer: `https://zoro.to/watch/${animename + "-" + ep}`,
             "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
           },
-        }
+        },
       );
       const $ = load(data.html);
       const epi = new Episode();
@@ -170,9 +170,11 @@ export class Zoro extends AnimeScraperModel {
     }
   }
 
-  private async getServers(id): Promise<any> {
+  private async getServers(
+    id: number | string,
+  ): Promise<{ link: string; [key: string]: unknown }> {
     const { data } = await axios.get(
-      `${this.url}/ajax/v2/episode/sources?id=${id}`
+      `${this.url}/ajax/v2/episode/sources?id=${id}`,
     );
     return data;
   }

@@ -90,7 +90,7 @@ export function extractGalleryJson(html: string): GalleryJson | null {
  */
 export function getPageImages(
   thumbnails: string[],
-  pages?: Record<string, { t: string }>
+  pages?: Record<string, { t: string }>,
 ): string[] {
   const extensions = pages
     ? Object.keys(pages)

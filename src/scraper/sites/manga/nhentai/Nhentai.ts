@@ -1,17 +1,8 @@
 import axios from "axios";
 import { load } from "cheerio";
-import {
-  getFilterByPages,
-  getFilterNumPages,
-} from "./assets/getFilterByPage";
-import {
-  extractGalleryJson,
-  getPageImages,
-} from "./assets/galleryJson";
-import {
-  fetchGalleryPage,
-  REQUEST_TIMEOUT,
-} from "./assets/galleryClient";
+import { getFilterByPages, getFilterNumPages } from "./assets/getFilterByPage";
+import { extractGalleryJson, getPageImages } from "./assets/galleryJson";
+import { fetchGalleryPage, REQUEST_TIMEOUT } from "./assets/galleryClient";
 import { PROVIDER_ID, SITE_URL } from "./assets/site";
 import {
   type IMangaChapter,
@@ -21,10 +12,7 @@ import {
 } from "../../../../types/manga";
 
 export class Nhentai {
-  async filter(
-    mangaName: string,
-    page?: number
-  ): Promise<IMangaResult[]> {
+  async filter(mangaName: string, page?: number): Promise<IMangaResult[]> {
     return new NhentaiFilter().filter(mangaName, page);
   }
 
@@ -42,7 +30,7 @@ class NhentaiFilter {
 
   private async fetchSearchPage(
     mangaName: string,
-    page: number
+    page: number,
   ): Promise<string> {
     const query = encodeURIComponent(mangaName);
     const suffix = page > 1 ? `&page=${page}` : "";
@@ -106,8 +94,7 @@ class NhentaiMangaInfo {
     };
 
     if (gallery) {
-      manga.name =
-        gallery.title.english || gallery.title.pretty || "";
+      manga.name = gallery.title.english || gallery.title.pretty || "";
 
       if (gallery.title.japanese) {
         manga.alt_names = [gallery.title.japanese];
@@ -158,7 +145,7 @@ class NhentaiGetMangaChapters {
         const src = $(chapterImage).attr("data-src");
 
         if (src) thumbnails.push(src);
-      }
+      },
     );
 
     const chapter = new MangaChapter();

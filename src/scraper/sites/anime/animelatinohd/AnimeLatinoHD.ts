@@ -2,26 +2,26 @@ import * as cheerio from "cheerio";
 import axios from "axios";
 import { AnimeMedia } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
-import CryptoJS from 'crypto-js'
+import CryptoJS from "crypto-js";
 
-import {
-  ResultSearch,
-  AnimeResult
-} from "../../../../types/search";
+import { ResultSearch, AnimeResult } from "../../../../types/search";
 import { AnimeScraperModel } from "../../../../models/AnimeScraperModel";
 
 export class AnimeLatinoHD extends AnimeScraperModel {
-
   readonly url = "https://www.animelatinohd.com";
   readonly api = "https://web.animelatinohd.com";
-  readonly key = "l7z8rIhQDXIH6pl66ZEQgPkNwkDlilgdOHMMWkxkzzE="
+  readonly key = "l7z8rIhQDXIH6pl66ZEQgPkNwkDlilgdOHMMWkxkzzE=";
 
   async GetItemInfo(anime: string): Promise<AnimeMedia> {
     try {
       const { data } = await axios.get(`${this.url}/anime/${anime}`);
       const $ = cheerio.load(data);
 
-      const animeInfoParseObj = JSON.parse(this.decrypt(JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data));
+      const animeInfoParseObj = JSON.parse(
+        this.decrypt(
+          JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data,
+        ),
+      );
       const AnimeInfo: AnimeMedia = {
         name: animeInfoParseObj.name,
         url: `/anime/animelatinohd/name/${anime}`,
@@ -44,8 +44,11 @@ export class AnimeLatinoHD extends AnimeScraperModel {
         const AnimeEpisode: Episode = {
           name: animeInfoParseObj.name,
           num: Number(e.number),
-          thumbnail:{
-            url :"https://www.themoviedb.org/t/p/original" + animeInfoParseObj.banner + "?&w=280&q=95"
+          thumbnail: {
+            url:
+              "https://www.themoviedb.org/t/p/original" +
+              animeInfoParseObj.banner +
+              "?&w=280&q=95",
           },
           url: `/anime/animelatinohd/episode/${
             animeInfoParseObj.slug + "-" + e.number
@@ -72,7 +75,11 @@ export class AnimeLatinoHD extends AnimeScraperModel {
       const { data } = await axios.get(`${this.url}/ver/${anime}/${number}`);
       const $ = cheerio.load(data);
 
-      const animeEpisodeParseObj = JSON.parse(this.decrypt(JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data));
+      const animeEpisodeParseObj = JSON.parse(
+        this.decrypt(
+          JSON.parse($("#__NEXT_DATA__").html()).props.pageProps.data,
+        ),
+      );
 
       const AnimeEpisodeInfo: Episode = {
         name: animeEpisodeParseObj.anime.name,
@@ -96,69 +103,74 @@ export class AnimeLatinoHD extends AnimeScraperModel {
         });
       }
 
+      for (
+        let index = 0;
+        index < animeEpisodeParseObj.players[f_index].length;
+        index++
+      ) {
+        //const warpVideo = await axios.get(this.api +'/video/'+this.encrypt(JSON.stringify(animeEpisodeParseObj.players[f_index][index].id)))
+        const Server: EpisodeServer = {
+          name: animeEpisodeParseObj.players[f_index][index].server.title,
+          url: "",
+        };
+        Server.url = `${this.api}/video/${this.encrypt(JSON.stringify(animeEpisodeParseObj.players[f_index][index].id))}`;
+        Server.name = animeEpisodeParseObj.players[f_index][index].server.title;
 
-      for (let index = 0; index < animeEpisodeParseObj.players[f_index].length; index++) {
-            //const warpVideo = await axios.get(this.api +'/video/'+this.encrypt(JSON.stringify(animeEpisodeParseObj.players[f_index][index].id)))
-            const Server: EpisodeServer = {
-              name: animeEpisodeParseObj.players[f_index][index].server.title,
-              url: "",
-            };
-            Server.url = `${this.api}/video/${this.encrypt(JSON.stringify(animeEpisodeParseObj.players[f_index][index].id))}`;
-            Server.name = animeEpisodeParseObj.players[f_index][index].server.title;
+        AnimeEpisodeInfo.servers.push(Server);
+      }
 
-            AnimeEpisodeInfo.servers.push(Server); 
-        }
-       
-      
-      AnimeEpisodeInfo.servers.sort((a,b) => a.name.localeCompare(b.name))
+      AnimeEpisodeInfo.servers.sort((a, b) => a.name.localeCompare(b.name));
       return AnimeEpisodeInfo;
     } catch (error) {
       console.log(error);
     }
   }
-  
-  decrypt(data: string){
-    let t = CryptoJS.enc.Base64.parse(data).toString(CryptoJS.enc.Utf8)
-    t = JSON.parse(t)
-    const a = CryptoJS.enc.Base64.parse(t.iv)
-    const n = CryptoJS.AES.decrypt(t.value, CryptoJS.enc.Base64.parse(this.key), {
-      iv:a,
-      mode:CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7
-    })
-    return CryptoJS.enc.Utf8.stringify(n)
+
+  decrypt(data: string) {
+    let t = CryptoJS.enc.Base64.parse(data).toString(CryptoJS.enc.Utf8);
+    t = JSON.parse(t);
+    const a = CryptoJS.enc.Base64.parse(t.iv);
+    const n = CryptoJS.AES.decrypt(
+      t.value,
+      CryptoJS.enc.Base64.parse(this.key),
+      {
+        iv: a,
+        mode: CryptoJS.mode.CBC,
+        padding: CryptoJS.pad.Pkcs7,
+      },
+    );
+    return CryptoJS.enc.Utf8.stringify(n);
   }
-  encrypt(data:string | number){
-    let t = CryptoJS.lib.WordArray.random(16)
-    let r
-    const a = CryptoJS.enc.Base64.parse(this.key)
+  encrypt(data: string | number) {
+    let t = CryptoJS.lib.WordArray.random(16);
+    let r;
+    const a = CryptoJS.enc.Base64.parse(this.key);
     const n = {
       iv: t,
-      mode:CryptoJS.mode.CBC,
-      padding: CryptoJS.pad.Pkcs7
-  }
-   
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7,
+    };
+
     const s = CryptoJS.AES.encrypt(data, a, n).toString();
 
-  r = {
-      iv: t = CryptoJS.enc.Base64.stringify(t),
+    r = {
+      iv: (t = CryptoJS.enc.Base64.stringify(t)),
       value: s,
-      mac: CryptoJS.HmacSHA256(t + s, a).toString()
-  };
-  r = JSON.stringify(r)
-  r = CryptoJS.enc.Utf8.parse(r)
-  
-  return CryptoJS.enc.Base64.stringify(r)
+      mac: CryptoJS.HmacSHA256(t + s, a).toString(),
+    };
+    r = JSON.stringify(r);
+    r = CryptoJS.enc.Utf8.parse(r);
+
+    return CryptoJS.enc.Base64.stringify(r);
   }
   async GetItemByFilter(
     search?: string,
     type?: number,
     page?: number,
     year?: string,
-    genre?: string
+    genre?: string,
   ): Promise<ResultSearch<AnimeResult>> {
     try {
-
       const { data } = await axios.get(`${this.api}/api/anime/list`, {
         params: {
           search: search,
@@ -168,7 +180,7 @@ export class AnimeLatinoHD extends AnimeScraperModel {
           page: page,
         },
       });
-  
+
       const animeSearchParseObj = JSON.parse(this.decrypt(data.data));
 
       const animeSearch: ResultSearch<AnimeResult> = {

@@ -1,19 +1,19 @@
 import * as cheerio from "cheerio";
 import axios from "axios";
-import { Anime } from "../../../../types/anime";
+import { AnimeMedia } from "../../../../types/anime";
 import { Episode, EpisodeServer } from "../../../../types/episode";
 import {
-  AnimeSearch,
+  AnimeResult,
   ResultSearch,
   type IResultSearch,
-  type IAnimeSearch,
+  type IAnimeResult,
 } from "../../../../types/search";
 
 export class Dramanice {
   readonly url = "https://www.animelatinohd.com";
   readonly api = "https://api.animelatinohd.com";
 
-  async GetAnimeInfo(anime: string): Promise<Anime> {
+  async GetAnimeInfo(anime: string): Promise<AnimeMedia> {
     try {
       const { data } = await axios.get(`${this.url}/anime/${anime}`);
       const $ = cheerio.load(data);
@@ -21,11 +21,11 @@ export class Dramanice {
       const animeInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props
         .pageProps.data;
 
-      const AnimeInfo: Anime = {
+      const AnimeInfo: AnimeMedia = {
         name: animeInfoParseObj.name,
         url: `/anime/animelatinohd/name/${anime}`,
         synopsis: animeInfoParseObj.overview,
-        alt_name: [...animeInfoParseObj.name_alternative.split(",")],
+        alt_names: [...animeInfoParseObj.name_alternative.split(",")],
         image: {
           url:
             "https://www.themoviedb.org/t/p/original" +
@@ -42,11 +42,13 @@ export class Dramanice {
       animeInfoParseObj.episodes.map((e) => {
         const AnimeEpisode: Episode = {
           name: animeInfoParseObj.name,
-          number: e.number + "",
-          image:
-            "https://www.themoviedb.org/t/p/original" +
-            animeInfoParseObj.banner +
-            "?&w=280&q=95",
+          num: Number(e.number),
+          thumbnail: {
+            url:
+              "https://www.themoviedb.org/t/p/original" +
+              animeInfoParseObj.banner +
+              "?&w=280&q=95",
+          },
           url: `/anime/animelatinohd/episode/${
             animeInfoParseObj.slug + "-" + e.number
           }`,
@@ -78,8 +80,7 @@ export class Dramanice {
       const AnimeEpisodeInfo: Episode = {
         name: animeEpisodeParseObj.anime.name,
         url: `/anime/animelatinohd/episode/${episode}`,
-        number: number,
-        image: "",
+        num: Number(number),
         servers: [],
       };
 
@@ -132,8 +133,8 @@ export class Dramanice {
                    Server.url = "https://filemoon.sx" + "/e/" + id_file
                }*/
             AnimeEpisodeInfo.servers.push(Server);
-          }
-        )
+          },
+        ),
       );
 
       return AnimeEpisodeInfo;
@@ -147,8 +148,8 @@ export class Dramanice {
     type?: number,
     page?: number,
     year?: string,
-    genre?: string
-  ): Promise<IResultSearch<IAnimeSearch>> {
+    genre?: string,
+  ): Promise<IResultSearch<IAnimeResult>> {
     try {
       const { data } = await axios.get(`${this.api}/api/anime/list`, {
         params: {
@@ -162,7 +163,7 @@ export class Dramanice {
 
       const animeSearchParseObj = data;
 
-      const animeSearch: ResultSearch<IAnimeSearch> = {
+      const animeSearch: ResultSearch<IAnimeResult> = {
         nav: {
           count: animeSearchParseObj.data.length,
           current: animeSearchParseObj.current_page,
@@ -175,7 +176,7 @@ export class Dramanice {
         results: [],
       };
       animeSearchParseObj.data.map((e) => {
-        const animeSearchData: AnimeSearch = {
+        const animeSearchData: AnimeResult = {
           name: e.name,
           image:
             "https://www.themoviedb.org/t/p/original" +

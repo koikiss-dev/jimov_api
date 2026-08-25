@@ -34,27 +34,26 @@ export class Comick {
     type?: number,
     year?: number,
     genre?: string,
-    page?: number
+    page?: number,
   ): Promise<IResultSearch<IMangaResult>> {
     try {
       const { data } = await axios.get(`${this.api}/v1.0/search`, {
         params: {
           q: search,
           status: status,
-          type:type,
+          type: type,
           year: year,
           page: page,
           genre: genre,
         },
       });
       const ResultList: IResultSearch<IMangaResult> = {
-        nav: { count: data.length,
+        nav: {
+          count: data.length,
           current: page ? page : 1,
-          next:
-           data.length < 49
-              ? 0
-              : page + 1,
-          hasNext: data.length < 49 ? false : true, },
+          next: data.length < 49 ? 0 : page + 1,
+          hasNext: data.length < 49 ? false : true,
+        },
         results: [],
       };
       data.map(
@@ -73,35 +72,34 @@ export class Comick {
             url: `/manga/comick/name/${e.slug}`,
           };
           ResultList.results.push(ListMangaResult);
-        }
+        },
       );
 
       return ResultList;
     } catch (error) {
+      console.error("Comick filter failed", error);
     }
   }
 
   async GetMangaInfo(manga: string, lang: string): Promise<MangaMedia> {
     try {
-      const { data } = await axios.get(
-        `${this.url}/comic/${manga}`
-      );
+      const { data } = await axios.get(`${this.url}/comic/${manga}`);
       const $ = cheerio.load(data);
-      const mangaInfoParseObj = JSON.parse($("#__NEXT_DATA__").html())
-        .props.pageProps;
+      const mangaInfoParseObj = JSON.parse($("#__NEXT_DATA__").html()).props
+        .pageProps;
       const buildId = JSON.parse($("#__NEXT_DATA__").html()).buildId;
       const currentLang = lang ? `?lang=${lang}` : `?lang=en`;
-      let dataApi = null
+      let dataApi = null;
       if (mangaInfoParseObj.firstChap) {
         dataApi = await axios.get(
-          `${this.url}/_next/data/${buildId}/comic/${manga}/${mangaInfoParseObj.firstChap.hid + "-chapter-" + mangaInfoParseObj.firstChap.chap + "-" + mangaInfoParseObj.firstChap.lang}.json`
+          `${this.url}/_next/data/${buildId}/comic/${manga}/${mangaInfoParseObj.firstChap.hid + "-chapter-" + mangaInfoParseObj.firstChap.chap + "-" + mangaInfoParseObj.firstChap.lang}.json`,
         );
       }
       const MangaInfo: MangaMedia = {
         id: mangaInfoParseObj.comic.id,
         name: mangaInfoParseObj.comic.title,
         alt_names: mangaInfoParseObj.comic.md_titles.map(
-          (e: { title: string }) => e.title
+          (e: { title: string }) => e.title,
         ),
         url: `/manga/comick/name/${mangaInfoParseObj.comic.slug}`,
         synopsis: mangaInfoParseObj.comic.desc,
@@ -110,7 +108,7 @@ export class Comick {
         status: mangaInfoParseObj.comic.status == "1" ? "ongoing" : "completed",
         authors: mangaInfoParseObj.authors.map((e: { name: string }) => e.name),
         genres: mangaInfoParseObj.comic.md_comic_md_genres.map(
-          (e: { md_genres: { name: string } }) => e.md_genres.name
+          (e: { md_genres: { name: string } }) => e.md_genres.name,
         ),
         chapters: [],
         thumbnail: {
@@ -135,8 +133,9 @@ export class Comick {
             const MangaInfoChapter: MangaChapter = {
               id: e.id,
               name: e.title,
-              url: `/manga/comick/chapter/${e.hid}-${mangaInfoParseObj.comic.slug
-                }-${e.chap ? e.chap : "err"}${langChapter}`,
+              url: `/manga/comick/chapter/${e.hid}-${
+                mangaInfoParseObj.comic.slug
+              }-${e.chap ? e.chap : "err"}${langChapter}`,
               num: Number(e.chap),
               images: null,
               date: {
@@ -146,13 +145,14 @@ export class Comick {
               },
             };
             return MangaInfo.chapters.push(
-              !langChapter.includes("?lang=id") ? MangaInfoChapter : null
+              !langChapter.includes("?lang=id") ? MangaInfoChapter : null,
             );
-          }
+          },
         );
       }
       return MangaInfo;
     } catch (error) {
+      console.error("Comick GetMangaInfo failed", error);
     }
   }
 
@@ -173,7 +173,7 @@ export class Comick {
       }
 
       const { data } = await axios.get(
-        `${this.url}/comic/${title}/${urlchange}`
+        `${this.url}/comic/${title}/${urlchange}`,
       );
       const $ = cheerio.load(data);
 
@@ -195,9 +195,14 @@ export class Comick {
                 name: e.name,
                 image: "https://meo.comick.pictures/" + e.b2key,
               };
-            }
+            },
           ),
-          thumbnail:{url:null,banner:"https://meo.comick.pictures/" +mangaChapterInfoParseObj.chapter.md_comics.md_covers[0].b2key},
+          thumbnail: {
+            url: null,
+            banner:
+              "https://meo.comick.pictures/" +
+              mangaChapterInfoParseObj.chapter.md_comics.md_covers[0].b2key,
+          },
           date: {
             year: mindate.getFullYear() ? mindate.getFullYear() : null,
             month: mindate.getMonth() ? mindate.getMonth() : null,
@@ -212,7 +217,7 @@ export class Comick {
             ? `${title}/${hid}.json?slug=${title}&chapter=${hid}`
             : `${title}/${hid}-chapter-${idNumber}${currentLang}.json?slug=${title}&chapter=${hid}-chapter-${idNumber}${currentLang}`;
         const dataBuild = await axios.get(
-          `${this.url}/_next/data/${buildid}/comic/${currentUrl}`
+          `${this.url}/_next/data/${buildid}/comic/${currentUrl}`,
         );
 
         const mindate = new Date(dataBuild.data.pageProps.chapter.created_at);
@@ -230,9 +235,14 @@ export class Comick {
                 name: s.name,
                 image: "https://meo.comick.pictures/" + s.b2key,
               };
-            }
+            },
           ),
-          thumbnail:{url:null,banner:"https://meo.comick.pictures/" +dataBuild.data.pageProps.chapter.md_comics.md_covers[0].b2key},
+          thumbnail: {
+            url: null,
+            banner:
+              "https://meo.comick.pictures/" +
+              dataBuild.data.pageProps.chapter.md_comics.md_covers[0].b2key,
+          },
           date: {
             year: mindate.getFullYear() ? mindate.getFullYear() : null,
             month: mindate.getMonth() ? mindate.getMonth() : null,
@@ -243,6 +253,7 @@ export class Comick {
         return MangaChapterInfoChapter;
       }
     } catch (error) {
+      console.error("Comick GetChapterInfo failed", error);
     }
   }
 }

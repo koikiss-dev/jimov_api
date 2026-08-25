@@ -1,6 +1,7 @@
 {
   "name": "jimov_scraper",
   "version": "1.0.0",
+  "packageManager": "pnpm@11.23.0",
   "description": "API for scraping multimedia content such as anime, movies, series, and manga",
   "main": "src/index.ts",
   "scripts": {

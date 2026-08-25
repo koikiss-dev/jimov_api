@@ -56,7 +56,7 @@ describe("Nhentai assets - getFilterNumPages", () => {
   });
 
   it("should fall back to one page when there is no pagination", () => {
-    const $ = render("<section id=\"tags\"></section>");
+    const $ = render('<section id="tags"></section>');
 
     expect(getFilterNumPages($)).toBe(1);
   });
@@ -107,7 +107,7 @@ describe("Nhentai assets - getFilterByPages", () => {
     const results = getFilterByPages(load(SEARCH_PAGE));
 
     expect(
-      results.find((result) => result.name === "broken entry without href")
+      results.find((result) => result.name === "broken entry without href"),
     ).toBeUndefined();
   });
 
@@ -143,7 +143,7 @@ describe("Nhentai assets - extractGalleryJson", () => {
                 {"type":"tag","name":"nakadashi"},
             ],
             "scanlator": "",
-        })`)
+        })`),
     );
 
     expect(gallery).not.toBeNull();
@@ -164,7 +164,7 @@ describe("Nhentai assets - extractGalleryJson", () => {
                 "japanese": "日本語 {テスト}",
             },
             "images": {"pages": {"1":{"t":"w"}}},
-        })`)
+        })`),
     );
 
     expect(gallery).not.toBeNull();
@@ -174,7 +174,9 @@ describe("Nhentai assets - extractGalleryJson", () => {
 
   it("should handle whitespace between the marker and the object", () => {
     const gallery = extractGalleryJson(
-      wrap(`var gallery = new N.gallery(   \n\t  {"media_id":"9","title":{},"images":{"pages":{}},})`)
+      wrap(
+        `var gallery = new N.gallery(   \n\t  {"media_id":"9","title":{},"images":{"pages":{}},})`,
+      ),
     );
 
     expect(gallery).not.toBeNull();
@@ -186,11 +188,15 @@ describe("Nhentai assets - extractGalleryJson", () => {
   });
 
   it("should return null when the object cannot be parsed", () => {
-    expect(extractGalleryJson(wrap("var g = new N.gallery({invalid key: 1})"))).toBeNull();
+    expect(
+      extractGalleryJson(wrap("var g = new N.gallery({invalid key: 1})")),
+    ).toBeNull();
   });
 
   it("should return null when the object is never closed", () => {
-    expect(extractGalleryJson(wrap("var g = new N.gallery({\"media_id\": \"1\""))).toBeNull();
+    expect(
+      extractGalleryJson(wrap('var g = new N.gallery({"media_id": "1"')),
+    ).toBeNull();
   });
 });
 
@@ -200,14 +206,10 @@ describe("Nhentai assets - getPageImages", () => {
   it("should restore the exact extension reported per page", () => {
     const images = getPageImages(
       [`${CDN}/1t.webp`, `${CDN}/2t.webp`, `${CDN}/3t.webp`],
-      { "1": { t: "j" }, "2": { t: "p" }, "3": { t: "g" } }
+      { "1": { t: "j" }, "2": { t: "p" }, "3": { t: "g" } },
     );
 
-    expect(images).toEqual([
-      `${CDN}/1.jpg`,
-      `${CDN}/2.png`,
-      `${CDN}/3.gif`,
-    ]);
+    expect(images).toEqual([`${CDN}/1.jpg`, `${CDN}/2.png`, `${CDN}/3.gif`]);
   });
 
   it("should align extensions by position regardless of the map keys", () => {
