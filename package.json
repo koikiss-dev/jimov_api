@@ -16,11 +16,6 @@
     "start:dev": "nodemon src/index.ts",
     "test": "jest --coverage"
   },
-  "pre-commit": [
-    "ts.check",
-    "build",
-    "add-build"
-  ],
   "keywords": [
     "scraper",
     "api",
