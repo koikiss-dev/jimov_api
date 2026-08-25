@@ -69,6 +69,23 @@ pnpm linter       # eslint over scrapers and routes
 pnpm format       # prettier over the repository
 ```
 
+## **Self-hosting (Docker)**
+
+Run the API without installing anything but Docker:
+
+```bash
+# build and start in the background
+docker compose up -d --build
+
+# or without compose
+docker build -t jimov-api .
+docker run -d -p 3000:3000 jimov-api
+```
+
+- The image is multi-stage (`node:22-alpine`): dependencies are compiled and pruned to production-only, runs as a non-root user, and ships a `HEALTHCHECK` against `/`.
+- The container listens on `3000` internally; map any host port with `PORT=8080 docker compose up -d` or `-p 8080:3000`.
+- Logs: `docker compose logs -f api`
+
 ## **Testing**
 
 Most tests exercise real websites through the network, so they require an
