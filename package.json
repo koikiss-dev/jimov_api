@@ -16,11 +16,6 @@
     "start:dev": "nodemon src/index.ts",
     "test": "jest --coverage"
   },
-  "pre-commit": [
-    "ts.check",
-    "build",
-    "add-build"
-  ],
   "keywords": [
     "scraper",
     "api",
@@ -41,7 +36,7 @@
   },
   "homepage": "https://github.com/koikiss-dev/jimov_api",
   "dependencies": {
-    "axios": "^1.17.0",
+    "axios": "^1.19.0",
     "cheerio": "^1.2.0",
     "cors": "^2.8.6",
     "crypto-js": "^4.2.0",
