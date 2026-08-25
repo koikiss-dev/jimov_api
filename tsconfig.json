@@ -22,7 +22,7 @@
     "strictNullChecks": false,
     "moduleResolution": "node",
     "outDir": "./build",
-    "baseUrl": "./src",
+    "rootDir": "./","baseUrl": "./src",
     "paths": {
       "@animetypes/*": ["./types/*"],
       "@providers/*": [
@@ -35,5 +35,6 @@
       "@routes/doramas/*": ["./routes/v1/doramas/*"]
     }
   },
+  "include": ["src"],
   "exclude": ["node_modules", "build", "**/*.spec.ts"]
 }
