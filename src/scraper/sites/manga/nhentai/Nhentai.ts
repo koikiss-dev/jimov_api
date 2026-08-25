@@ -1,5 +1,5 @@
 import axios from "axios";
-import { load } from "cheerio";
+import { load, type CheerioAPI } from "cheerio";
 import { getFilterByPages, getFilterNumPages } from "./assets/getFilterByPage";
 import { extractGalleryJson, getPageImages } from "./assets/galleryJson";
 import { fetchGalleryPage, REQUEST_TIMEOUT } from "./assets/galleryClient";
@@ -72,7 +72,7 @@ class NhentaiMangaInfo {
    * 'Characters', 'Tags', etc) identified by the prefix of the link of
    * each tag.
    */
-  private getTags($: cheerio.Root, hrefPrefix: string): string[] {
+  private getTags($: CheerioAPI, hrefPrefix: string): string[] {
     return $("section#tags")
       .find(`a[href^="${hrefPrefix}"] span.name`)
       .map((_, element) => $(element).text())

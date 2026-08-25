@@ -1,10 +1,11 @@
+import { type CheerioAPI } from "cheerio";
 import { type IMangaResult } from "@animetypes/manga";
 import { PROVIDER_ID } from "./site";
 
 /**
  * Extracts the search results of an already downloaded search page.
  */
-export function getFilterByPages($: cheerio.Root): IMangaResult[] {
+export function getFilterByPages($: CheerioAPI): IMangaResult[] {
   const searchResults: IMangaResult[] = [];
 
   $(".container .gallery a").each((_, elementCheerio) => {
@@ -31,7 +32,7 @@ export function getFilterByPages($: cheerio.Root): IMangaResult[] {
  * search page. The link to the last page reports the real total; the
  * numbered links are only a windowed list.
  */
-export function getFilterNumPages($: cheerio.Root): number {
+export function getFilterNumPages($: CheerioAPI): number {
   // The link to the last page ('...&page=N')
   const lastHref = $("section.pagination a.last").attr("href");
   const match = lastHref?.match(/page=(\d+)/);

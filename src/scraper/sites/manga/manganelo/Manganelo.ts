@@ -4,7 +4,7 @@ import {
   MangaChapter,
 } from "../../../../types/manga";
 import axios from "axios";
-import { load } from "cheerio";
+import { load, type CheerioAPI } from "cheerio";
 import { Image } from "../../../../types/image";
 import { ManganatoManagerUtils } from "./ManganatoManagerUtils";
 import { type IManganatoFilterParams } from "./ManganatoTypes";
@@ -16,7 +16,7 @@ export class Manganelo extends MangaScraperModel {
   readonly name = "manganelo";
   private readonly manager = ManganatoManagerUtils.Instance;
 
-  private GetMangaDescription(data: cheerio.Root) {
+  private GetMangaDescription(data: CheerioAPI) {
     if (
       data("div#panel-story-info-description").length == 0 &&
       data("div#panel-story-info-description h3").length == 0
@@ -28,7 +28,7 @@ export class Manganelo extends MangaScraperModel {
     return data("div#panel-story-info-description").text().trim();
   }
 
-  private GetMangaStatus(data: cheerio.Root) {
+  private GetMangaStatus(data: CheerioAPI) {
     const selector = data(
       "div.panel-story-info > div.story-info-right > table > tbody > tr:nth-child(3) > td.table-value",
     );
@@ -39,7 +39,7 @@ export class Manganelo extends MangaScraperModel {
     else return "completed";
   }
 
-  private GetMangaAuthors(data: cheerio.Root): string[] | null {
+  private GetMangaAuthors(data: CheerioAPI): string[] | null {
     const selector = data(
       "div.panel-story-info > div.story-info-right > table > tbody > tr:nth-child(2) > td.table-value",
     );
@@ -54,7 +54,7 @@ export class Manganelo extends MangaScraperModel {
       .get();
   }
 
-  private GetMangaGenres(data: cheerio.Root): string[] | null {
+  private GetMangaGenres(data: CheerioAPI): string[] | null {
     const selector = data(
       "div.panel-story-info > div.story-info-right > table > tbody > tr:nth-child(4) > td.table-value",
     );
@@ -76,7 +76,7 @@ export class Manganelo extends MangaScraperModel {
     );
   }
 
-  private GetMangaPages(data: cheerio.Root) {
+  private GetMangaPages(data: CheerioAPI) {
     if (
       data("div.container-chapter-reader").length == 0 &&
       data("div.container-chapter-reader > img").length == 0
@@ -88,7 +88,7 @@ export class Manganelo extends MangaScraperModel {
       .get();
   }
 
-  private GetMangaSearchResults(data: cheerio.Root): IMangaResult[] | null {
+  private GetMangaSearchResults(data: CheerioAPI): IMangaResult[] | null {
     const section = data("div.panel-content-genres");
     if (section.length === 0) return null;
 

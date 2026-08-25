@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import * as cheerio from "cheerio";
+import { type Element } from "domhandler";
 import { api, utils } from "../../../../types/utils";
 import * as types from "../../../../types/.";
 import {
@@ -51,8 +52,8 @@ async function getEpisodeServers(url: string): Promise<types.EpisodeServer[]> {
  * @returns
  */
 function getEpisodeByElement(
-  $: cheerio.Root,
-  element: cheerio.Element,
+  $: cheerio.CheerioAPI,
+  element: Element,
 ): types.Episode {
   const episode = new types.Episode();
   episode.num = parseInt($(element).find("span.episode").text().trim());
@@ -83,7 +84,7 @@ async function getLastEpisodes(): Promise<types.Episode[]> {
  * @param $
  * @returns
  */
-function getGenres($: cheerio.Root): string[] {
+function getGenres($: cheerio.CheerioAPI): string[] {
   const genres: string[] = [];
   $("div.tab-content div.tab-pane div.lh-lg a").each((_i, element) => {
     genres.push($(element).find("span").text().trim());
@@ -99,7 +100,7 @@ function getGenres($: cheerio.Root): string[] {
  * @returns
  */
 async function getAnimeEpisodes(
-  $: cheerio.Root,
+  $: cheerio.CheerioAPI,
   animeName: string,
   pageData: AxiosResponse,
   animePath: string,
@@ -213,7 +214,7 @@ async function getLastAnimes(url?: string): Promise<types.AnimeMedia[]> {
   const animes: types.AnimeMedia[] = [];
   const $ = cheerio.load((await axios.get(url ?? PageInfo.url)).data);
 
-  const addElement = (element: cheerio.Element) => {
+  const addElement = (element: Element) => {
     const anime = new types.AnimeMedia();
     anime.url = api.getAnimeURL(PageInfo, $(element).find("a").attr("href"));
     anime.image = new types.Image($(element).find("img").attr("data-src"));

@@ -36,7 +36,6 @@
   },
   "homepage": "https://github.com/koikiss-dev/jimov_api",
   "dependencies": {
-    "@types/cheerio": "^0.22.35",
     "axios": "^1.19.0",
     "cheerio": "^1.2.0",
     "cors": "^2.8.6",
@@ -61,6 +60,7 @@
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "commitlint": "^17.8.1",
+    "domhandler": "5.0.3",
     "dotenv": "^16.6.1",
     "eslint": "^8.57.1",
     "husky": "^8.0.3",
@@ -71,6 +71,6 @@
     "pretty": "^2.0.0",
     "ts-jest": "^29.4.11",
     "tslib": "^2.8.1",
-    "typescript": "^4.9.5"
+    "typescript": "^5.4.5"
   }
 }

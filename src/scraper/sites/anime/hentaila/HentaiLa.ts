@@ -15,7 +15,9 @@ export class HentaiLa extends AnimeScraperModel {
       const { data } = await axios.get(`${this.url}/${formatUrl}`);
       const $ = cheerio.load(data);
       const genres = [];
-      $(".genres a").each((_i, e) => genres.push($(e).text()));
+      $(".genres a").each((_i, e) => {
+        genres.push($(e).text());
+      });
 
       const AnimeInfo: AnimeMedia = {
         name: $(".hentai-single .h-header h1.h-title").text().trim(),
@@ -81,7 +83,9 @@ export class HentaiLa extends AnimeScraperModel {
         servers: [],
       };
 
-      const video_script = $("script").get().at(-3).children[0].data;
+      const video_script = (
+        $("script").get().at(-3).children[0] as { data: string }
+      ).data;
       const video_format = eval(
         video_script
           .slice(

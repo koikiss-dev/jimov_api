@@ -145,7 +145,8 @@ export class WcoStream extends AnimeScraperModel {
       );
       const $ = cheerio.load(data);
 
-      const mainUrl = $("script").get()[3].children[0].data;
+      const mainUrl = ($("script").get()[3].children[0] as { data: string })
+        .data;
       const mainOrigin = eval(
         mainUrl
           .trim()
@@ -171,7 +172,7 @@ export class WcoStream extends AnimeScraperModel {
         servers: [],
       };
 
-      $$("item").each(async (_i, e) => {
+      $$("item").each((_i, e) => {
         const title = $$(e).find("title").text();
 
         if (
@@ -273,7 +274,9 @@ export class WcoStream extends AnimeScraperModel {
   async RuntimeUnpacked(data: string) {
     const $ = cheerio.load(decodeURI(data));
 
-    const Buffer = btoa($("script").get().at(-1).children[0].data);
+    const Buffer = btoa(
+      ($("script").get().at(-1).children[0] as { data: string }).data,
+    );
     const UnBuffer = UnPacked(Buffer);
     const RequestBR = await eval(
       UnBuffer.slice(
