@@ -18,7 +18,9 @@ export class HentaiHaven extends AnimeScraperModel {
       $(".single_data .list")
         .first()
         .find("a")
-        .each((_i, e) => genres.push($(e).text()));
+        .each((_i, e) => {
+          genres.push($(e).text());
+        });
 
       const AnimeInfo: AnimeMedia = {
         name: $("h1.htitle").text().trim(),

@@ -169,11 +169,15 @@ export class Inmanga {
       };
       $_(
         ".col-md-9.col-sm-8.col-xs-12 .panel.widget .panel-heading .text-muted span",
-      ).each((_i, e) => AltNames.push($_(e).text().replace(";", "")));
+      ).each((_i, e) => {
+        AltNames.push($_(e).text().replace(";", ""));
+      });
 
       $_(
         ".col-md-9.col-sm-8.col-xs-12 .panel.widget .panel-heading .label.ml-sm",
-      ).each((_i, e) => MangaInfo.genres.push($_(e).text().trim()));
+      ).each((_i, e) => {
+        MangaInfo.genres.push($_(e).text().trim());
+      });
 
       MangaInfo.alt_names.slice(MangaInfo.alt_names.indexOf('""'), 0);
       MangaInfo.genres.slice(MangaInfo.genres.indexOf('""'), 0);
