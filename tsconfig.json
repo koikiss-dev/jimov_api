@@ -22,7 +22,8 @@
     "strictNullChecks": false,
     "moduleResolution": "node",
     "outDir": "./build",
-    "rootDir": "./","baseUrl": "./src",
+    "rootDir": "./",
+    "baseUrl": "./src",
     "paths": {
       "@animetypes/*": ["./types/*"],
       "@providers/*": [
