@@ -82,3 +82,13 @@ jobs:
         # failures here are informative, not blocking.
         continue-on-error: true
         run: pnpm run test
+
+  docker:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Build Docker image (no push)
+        run: docker build -t jimov-api:ci .
